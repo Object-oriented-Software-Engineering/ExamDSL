@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,8 +13,8 @@ public enum ExamSymbolType {
 }
 
 namespace ExamDSL {
-    // Exam : Header? Questions
-    internal class ExamBuilder : ASTComposite {
+    // Exam : Header? Question+
+    public class ExamBuilder : ASTComposite {
         // contexts
         public const int HEADER=0, QUESTIONS=1;
 
@@ -24,40 +25,47 @@ namespace ExamDSL {
         public static ExamBuilder exam() {
             return new ExamBuilder();
         }
-        public ExamBuilder header() {
+        public ExamHeaderBuilder header() {
             var headerBuilder = new ExamHeaderBuilder();
             AddChild(HEADER,headerBuilder);
-            return this;
+            return headerBuilder;
+        }
+
+        public ExamQuestionBuilder question() {
+            var questionBuilder = new ExamQuestionBuilder();
+            AddChild(QUESTIONS, questionBuilder);
+            return questionBuilder;
         }
     }
 
     // ExamHeader : Title? Semester? Date? Duration? Teacher? StudentName?
-    internal class ExamHeaderBuilder :ASTComposite {
+    // Title : Text;
+    public class ExamHeaderBuilder :ASTComposite {
         public const int TITLE =0, SEMESTER=1, DATE=2, DURATION=3,TEACHER=4,STUDENTNAME=5;
         public ExamHeaderBuilder() : 
             base(6, (int)ExamSymbolType.ST_EXAMHEADER) { }
 
-        public ExamHeaderBuilder Title(DSLSymbol content) {
+        public ExamHeaderBuilder Title(Text content) {
             AddChild(TITLE,content);
             return this;
         }
-        public ExamHeaderBuilder Semester(DSLSymbol content) {
+        public ExamHeaderBuilder Semester(Text content) {
             AddChild(SEMESTER, content);
             return this;
         }
-        public ExamHeaderBuilder Date(DSLSymbol content) {
+        public ExamHeaderBuilder Date(Text content) {
             AddChild(DATE, content);
             return this;
         }
-        public ExamHeaderBuilder Duration(DSLSymbol content) {
+        public ExamHeaderBuilder Duration(Text content) {
             AddChild(DURATION, content);
             return this;
         }
-        public ExamHeaderBuilder Teacher(DSLSymbol content) {
+        public ExamHeaderBuilder Teacher(Text content) {
             AddChild(TEACHER, content);
             return this;
         }
-        public ExamHeaderBuilder StudentName(DSLSymbol content) {
+        public ExamHeaderBuilder StudentName(Text content) {
             AddChild(STUDENTNAME, content);
             return this;
         }
@@ -67,29 +75,32 @@ namespace ExamDSL {
     }
 
     // Question : Header Gravity Wording Solution Subquestions? 
-    internal class ExamQuestionBuilder : ASTComposite {
+    public class ExamQuestionBuilder : ASTComposite {
         public const int HEADER = 0, GRAVITY = 1, WORDING = 2, SOLUTION = 3, SUBQUESTION = 4;
+
+        // type of exam ( multiple choice, simple answer, 
+        private int m_questionType;
 
         public ExamQuestionBuilder() : 
             base(5, (int)ExamSymbolType.ST_EXAMQUESTION) { }
 
-        public ExamQuestionBuilder Header(DSLSymbol content) {
+        public ExamQuestionBuilder Header(Text content) {
             AddChild(HEADER, content);
             return this;
         }
-        public ExamQuestionBuilder Gravity(DSLSymbol content) {
+        public ExamQuestionBuilder Gravity(Text content) {
             AddChild(GRAVITY, content);
             return this;
         }
-        public ExamQuestionBuilder Wording(DSLSymbol content) {
+        public ExamQuestionBuilder Wording(Text content) {
             AddChild(WORDING, content);
             return this;
         }
-        public ExamQuestionBuilder Solution(DSLSymbol content) {
+        public ExamQuestionBuilder Solution(Text content) {
             AddChild(SOLUTION, content);
             return this;
         }
-        public ExamQuestionBuilder SubQuestion(DSLSymbol content) {
+        public ExamQuestionBuilder SubQuestion(Text content) {
             AddChild(SUBQUESTION, content);
             return this;
         }
@@ -98,13 +109,36 @@ namespace ExamDSL {
         }
     }
 
-    internal class CompositeTextSymbol : ASTComposite {
+    //      Text : StaticText
+    //           | TextObject
+    //           | Text
+    public class Text : ASTComposite {
         public const int CONTENT = 0;
-        public CompositeTextSymbol() : 
+        private Text() : 
             base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) { }
 
-        public CompositeTextSymbol Text(DSLSymbol content) {
-            AddChild(CONTENT, content);
+
+        public static Text T(string s) {
+            Text newText = new Text();
+            StaticTextSymbol st = new StaticTextSymbol(s);
+            newText.AddChild(0, st);
+            return newText;
+        }
+
+        public static Text T(DSLSymbol s) {
+            Text newText = new Text();
+            newText.AddChild(0, s);
+            return newText;
+        }
+
+        public Text Append(string s) {
+            StaticTextSymbol st = new StaticTextSymbol(s);
+            AddChild(0,st);
+            return this;
+        }
+        
+        public Text Append(DSLSymbol s) {
+            AddChild(0, s);
             return this;
         }
     }

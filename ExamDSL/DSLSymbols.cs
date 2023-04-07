@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ExamDSL {
-    public class DSLSymbol : IASTVisitableNode, ILabelled {
+    public abstract class DSLSymbol : IASTVisitableNode, ILabelled {
         private int m_type;
         private int m_serialNumber;
         // open for modification by subclasses
@@ -55,7 +55,7 @@ namespace ExamDSL {
         }
     }
 
-    public class ASTComposite : DSLSymbol {
+    public abstract class ASTComposite : DSLSymbol, IASTComposite {
 
         List<DSLSymbol>[] m_children;
 
@@ -108,8 +108,23 @@ namespace ExamDSL {
                 throw new ArgumentOutOfRangeException("context index out of range");
             }
         }
-        
-        
+
+        public IEnumerator<IASTVisitableNode> GetEnumerator() {
+            return new ASTCompositeEnumerator(this);
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() {
+            return GetEnumerator();
+        }
+
+        public IASTIterator CreateIterator() {
+            return new ASTChildrenIterator(this);
+        }
+
+        public IASTIterator CreateContextIterator(int context) {
+            return new ASTContextIterator(this, context);
+        }
+
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return,
             Params> v, params Params[] info) {
@@ -117,7 +132,7 @@ namespace ExamDSL {
         }
     }
 
-    public class ASTLeaf : DSLSymbol {
+    public abstract class ASTLeaf : DSLSymbol {
         private string m_stringLiteral;
 
         public string MStringLiteral => m_stringLiteral;
