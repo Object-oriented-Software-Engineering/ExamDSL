@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ExamDSL {
-    public class SimpleCalcVisitor<Result, Params> : ASTBaseVisitor<Result, Params> {
+    public class DSLBaseVisitor<Result, Params> : ASTBaseVisitor<Result, Params> {
 
         public virtual Result VisitContextChildren(ASTComposite node, int context,
             params Params[] info) {

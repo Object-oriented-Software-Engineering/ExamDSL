@@ -49,6 +49,7 @@
     <Compile Include="DSLIterator.cs" />
     <Compile Include="DSLSymbols.cs" />
     <Compile Include="DSLVisitor.cs" />
+    <Compile Include="ExamPrinterVisitor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

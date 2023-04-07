@@ -36,6 +36,10 @@ namespace ExamDSL {
             AddChild(QUESTIONS, questionBuilder);
             return questionBuilder;
         }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return,Params>).VisitExamBuilder(this);
+        }
     }
 
     // ExamHeader : Title? Semester? Date? Duration? Teacher? StudentName?
