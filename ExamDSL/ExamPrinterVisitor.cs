@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ExamDSL {
-    public class ExamPrinterVisitor : DSLBaseVisitor<int,DSLSymbol> {
+    public class ExamPrinterVisitor : DSLBaseVisitor<int, DSLSymbol> {
         private StreamWriter m_dotFile;
         private string m_dotFileName;
         private int m_clusterSerial;
@@ -29,16 +29,16 @@ namespace ExamDSL {
                     m_dotFile.Write("\t\t");
                 }
                 first = false;
+
                 m_dotFile.Write("\"" + child.MNodeName + "\" ");
-                if (child is ASTLeaf leaf) {
-                    m_dotFile.Write("[ label=\"" + leaf.MStringLiteral + "\"] ");
+                if (node.GetNumberOfContextNodes(contextindex) != 0) {
+                    m_dotFile.WriteLine($";");
                 }
 
+
             }
 
-            if (node.GetNumberOfContextNodes(contextindex) != 0) {
-                m_dotFile.WriteLine($";");
-            }
+
 
             m_dotFile.WriteLine($"\t\tlabel = \"{contextName}\";");
             m_dotFile.WriteLine($"\t}}");
@@ -108,7 +108,7 @@ namespace ExamDSL {
 
             CreateContextSubgraph(n, ExamHeaderBuilder.STUDENTNAME,
                 n.mc_contextNames[ExamHeaderBuilder.STUDENTNAME]);
-            
+
             return base.VisitExamHeaderBuilder(node, n);
         }
 
@@ -146,13 +146,14 @@ namespace ExamDSL {
 
             CreateContextSubgraph(n, Text.CONTENT,
                 n.mc_contextNames[Text.CONTENT]);
-            
+
             return base.VisitText(node, n);
         }
 
         public override int VisitLeaf(ASTLeaf node, params DSLSymbol[] args) {
 
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node.MStringLiteral}\";");
 
             return base.VisitLeaf(node, args);
         }
