@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 public enum ExamSymbolType {
     ST_EXAMBUILDER, ST_EXAMHEADER, ST_EXAMQUESTION,
-    ST_COMPOSITETEXT, ST_STATICTEXT
+    ST_COMPOSITETEXT, ST_STATICTEXT, ST_MACROTEXT
 }
 
 namespace ExamDSL {
@@ -164,13 +164,25 @@ namespace ExamDSL {
         }
     }
 
-    internal class StaticTextSymbol : ASTLeaf {
+    public class StaticTextSymbol : ASTLeaf {
         public StaticTextSymbol(string content) :
             base(content, (int)ExamSymbolType.ST_STATICTEXT) { }
 
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return,
-            Params> v, params Params[] info) {
+        public override Return Accept<Return, Params>(
+            IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitLeaf(this,info);
+        }
+    }
+
+    public abstract class TextMacroSymbol : ASTLeaf {
+        public TextMacroSymbol() : 
+            base("", (int)ExamSymbolType.ST_MACROTEXT) { }
+
+        public abstract string Evaluate();
+
+        public override Return Accept<Return, Params>(
+            IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitLeaf(this, info);
         }
     }
 

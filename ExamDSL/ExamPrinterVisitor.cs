@@ -153,7 +153,16 @@ namespace ExamDSL {
         public override int VisitLeaf(ASTLeaf node, params DSLSymbol[] args) {
 
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
-            m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node.MStringLiteral}\";");
+            switch ((ExamSymbolType)node.MType) {
+                case ExamSymbolType.ST_STATICTEXT:
+                    m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node.MStringLiteral}\";");
+                    break;
+                case ExamSymbolType.ST_MACROTEXT:
+                    TextMacroSymbol s = node as TextMacroSymbol;
+                    m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{s?.Evaluate()}\";");
+                    break;
+            }
+            
 
             return base.VisitLeaf(node, args);
         }
