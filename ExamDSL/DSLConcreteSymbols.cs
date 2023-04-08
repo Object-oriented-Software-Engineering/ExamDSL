@@ -17,6 +17,7 @@ namespace ExamDSL {
     public class ExamBuilder : ASTComposite {
         // contexts
         public const int HEADER=0, QUESTIONS=1;
+        public readonly string[] mc_contextNames = { "HEADER", "QUESTIONS" };
 
         private ExamBuilder() : 
             base(2,(int)(ExamSymbolType.ST_EXAMBUILDER)) {
@@ -46,6 +47,7 @@ namespace ExamDSL {
     // Title : Text;
     public class ExamHeaderBuilder :ASTComposite {
         public const int TITLE =0, SEMESTER=1, DATE=2, DURATION=3,TEACHER=4,STUDENTNAME=5;
+        public readonly string[] mc_contextNames = { "TITLE", "SEMESTER", "DATE","DURATION", "TEACHER","STUDENTNAME" };
         public ExamHeaderBuilder() : 
             base(6, (int)ExamSymbolType.ST_EXAMHEADER) { }
 
@@ -76,11 +78,16 @@ namespace ExamDSL {
         public ExamBuilder End() {
             return MParent as ExamBuilder;
         }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderBuilder(this,info);
+        }
     }
 
     // Question : Header Gravity Wording Solution Subquestions? 
     public class ExamQuestionBuilder : ASTComposite {
-        public const int HEADER = 0, GRAVITY = 1, WORDING = 2, SOLUTION = 3, SUBQUESTION = 4;
+        public const int HEADER = 0, WEIGHT = 1, WORDING = 2, SOLUTION = 3, SUBQUESTION = 4;
+        public readonly string[] mc_contextNames = { "HEADER", "WEIGHT", "WORDING", "SOLUTION", "SUBQUESTION" };
 
         // type of exam ( multiple choice, simple answer, 
         private int m_questionType;
@@ -93,7 +100,7 @@ namespace ExamDSL {
             return this;
         }
         public ExamQuestionBuilder Gravity(Text content) {
-            AddChild(GRAVITY, content);
+            AddChild(WEIGHT, content);
             return this;
         }
         public ExamQuestionBuilder Wording(Text content) {
@@ -111,13 +118,18 @@ namespace ExamDSL {
         public ExamBuilder End() {
             return MParent as ExamBuilder;
         }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionBuilder(this,info);
+        }
     }
 
     //      Text : StaticText
     //           | TextObject
     //           | Text
     public class Text : ASTComposite {
-        public const int CONTENT = 0;
+        public const int CONTENT = 0; 
+        public readonly string[] mc_contextNames = { "CONTENT"};
         private Text() : 
             base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) { }
 
@@ -145,11 +157,21 @@ namespace ExamDSL {
             AddChild(0, s);
             return this;
         }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
+                                                        params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitText(this,info);
+        }
     }
 
     internal class StaticTextSymbol : ASTLeaf {
         public StaticTextSymbol(string content) :
             base(content, (int)ExamSymbolType.ST_STATICTEXT) { }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return,
+            Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitLeaf(this,info);
+        }
     }
 
 }

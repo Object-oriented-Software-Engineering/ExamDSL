@@ -21,7 +21,7 @@ namespace ExamDSL {
             ;
 
             ExamPrinterVisitor printer = new ExamPrinterVisitor("test.dot");
-            printer.Visit(exam);
+            printer.Visit(exam,null);
         }
     }
 }

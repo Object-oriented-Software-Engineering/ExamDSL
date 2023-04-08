@@ -46,5 +46,12 @@ namespace ExamDSL {
         public virtual Result VisitExamQuestionBuilder(ExamQuestionBuilder node, params Params[] args) {
             return VisitChildren(node, args);
         }
+
+        public virtual Result VisitText(Text node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitLeaf(ASTLeaf node, params Params[] args) {
+            return default(Result);
+        }
     }
 }

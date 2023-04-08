@@ -47,11 +47,17 @@ namespace ExamDSL {
                 m_curNode = m_sourceNode.GetChild(mi_curContext, mi_curNode);
             } else {
                 mi_curContext++;
-                if (mi_curContext < m_sourceNode.MContexts) {
+                while (mi_curContext < m_sourceNode.MContexts &&
+                m_sourceNode.GetNumberOfContextNodes(mi_curContext)==0) {
+                    mi_curContext++;
+                }
+
+                if (mi_curContext == m_sourceNode.MContexts) {
+                    m_endFlag = true;
+                }
+                else {
                     mi_curNode = 0;
                     m_curNode = m_sourceNode.GetChild(mi_curContext, mi_curNode);
-                } else {
-                    m_endFlag = true;
                 }
             }
         }
