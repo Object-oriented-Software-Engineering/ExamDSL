@@ -6,10 +6,19 @@ using System.Threading.Tasks;
 
 namespace ExamDSL {
     internal class Program {
+
+        public static void Initialize() {
+            // Initialize database
+
+            // Update database
+        }
+
         static void Main(string[] args) {
             // Program
 
-            ExerciseCounter X=new ExerciseCounter();
+            Initialize();
+
+            TextMacroSymbol X = MacroFactory.CreateSerialCounter();
 
             var exam = ExamBuilder.exam().
                 header().
@@ -18,30 +27,39 @@ namespace ExamDSL {
                      Date(Text.T("23/2/2023")).
                 End().
                 question().
-                    Header(Text.T("Exercise ").Append(X)).
+                    Header(Text.T("Exercise ").Append(X).Append(")")).
                     Wording(Text.T("Find the sum of 5 + 3")).
                 End().
                 question().
-                    Header(Text.T("Exercise ").Append(X)).
+                    Header(Text.T("Exercise ").Append(X).Append(")")).
                     Wording(Text.T("Find the sum of 55 + 66")).
                 End();
-
-
-
-
-            ExamPrinterVisitor printer = new ExamPrinterVisitor("test.dot");
+            
+            ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam,null);
         }
     }
 
     // MACRO : Counting the exercise serial number
-    public class ExerciseCounter :TextMacroSymbol{
+    public class SerialCounter :TextMacroSymbol{
         private int m_currentNumber=1;
+        
+        public SerialCounter() :
+        base("SERIAL_COUNTER"){ }
 
-        public ExerciseCounter() { }
-
-        public override string Evaluate() {
-            return Convert.ToString(m_currentNumber++);
+        public override StaticTextSymbol Evaluate() {
+            StaticTextSymbol staticText = 
+                new StaticTextSymbol(Convert.ToString(m_currentNumber++));
+            return staticText;
         }
     }
+
+    // MACRO FACTORY : Creates macro instances
+    public static class MacroFactory {
+        public static TextMacroSymbol CreateSerialCounter() {
+            return new SerialCounter();
+        }
+    }
+
+    
 }

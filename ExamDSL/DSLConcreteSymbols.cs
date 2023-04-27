@@ -13,6 +13,7 @@ public enum ExamSymbolType {
 }
 
 namespace ExamDSL {
+
     // Exam : Header? Question+
     public class ExamBuilder : ASTComposite {
         // contexts
@@ -28,13 +29,13 @@ namespace ExamDSL {
         }
         public ExamHeaderBuilder header() {
             var headerBuilder = new ExamHeaderBuilder();
-            AddChild(HEADER,headerBuilder);
+            AddText(headerBuilder, HEADER);
             return headerBuilder;
         }
 
         public ExamQuestionBuilder question() {
             var questionBuilder = new ExamQuestionBuilder();
-            AddChild(QUESTIONS, questionBuilder);
+            AddText(questionBuilder, QUESTIONS);
             return questionBuilder;
         }
 
@@ -52,27 +53,27 @@ namespace ExamDSL {
             base(6, (int)ExamSymbolType.ST_EXAMHEADER) { }
 
         public ExamHeaderBuilder Title(Text content) {
-            AddChild(TITLE,content);
+            AddText(content, TITLE);
             return this;
         }
         public ExamHeaderBuilder Semester(Text content) {
-            AddChild(SEMESTER, content);
+            AddText(content, SEMESTER);
             return this;
         }
         public ExamHeaderBuilder Date(Text content) {
-            AddChild(DATE, content);
+            AddText(content, DATE);
             return this;
         }
         public ExamHeaderBuilder Duration(Text content) {
-            AddChild(DURATION, content);
+            AddText(content, DURATION);
             return this;
         }
         public ExamHeaderBuilder Teacher(Text content) {
-            AddChild(TEACHER, content);
+            AddText(content, TEACHER);
             return this;
         }
         public ExamHeaderBuilder StudentName(Text content) {
-            AddChild(STUDENTNAME, content);
+            AddText(content, STUDENTNAME);
             return this;
         }
         public ExamBuilder End() {
@@ -96,29 +97,29 @@ namespace ExamDSL {
             base(5, (int)ExamSymbolType.ST_EXAMQUESTION) { }
 
         public ExamQuestionBuilder Header(Text content) {
-            AddChild(HEADER, content);
+            AddText(content,HEADER);
             return this;
         }
         public ExamQuestionBuilder Gravity(Text content) {
-            AddChild(WEIGHT, content);
+            AddText(content, WEIGHT);
             return this;
         }
         public ExamQuestionBuilder Wording(Text content) {
-            AddChild(WORDING, content);
+            AddText(content, WORDING);
             return this;
         }
         public ExamQuestionBuilder Solution(Text content) {
-            AddChild(SOLUTION, content);
+            AddText(content, SOLUTION);
             return this;
         }
         public ExamQuestionBuilder SubQuestion(Text content) {
-            AddChild(SUBQUESTION, content);
+            AddText(content, SUBQUESTION);
             return this;
         }
         public ExamBuilder End() {
             return MParent as ExamBuilder;
         }
-
+        
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionBuilder(this,info);
         }
@@ -137,24 +138,24 @@ namespace ExamDSL {
         public static Text T(string s) {
             Text newText = new Text();
             StaticTextSymbol st = new StaticTextSymbol(s);
-            newText.AddChild(0, st);
+            newText.AddText(st,0);
             return newText;
         }
 
         public static Text T(DSLSymbol s) {
             Text newText = new Text();
-            newText.AddChild(0, s);
+            newText.AddText(s,0);
             return newText;
         }
 
         public Text Append(string s) {
             StaticTextSymbol st = new StaticTextSymbol(s);
-            AddChild(0,st);
+            AddText(st,0);
             return this;
         }
         
         public Text Append(DSLSymbol s) {
-            AddChild(0, s);
+            AddText(s,0);
             return this;
         }
 
@@ -168,6 +169,7 @@ namespace ExamDSL {
         public StaticTextSymbol(string content) :
             base(content, (int)ExamSymbolType.ST_STATICTEXT) { }
 
+        
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitLeaf(this,info);
@@ -175,11 +177,16 @@ namespace ExamDSL {
     }
 
     public abstract class TextMacroSymbol : ASTLeaf {
-        public TextMacroSymbol() : 
-            base("", (int)ExamSymbolType.ST_MACROTEXT) { }
+        public readonly string mc_macroID;
 
-        public abstract string Evaluate();
+        public TextMacroSymbol(string id) :
+            base("", (int)ExamSymbolType.ST_MACROTEXT) {
+            mc_macroID = id;
+        }
 
+        public abstract StaticTextSymbol Evaluate();
+
+        
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitLeaf(this, info);

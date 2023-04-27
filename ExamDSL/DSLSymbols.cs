@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ExamDSL {
-    public abstract class DSLSymbol : IASTVisitableNode, ILabelled {
+    
+    public abstract class DSLSymbol : CEmmitableTextContainer, IASTVisitableNode, ILabelled {
         private int m_type;
         private int m_serialNumber;
         // open for modification by subclasses
@@ -53,6 +55,7 @@ namespace ExamDSL {
             params Params[] info) {
             return v.Visit(this);
         }
+
     }
 
     public abstract class ASTComposite : DSLSymbol, IASTComposite {
@@ -100,13 +103,24 @@ namespace ExamDSL {
             }
         }
 
-        public void AddChild(int context, DSLSymbol child) {
+        public override void AddText(DSLSymbol code, int context = -1) {
             if (context < m_children.Length) {
-                m_children[context].Add(child);
-                child.SetParent(this);
+                m_children[context].Add(code);
+                code.SetParent(this);
             } else {
                 throw new ArgumentOutOfRangeException("context index out of range");
             }
+        }
+
+        public override void AddText(string text, int context) {
+            StaticTextSymbol container = new StaticTextSymbol(text);
+            AddText(container,context);
+        }
+
+        public override void AddNewLine(int context) {
+            StaticTextSymbol container = new StaticTextSymbol("");
+            container.AddNewLine();
+            AddText(container, context);
         }
 
         public IEnumerator<IASTVisitableNode> GetEnumerator() {
@@ -133,14 +147,37 @@ namespace ExamDSL {
     }
 
     public abstract class ASTLeaf : DSLSymbol {
-        private string m_stringLiteral;
+        private StringBuilder m_stringLiteral;
 
-        public string MStringLiteral => m_stringLiteral;
+        public string MStringLiteral => m_stringLiteral.ToString();
 
         public ASTLeaf(string leafLiteral, int mType) :
             base(mType) {
-            m_stringLiteral = leafLiteral;
+            m_stringLiteral =new StringBuilder(leafLiteral);
         }
+
+        public override void AddText(string text, int context = -1) {
+            string[] lines = text.Split(new[] { '\n', '\r' },
+                StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in lines) {
+                m_stringLiteral.Append(line);
+                if (text.Contains('\n')) {
+                    m_stringLiteral.Append("\r\n");
+                    m_stringLiteral.Append(new string('\t', M_NestingLevel));
+                }
+            }
+        }
+
+        public override void AddText(DSLSymbol code, int context) {
+            string str = code.ToString();
+            AddText(str,context);
+        }
+
+        public override void AddNewLine(int context = -1) {
+            m_stringLiteral.Append("\r\n");
+            m_stringLiteral.Append(new string('\t', M_NestingLevel));
+        }
+
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return,
             Params> v, params Params[] info) {
             return v.Visit(this, info);

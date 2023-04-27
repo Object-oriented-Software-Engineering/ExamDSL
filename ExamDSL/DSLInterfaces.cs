@@ -18,6 +18,7 @@ namespace ExamDSL {
 
     public interface IASTVisitableNode {
         Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info);
+
     }
 
     public interface IASTComposite : IEnumerable<IASTVisitableNode> {

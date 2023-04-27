@@ -43,13 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeContainer.cs" />
     <Compile Include="DSLBaseVisitor.cs" />
     <Compile Include="DSLConcreteSymbols.cs" />
     <Compile Include="DSLInterfaces.cs" />
     <Compile Include="DSLIterator.cs" />
     <Compile Include="DSLSymbols.cs" />
     <Compile Include="DSLVisitor.cs" />
-    <Compile Include="ExamPrinterVisitor.cs" />
+    <Compile Include="ExamASTPrinterVisitor.cs" />
+    <Compile Include="ExamTextPrinterVisitor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

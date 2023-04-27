@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ExamDSL {
-    public class ExamPrinterVisitor : DSLBaseVisitor<int, DSLSymbol> {
+    public class ExamASTPrinterVisitor : DSLBaseVisitor<int, DSLSymbol> {
         private StreamWriter m_dotFile;
         private string m_dotFileName;
         private int m_clusterSerial;
         private int ms_clusterSerialCounter;
 
-        public ExamPrinterVisitor(string dotfilename) {
+        public ExamASTPrinterVisitor(string dotfilename) {
             m_dotFile = new StreamWriter(dotfilename);
             m_dotFileName = dotfilename;
         }
