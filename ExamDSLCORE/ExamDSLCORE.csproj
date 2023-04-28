@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Desktop\Kokalakos\Randomizer\Randomizer.csproj" />
+    <ProjectReference Include="..\Randomizer\Randomizer\Randomizer\Randomizer.csproj" />
   </ItemGroup>
 
 </Project>
