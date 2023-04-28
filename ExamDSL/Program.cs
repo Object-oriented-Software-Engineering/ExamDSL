@@ -19,6 +19,8 @@ namespace ExamDSL {
             Initialize();
 
             TextMacroSymbol X = MacroFactory.CreateSerialCounter();
+            RandomInteger Y = new RandomInteger();
+            RandomInteger Z = new RandomInteger();
 
             var exam = ExamBuilder.exam().
                 header().
@@ -28,7 +30,7 @@ namespace ExamDSL {
                 End().
                 question().
                     Header(Text.T("Exercise ").Append(X).Append(")")).
-                    Wording(Text.T("Find the sum of 5 + 3")).
+                    Wording(Text.T($"Find the sum of {Y} + {Z}")).
                 End().
                 question().
                     Header(Text.T("Exercise ").Append(X).Append(")")).
@@ -60,6 +62,36 @@ namespace ExamDSL {
         public override StaticTextSymbol Evaluate() {
             StaticTextSymbol staticText = 
                 new StaticTextSymbol(Convert.ToString(m_currentNumber++));
+            return staticText;
+        }
+
+        public override StaticTextSymbol GetText() {
+            StaticTextSymbol staticText =
+                new StaticTextSymbol(Convert.ToString(m_currentNumber));
+            return staticText;
+        }
+    }
+
+    public class RandomInteger : TextMacroSymbol {
+        private int m_integer;
+        static Random r = new Random();
+        public RandomInteger() : base("RANDOM_INTEGER") {
+        }
+
+        public override StaticTextSymbol Evaluate() {
+            int m = r.Next(1,10);
+            StaticTextSymbol staticText =
+                new StaticTextSymbol(Convert.ToString(m));
+            return staticText;
+        }
+
+        public override void Reset() {
+            Evaluate();
+        }
+
+        public override StaticTextSymbol GetText() {
+            StaticTextSymbol staticText =
+                new StaticTextSymbol(Convert.ToString(m_integer));
             return staticText;
         }
     }

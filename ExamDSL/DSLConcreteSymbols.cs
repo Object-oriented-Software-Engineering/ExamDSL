@@ -197,6 +197,8 @@ namespace ExamDSL {
 
         public abstract void Reset();
 
+        public abstract StaticTextSymbol GetText();
+
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitLeaf(this, info);
