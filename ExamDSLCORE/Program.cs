@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Randomizer;
 
 
 namespace ExamDSL {
@@ -20,13 +21,13 @@ namespace ExamDSL {
             Initialize();
 
             TextMacroSymbol X = MacroFactory.CreateSerialCounter();
-            RandomInteger Y = new RandomInteger();
-            RandomInteger Z = new RandomInteger();
+            RandomInteger Y = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0,10)));
+            RandomInteger Z = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0,10)));
 
             var exam = ExamBuilder.exam().
                 header().
                     Title(Text.T("Arithmetic Examination"))
-                    .Semester(Text.T("Winter Semester 2023")).
+                    .Semester(Text.T("Winter Semester ")).
                      Date(Text.T("23/2/2023")).
                 End().
                 question().
@@ -75,12 +76,18 @@ namespace ExamDSL {
 
     public class RandomInteger : TextMacroSymbol {
         private int m_integer;
-        static Random r = new Random();
-        public RandomInteger() : base("RANDOM_INTEGER") {
+        IGenerator<int> m_generator;
+        public int Next() {
+            return m_generator.Next();
+        }
+        
+        public RandomInteger(IGenerator<int> generator) : base("RANDOM_INTEGER") {
+            m_generator = generator;
         }
 
+
         public override StaticTextSymbol Evaluate() {
-            int m = r.Next(1,10);
+            int m = m_generator.Next();
             StaticTextSymbol staticText =
                 new StaticTextSymbol(Convert.ToString(m));
             return staticText;
