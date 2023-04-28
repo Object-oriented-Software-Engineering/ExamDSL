@@ -37,15 +37,25 @@ namespace ExamDSL {
             
             ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam,null);
+            ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
+            StaticTextSymbol x=textPrinter.Visit(exam, null);
+            Console.WriteLine(x.MStringLiteral);
+
         }
     }
 
     // MACRO : Counting the exercise serial number
     public class SerialCounter :TextMacroSymbol{
         private int m_currentNumber=1;
-        
+
         public SerialCounter() :
-        base("SERIAL_COUNTER"){ }
+            base("SERIAL_COUNTER") {
+
+        }
+
+        public override void Reset() {
+            m_currentNumber = 1;
+        }
 
         public override StaticTextSymbol Evaluate() {
             StaticTextSymbol staticText = 

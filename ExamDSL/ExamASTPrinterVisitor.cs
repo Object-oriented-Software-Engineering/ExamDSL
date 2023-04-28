@@ -16,6 +16,7 @@ namespace ExamDSL {
         public ExamASTPrinterVisitor(string dotfilename) {
             m_dotFile = new StreamWriter(dotfilename);
             m_dotFileName = dotfilename;
+            SymbolMemory.Reset();
         }
 
         private void CreateContextSubgraph(ASTComposite node, int contextindex, string contextName) {

@@ -166,6 +166,10 @@ namespace ExamDSL {
     }
 
     public class StaticTextSymbol : ASTLeaf {
+
+        public StaticTextSymbol() :
+            base("", (int)ExamSymbolType.ST_STATICTEXT) { }
+
         public StaticTextSymbol(string content) :
             base(content, (int)ExamSymbolType.ST_STATICTEXT) { }
 
@@ -173,6 +177,10 @@ namespace ExamDSL {
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitLeaf(this,info);
+        }
+
+        public override string ToString() {
+            return MStringLiteral;
         }
     }
 
@@ -182,14 +190,20 @@ namespace ExamDSL {
         public TextMacroSymbol(string id) :
             base("", (int)ExamSymbolType.ST_MACROTEXT) {
             mc_macroID = id;
+            SymbolMemory.Register(this);
         }
 
         public abstract StaticTextSymbol Evaluate();
 
-        
+        public abstract void Reset();
+
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitLeaf(this, info);
+        }
+
+        public override string ToString() {
+            return Evaluate().ToString();
         }
     }
 
