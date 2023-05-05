@@ -10,22 +10,30 @@ public static class Program {
 
 		IGenerator<int> parameter1 = new Random<int>(new SimplePicker<int>(someIntegers));
 		for( var i = 0; i < 3 * n; i++ ) 
-			Console.Write(parameter1.Next() + " ");
+			Console.Write(parameter1.Next().value + " ");
         
 		double[] someDoubles = { 4.2, 8.345, 5.34, 8.2 };
 		IGenerator<double> parameter2 = new Random<double>(new SimplePicker<double>(someDoubles));
 		Console.WriteLine();
 		for( var i = 0; i < 6; i++ )
-			Console.Write(parameter2.Next() + " ");
+			Console.Write(parameter2.Next().value + " ");
 
 		IGenerator<int> parameter3 = new Random<int>(new SimpleRangeIntegerPicker(1,4));
 		Console.WriteLine();
 		for( var i = 0; i < 6; i++ )
-			Console.Write(parameter3.Next() + " ");
+			Console.Write(parameter3.Next().value + " ");
 
 		Console.WriteLine();
-		IFormatter<int> parameter4 = new HexFormatter("ok","okk","X5");
-		Console.WriteLine(parameter4.Format(14));
+
+		
+		IGenerator<int> parameter4 = new HexFormatter(parameter3,"X5");
+		Console.WriteLine(parameter4.Next().formattedValue);
+		
+		
+		IGenerator<int> tmp = new PrefixPostfixFormatter<int>(parameter4,"okkk","okkk");
+		Console.WriteLine(tmp.Next().formattedValue);
+
+		
 	}
 	
 }

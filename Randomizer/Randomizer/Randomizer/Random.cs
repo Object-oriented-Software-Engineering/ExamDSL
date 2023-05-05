@@ -1,7 +1,13 @@
 ﻿namespace Randomizer;
 
+public class Generated<T>
+{
+    public T value;
+    public string formattedValue;
+}
+
 public interface IGenerator<T> {
-    T Next();
+    Generated<T> Next();
 }
 
 public class Random<T>:IGenerator<T>
@@ -12,8 +18,12 @@ public class Random<T>:IGenerator<T>
         _picker = picker;
     }
     
-    public T Next() {
-        return _picker.Pick();
+    public Generated<T> Next()
+    {
+        Generated<T> g = new Generated<T>();
+        g.value = _picker.Pick();
+        g.formattedValue = g.value.ToString();
+        return g;
     }
     
     //TODO Add Apply format method that utilizes parameter value (Add to IGenerator interface) 

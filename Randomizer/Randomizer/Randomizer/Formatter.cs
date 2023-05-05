@@ -1,27 +1,37 @@
 ﻿namespace Randomizer;
 
-public interface IFormatter<T> {
-    public string Format(T value);
+public abstract class BaseFormatter<T>:IGenerator<T>
+{
+    private IGenerator<T> _generator;
+
+    protected BaseFormatter(IGenerator<T> g)
+    {
+        _generator = g;
+    }
+    public Generated<T> Next()
+    {
+        var generated = _generator.Next();
+        Format(generated);
+        return generated;
+    }
+
+    protected abstract void Format(Generated<T> generated);
 }
 
-public class BaseFormatter<T>:IFormatter<T>
+public class PrefixPostfixFormatter<T> : BaseFormatter<T>
 {
+    
     private string _prefix, _postfix;
 
-    public BaseFormatter(string prefix, string postfix)
+    public PrefixPostfixFormatter(IGenerator<T> g, string prefix, string postfix) : base(g)
     {
         _prefix = prefix;
         _postfix = postfix;
     }
-        
-    public virtual string Format(T value)
+
+    protected override void Format(Generated<T> generated)
     {
-        return _prefix + value + _postfix;
-    }
-    
-    public string Format(string value)
-    {
-        return _prefix + value + _postfix;
+        generated.formattedValue = _prefix + generated.formattedValue + _postfix;
     }
 }
 
@@ -29,13 +39,13 @@ public class HexFormatter : BaseFormatter<int>
 {
     private string _format;
 
-    public HexFormatter(string prefix, string postfix, string format) : base(prefix, postfix)
+    public HexFormatter(IGenerator<int> g, string format) : base(g)
     {
         _format = format;
     }
 
-    public override string Format(int value)
+    protected override void Format(Generated<int> generated)
     {
-        return base.Format(value.ToString(_format));
+        generated.formattedValue = generated.value.ToString(_format);
     }
 }
