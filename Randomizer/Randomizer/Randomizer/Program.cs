@@ -30,7 +30,7 @@ public static class Program {
 		Console.WriteLine(parameter4.Next().formattedValue);
 		
 		
-		IGenerator<int> tmp = new PrefixPostfixFormatter<int>(parameter4,"okkk","okkk");
+		IGenerator<int> tmp = new PrefixPostfixFormatter<int>(parameter4,"okkkpre","okkkpost");
 		Console.WriteLine(tmp.Next().formattedValue);
 
 		
