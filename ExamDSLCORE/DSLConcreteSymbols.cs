@@ -12,114 +12,162 @@ public enum ExamSymbolType {
 
 namespace ExamDSL {
 
-    // Exam : Header? Question+
-    public class ExamBuilder : ASTComposite {
-        // contexts
-        public const int HEADER=0, QUESTIONS=1;
+    public class Exam : ASTComposite {
+        public const int HEADER = 0, QUESTIONS = 1;
         public readonly string[] mc_contextNames = { "HEADER", "QUESTIONS" };
 
-        private ExamBuilder() : 
-            base(2,(int)(ExamSymbolType.ST_EXAMBUILDER)) {
+        public Exam() : 
+            base(2, (int)(ExamSymbolType.ST_EXAMBUILDER)) { }
 
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitExam(this);
+        }
+    }
+
+    public interface IExamBuilder {
+        IExamBuilder M_Parent { get; }
+        DSLSymbol M_Product { get; }
+
+    }
+
+    // Exam : Header? Question+
+    public class ExamBuilder :IExamBuilder{
+        private Exam m_exam;
+
+        public DSLSymbol M_Product => m_exam;
+
+        public IExamBuilder M_Parent {
+            get { return null; }
+        }
+
+        private ExamBuilder() {
+            m_exam = new Exam();
         }
         public static ExamBuilder exam() {
             return new ExamBuilder();
         }
         public ExamHeaderBuilder header() {
-            var headerBuilder = new ExamHeaderBuilder();
-            AddText(headerBuilder, HEADER);
+            var headerBuilder = new ExamHeaderBuilder(this);
+            m_exam.AddText(headerBuilder.M_Product,Exam.HEADER);
             return headerBuilder;
         }
 
         public ExamQuestionBuilder question() {
-            var questionBuilder = new ExamQuestionBuilder();
-            AddText(questionBuilder, QUESTIONS);
+            var questionBuilder = new ExamQuestionBuilder(this);
+            m_exam.AddText(questionBuilder.M_Product,Exam.QUESTIONS);
             return questionBuilder;
         }
 
+    }
+
+    public class ExamHeader : ASTComposite {
+        public const int TITLE = 0, SEMESTER = 1, DATE = 2, DURATION = 3, TEACHER = 4, STUDENTNAME = 5;
+        public readonly string[] mc_contextNames = { "TITLE", "SEMESTER", "DATE", "DURATION", "TEACHER", "STUDENTNAME" };
+
+        public ExamHeader() :
+            base(6, (int)ExamSymbolType.ST_EXAMHEADER) {
+        }
+
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return,Params>).VisitExamBuilder(this);
+            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeader(this, info);
         }
     }
 
     // ExamHeader : Title? Semester? Date? Duration? Teacher? StudentName?
     // Title : Text;
-    public class ExamHeaderBuilder :ASTComposite {
-        public const int TITLE =0, SEMESTER=1, DATE=2, DURATION=3,TEACHER=4,STUDENTNAME=5;
-        public readonly string[] mc_contextNames = { "TITLE", "SEMESTER", "DATE","DURATION", "TEACHER","STUDENTNAME" };
-        public ExamHeaderBuilder() : 
-            base(6, (int)ExamSymbolType.ST_EXAMHEADER) { }
+    public class ExamHeaderBuilder  :IExamBuilder{
+        private ExamHeader m_header; // product
+        private ExamBuilder m_parent; // parent
+        public DSLSymbol M_Product => m_header;
+
+        public IExamBuilder M_Parent => m_parent;
+
+        public ExamHeaderBuilder(ExamBuilder parent) {
+            m_header = new ExamHeader();
+            m_parent = parent;
+        }
 
         public ExamHeaderBuilder Title(Text content) {
-            AddText(content, TITLE);
+            m_header.AddText(content,ExamHeader.TITLE);
             return this;
         }
         public ExamHeaderBuilder Semester(Text content) {
-            AddText(content, SEMESTER);
+            m_header.AddText(content, ExamHeader.SEMESTER);
             return this;
         }
         public ExamHeaderBuilder Date(Text content) {
-            AddText(content, DATE);
+            m_header.AddText(content, ExamHeader.DATE);
             return this;
         }
         public ExamHeaderBuilder Duration(Text content) {
-            AddText(content, DURATION);
+            m_header.AddText(content, ExamHeader.DURATION);
             return this;
         }
         public ExamHeaderBuilder Teacher(Text content) {
-            AddText(content, TEACHER);
+            m_header.AddText(content, ExamHeader.TEACHER);
             return this;
         }
         public ExamHeaderBuilder StudentName(Text content) {
-            AddText(content, STUDENTNAME);
+            m_header.AddText(content, ExamHeader.STUDENTNAME);
             return this;
         }
         public ExamBuilder End() {
-            return MParent as ExamBuilder;
+            return M_Parent as ExamBuilder;
+        }
+    }
+
+    public class ExamQuestion : ASTComposite {
+        public const int HEADER = 0, WEIGHT = 1, WORDING = 2, SOLUTION = 3, SUBQUESTION = 4;
+        public readonly string[] mc_contextNames = { "HEADER", "WEIGHT", "WORDING", "SOLUTION", "SUBQUESTION" };
+
+        public ExamQuestion() :
+            base(5, (int)ExamSymbolType.ST_EXAMQUESTION) {
         }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderBuilder(this,info);
+            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestion(this, info);
         }
     }
 
     // Question : Header Gravity Wording Solution Subquestions? 
-    public class ExamQuestionBuilder : ASTComposite {
-        public const int HEADER = 0, WEIGHT = 1, WORDING = 2, SOLUTION = 3, SUBQUESTION = 4;
-        public readonly string[] mc_contextNames = { "HEADER", "WEIGHT", "WORDING", "SOLUTION", "SUBQUESTION" };
+    public class ExamQuestionBuilder : IExamBuilder {
+        private ExamQuestion m_examQuestion;
+        private ExamBuilder m_parent;
+
+        public DSLSymbol M_Product => m_examQuestion;
+
+        public IExamBuilder M_Parent => m_parent;
 
         // type of exam ( multiple choice, simple answer, 
         private int m_questionType;
 
-        public ExamQuestionBuilder() : 
-            base(5, (int)ExamSymbolType.ST_EXAMQUESTION) { }
+        public ExamQuestionBuilder(ExamBuilder parent) {
+            m_examQuestion = new ExamQuestion();
+            m_parent= parent;
+        }
 
         public ExamQuestionBuilder Header(Text content) {
-            AddText(content,HEADER);
+            m_examQuestion.AddText(content,ExamQuestion.HEADER);
             return this;
         }
         public ExamQuestionBuilder Gravity(Text content) {
-            AddText(content, WEIGHT);
+            m_examQuestion.AddText(content, ExamQuestion.WEIGHT);
             return this;
         }
         public ExamQuestionBuilder Wording(Text content) {
-            AddText(content, WORDING);
+            m_examQuestion.AddText(content, ExamQuestion.WORDING);
             return this;
         }
         public ExamQuestionBuilder Solution(Text content) {
-            AddText(content, SOLUTION);
+            m_examQuestion.AddText(content, ExamQuestion.SOLUTION);
             return this;
         }
         public ExamQuestionBuilder SubQuestion(Text content) {
-            AddText(content, SUBQUESTION);
+            m_examQuestion.AddText(content, ExamQuestion.SUBQUESTION);
             return this;
         }
         public ExamBuilder End() {
-            return MParent as ExamBuilder;
-        }
-        
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionBuilder(this,info);
+            return M_Parent as ExamBuilder;
         }
     }
 

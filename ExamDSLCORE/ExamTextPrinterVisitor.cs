@@ -10,7 +10,7 @@ namespace ExamDSL {
             SymbolMemory.Reset();
         }
 
-        public override StaticTextSymbol VisitExamBuilder(ExamBuilder node,
+        public override StaticTextSymbol VisitExam(Exam node,
             params DSLSymbol[] args) {
             StaticTextSymbol staticText = new StaticTextSymbol();
 
@@ -22,7 +22,7 @@ namespace ExamDSL {
             return staticText;
         }
 
-        public override StaticTextSymbol VisitExamHeaderBuilder(ExamHeaderBuilder node,
+        public override StaticTextSymbol VisitExamHeader(ExamHeader node,
             params DSLSymbol[] args) {
             StaticTextSymbol staticText = new StaticTextSymbol();
 
@@ -34,7 +34,7 @@ namespace ExamDSL {
             return staticText;
         }
 
-        public override StaticTextSymbol VisitExamQuestionBuilder(ExamQuestionBuilder node,
+        public override StaticTextSymbol VisitExamQuestion(ExamQuestion node,
             params DSLSymbol[] args) {
             StaticTextSymbol staticText = new StaticTextSymbol();
 

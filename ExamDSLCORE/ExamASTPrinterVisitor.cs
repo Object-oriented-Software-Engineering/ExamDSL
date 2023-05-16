@@ -45,21 +45,21 @@ namespace ExamDSL {
             m_dotFile.WriteLine($"\t}}");
         }
 
-        public override int VisitExamBuilder(ExamBuilder node, params DSLSymbol[] args) {
-            ExamBuilder n = node as ExamBuilder;
+        public override int VisitExam(Exam node, params DSLSymbol[] args) {
+            Exam n = node as Exam;
             if (n == null) {
                 throw new InvalidCastException("Expected CompileUnit type");
             }
 
             m_dotFile.WriteLine("digraph G{\n");
 
-            CreateContextSubgraph(n, ExamBuilder.HEADER,
-                n.mc_contextNames[ExamBuilder.HEADER]);
+            CreateContextSubgraph(n, Exam.HEADER,
+                n.mc_contextNames[Exam.HEADER]);
 
-            CreateContextSubgraph(n, ExamBuilder.QUESTIONS,
-                n.mc_contextNames[ExamBuilder.QUESTIONS]);
+            CreateContextSubgraph(n, Exam.QUESTIONS,
+                n.mc_contextNames[Exam.QUESTIONS]);
 
-            base.VisitExamBuilder(node, n);
+            base.VisitExam(node, n);
 
             m_dotFile.WriteLine("}");
             m_dotFile.Close();
@@ -88,54 +88,54 @@ namespace ExamDSL {
             return 0;
         }
 
-        public override int VisitExamHeaderBuilder(ExamHeaderBuilder node, params DSLSymbol[] args) {
-            ExamHeaderBuilder n = node as ExamHeaderBuilder;
+        public override int VisitExamHeader(ExamHeader node, params DSLSymbol[] args) {
+            ExamHeader n = node as ExamHeader;
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
 
-            CreateContextSubgraph(n, ExamHeaderBuilder.TITLE,
-                n.mc_contextNames[ExamHeaderBuilder.TITLE]);
+            CreateContextSubgraph(n, ExamHeader.TITLE,
+                n.mc_contextNames[ExamHeader.TITLE]);
 
-            CreateContextSubgraph(n, ExamHeaderBuilder.SEMESTER,
-                n.mc_contextNames[ExamHeaderBuilder.SEMESTER]);
+            CreateContextSubgraph(n, ExamHeader.SEMESTER,
+                n.mc_contextNames[ExamHeader.SEMESTER]);
 
-            CreateContextSubgraph(n, ExamHeaderBuilder.DATE,
-                n.mc_contextNames[ExamHeaderBuilder.DATE]);
+            CreateContextSubgraph(n, ExamHeader.DATE,
+                n.mc_contextNames[ExamHeader.DATE]);
 
-            CreateContextSubgraph(n, ExamHeaderBuilder.DURATION,
-                n.mc_contextNames[ExamHeaderBuilder.DURATION]);
+            CreateContextSubgraph(n, ExamHeader.DURATION,
+                n.mc_contextNames[ExamHeader.DURATION]);
 
-            CreateContextSubgraph(n, ExamHeaderBuilder.STUDENTNAME,
-                n.mc_contextNames[ExamHeaderBuilder.STUDENTNAME]);
+            CreateContextSubgraph(n, ExamHeader.STUDENTNAME,
+                n.mc_contextNames[ExamHeader.STUDENTNAME]);
 
-            return base.VisitExamHeaderBuilder(node, n);
+            return base.VisitExamHeader(node, n);
         }
 
-        public override int VisitExamQuestionBuilder(ExamQuestionBuilder node, params DSLSymbol[] args) {
-            ExamQuestionBuilder n = node as ExamQuestionBuilder;
+        public override int VisitExamQuestion(ExamQuestion node, params DSLSymbol[] args) {
+            ExamQuestion n = node as ExamQuestion;
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
 
-            CreateContextSubgraph(n, ExamQuestionBuilder.HEADER,
-                n.mc_contextNames[ExamQuestionBuilder.HEADER]);
+            CreateContextSubgraph(n, ExamQuestion.HEADER,
+                n.mc_contextNames[ExamQuestion.HEADER]);
 
-            CreateContextSubgraph(n, ExamQuestionBuilder.WEIGHT,
-                n.mc_contextNames[ExamQuestionBuilder.WEIGHT]);
+            CreateContextSubgraph(n, ExamQuestion.WEIGHT,
+                n.mc_contextNames[ExamQuestion.WEIGHT]);
 
-            CreateContextSubgraph(n, ExamQuestionBuilder.WORDING,
-                n.mc_contextNames[ExamQuestionBuilder.WORDING]);
+            CreateContextSubgraph(n, ExamQuestion.WORDING,
+                n.mc_contextNames[ExamQuestion.WORDING]);
 
-            CreateContextSubgraph(n, ExamQuestionBuilder.SOLUTION,
-                n.mc_contextNames[ExamQuestionBuilder.SOLUTION]);
+            CreateContextSubgraph(n, ExamQuestion.SOLUTION,
+                n.mc_contextNames[ExamQuestion.SOLUTION]);
 
-            CreateContextSubgraph(n, ExamQuestionBuilder.SUBQUESTION,
-                n.mc_contextNames[ExamQuestionBuilder.SUBQUESTION]);
+            CreateContextSubgraph(n, ExamQuestion.SUBQUESTION,
+                n.mc_contextNames[ExamQuestion.SUBQUESTION]);
 
-            return base.VisitExamQuestionBuilder(node, n);
+            return base.VisitExamQuestion(node, n);
         }
 
         public override int VisitText(Text node, params DSLSymbol[] args) {

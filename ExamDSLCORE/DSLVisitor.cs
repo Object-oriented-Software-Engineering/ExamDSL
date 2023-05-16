@@ -35,15 +35,15 @@ namespace ExamDSL {
             return result;
         }
 
-        public virtual Result VisitExamBuilder(ExamBuilder node, params Params[] args) {
+        public virtual Result VisitExam(Exam node, params Params[] args) {
             return VisitChildren(node, args);
         }
 
-        public virtual Result VisitExamHeaderBuilder(ExamHeaderBuilder node, params Params[] args) {
+        public virtual Result VisitExamHeader(ExamHeader node, params Params[] args) {
             return VisitChildren(node, args);
         }
 
-        public virtual Result VisitExamQuestionBuilder(ExamQuestionBuilder node, params Params[] args) {
+        public virtual Result VisitExamQuestion(ExamQuestion node, params Params[] args) {
             return VisitChildren(node, args);
         }
 
