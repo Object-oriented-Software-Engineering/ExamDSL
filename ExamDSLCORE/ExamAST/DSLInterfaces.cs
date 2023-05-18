@@ -4,28 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ExamDSL {
-    public interface IASTIterator {
+namespace ExamDSLCORE.ExamAST
+{
+    public interface IASTIterator
+    {
         DSLSymbol MCurNode { get; }
         void Init();
         bool End();
         void Next();
     }
 
-    public interface ILabelled {
+    public interface ILabelled
+    {
         string MNodeName { get; }
     }
 
-    public interface IASTVisitableNode {
+    public interface IASTVisitableNode
+    {
         Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info);
 
     }
 
-    public interface IASTComposite : IEnumerable<IASTVisitableNode> {
+    public interface IASTComposite : IEnumerable<IASTVisitableNode>
+    {
 
     }
 
-    public interface IASTBaseVisitor<Return, Params> {
+    public interface IASTBaseVisitor<Return, Params>
+    {
         Return Visit(IASTVisitableNode node, params Params[] info);
         Return VisitChildren(IASTComposite node, params Params[] info);
     }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExamDSLCORE.ExamAST;
 
-namespace ExamDSL {
+namespace ExamDSL
+{
 
-    
+
     public abstract class CEmmitableTextContainer {
         private int m_nestingLevel = 0;
 

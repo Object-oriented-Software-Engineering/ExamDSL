@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExamDSLCORE.ExamAST;
 
-namespace ExamDSL {
+namespace ExamDSL
+{
     public class ExamASTPrinterVisitor : DSLBaseVisitor<int, DSLSymbol> {
         private StreamWriter m_dotFile;
         private string m_dotFileName;

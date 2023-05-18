@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExamDSLCORE.ExamAST;
 
-namespace ExamDSL {
+namespace ExamDSL
+{
     internal class ExamTextPrinterVisitor : DSLBaseVisitor<StaticTextSymbol,DSLSymbol > {
         public ExamTextPrinterVisitor() {
             SymbolMemory.Reset();

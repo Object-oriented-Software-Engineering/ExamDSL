@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExamDSLCORE.ExamAST;
 
-namespace ExamDSL {
+namespace ExamDSL
+{
     internal static class SymbolMemory {
         private static HashSet<TextMacroSymbol> m_symbols;
 
