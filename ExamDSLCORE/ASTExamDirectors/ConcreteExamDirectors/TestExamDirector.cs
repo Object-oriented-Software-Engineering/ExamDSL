@@ -13,7 +13,7 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
         public TestExam() { }
 
         // Here the client writes the code to describe the exam
-        public override void Compose() {
+        public override DSLSymbol Compose() {
             TextMacroSymbol X = MacroFactory.CreateSerialCounter();
             RandomInteger Y = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0, 10)));
             RandomInteger Z = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0, 10)));
@@ -32,6 +32,7 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
                 Header(Text.T("Exercise ").Append(X).Append(")")).
                 Wording(Text.T("Find the sum of 55 + 66")).
                 End();
+            return m_examAST.M_Product;
         }
     }
 }

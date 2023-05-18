@@ -4,9 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExamDSLCORE.ASTExamBuilders;
+using ExamDSLCORE.ExamAST;
 
 namespace ExamDSLCORE.ASTExamDirectors
-{
+{   
+    // This class hosts the programming environment of 
+    // user. The ExamDirector has the Create() method
+    // which is the starting point of the exam description
+    // that creates the ExamBuilder.
     public abstract class ExamDirector
     {
         protected ExamBuilder m_examAST;
@@ -20,7 +25,7 @@ namespace ExamDSLCORE.ASTExamDirectors
             return m_examAST = ExamBuilder.exam();
         }
 
-        public abstract void Compose();
+        public abstract DSLSymbol Compose();
     }
 
     public abstract class QuestionDirector
@@ -39,7 +44,7 @@ namespace ExamDSLCORE.ASTExamDirectors
             return null;
         }
 
-        public abstract void Compose();
+        public abstract DSLSymbol Compose();
 
     }
 

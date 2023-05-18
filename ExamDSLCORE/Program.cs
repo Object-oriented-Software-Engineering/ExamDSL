@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExamDSLCORE.ASTExamBuilders;
 using ExamDSLCORE.ASTExamDirectors;
+using ExamDSLCORE.ASTExamDirectors.ConcreteDirectors;
 using ExamDSLCORE.ASTExamDirectors.MacroSymbols;
 using ExamDSLCORE.ExamAST;
 using Randomizer;
@@ -25,9 +26,9 @@ namespace ExamDSL
 
             Initialize();
 
-            TextMacroSymbol X = MacroFactory.CreateSerialCounter();
-            RandomInteger Y = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0,10)));
-            RandomInteger Z = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0,10)));
+            /*TextMacroSymbol X = MacroFactory.CreateSerialCounter();
+            TextMacroSymbol Y = MacroFactory.CreateRandomInteger(1,10);
+            TextMacroSymbol Z = MacroFactory.CreateRandomInteger(1,10); 
 
             // Text Structural representation description of the exam
             var exam = ExamBuilder.exam().
@@ -43,12 +44,13 @@ namespace ExamDSL
                 question().
                     Header(Text.T("Exercise ").Append(X).Append(")")).
                     Wording(Text.T("Find the sum of 55 + 66")).
-                End();
+                End();*/
+            Exam exam = new TestExam().Compose() as Exam;
             
             ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
-            printer.Visit(exam.M_Product,null);
+            printer.Visit(exam,null);
             ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
-            StaticTextSymbol x=textPrinter.Visit(exam.M_Product, null);
+            StaticTextSymbol x=textPrinter.Visit(exam, null);
             Console.WriteLine(x.MStringLiteral);
 
         }
@@ -75,7 +77,7 @@ namespace ExamDSL
 
     public class CacheCharacteristicsExam :ExamDirector{
         public CacheCharacteristicsExam() { }
-        public override void Compose() {
+        public override DSLSymbol Compose() {
             throw new NotImplementedException();
         }
     }
