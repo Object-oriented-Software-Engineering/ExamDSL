@@ -8,26 +8,24 @@ using System.Threading.Tasks;
 
 namespace ExamDSLCORE.ASTExamBuilders
 {
-    public abstract class AExamBuilder {
-        protected AExamBuilder m_parent;
-        protected DSLSymbol m_product;
-
-        public virtual AExamBuilder M_Parent => m_parent;
-
-        public DSLSymbol M_Product => m_product;
+    public interface IBuilder {
+        IBuilder M_Parent {
+            get { return null; }
+        }
+    }
+    public interface IExamBuilder<out TProduct> : IBuilder
+        where TProduct:DSLSymbol {
+        TProduct M_Product { get; }
     }
 
     // Exam : Header? Question+
-    public class ExamBuilder : AExamBuilder
-    {
-        public override AExamBuilder M_Parent
-        {
-            get { return null; }
-        }
+    public class ExamBuilder : IExamBuilder<Exam> {
+        
+        public Exam M_Product { get; }
 
         private ExamBuilder()
         {
-            m_product = new Exam();
+            M_Product = new Exam();
         }
         public static ExamBuilder exam()
         {
@@ -36,60 +34,65 @@ namespace ExamDSLCORE.ASTExamBuilders
         public ExamHeaderBuilder header()
         {
             var headerBuilder = new ExamHeaderBuilder(this);
-            m_product.AddText(headerBuilder.M_Product, Exam.HEADER);
+            M_Product.AddText(headerBuilder.M_Product, Exam.HEADER);
             return headerBuilder;
         }
 
         public ExamQuestionBuilder question()
         {
             var questionBuilder = new ExamQuestionBuilder(this);
-            m_product.AddText(questionBuilder.M_Product, Exam.QUESTIONS);
+            M_Product.AddText(questionBuilder.M_Product, Exam.QUESTIONS);
             return questionBuilder;
         }
 
         public ExamQuestionBuilder question(ExamQuestion question) {
             var questionBuilder = new ExamQuestionBuilder(question,this);
-            m_product.AddText(question, Exam.QUESTIONS);
+            M_Product.AddText(question, Exam.QUESTIONS);
             return questionBuilder;
         }
     }
 
-    public class ExamHeaderBuilder : AExamBuilder
+    public class ExamHeaderBuilder : IExamBuilder<ExamHeader>
     {
+        
+        public IBuilder M_Parent { get; }
+
+        public ExamHeader M_Product { get; }
+
         public ExamHeaderBuilder(ExamBuilder parent)
         {
-            m_product = new ExamHeader();
-            m_parent = parent;
+            M_Product = new ExamHeader();
+            M_Parent = parent;
         }
 
         public ExamHeaderBuilder Title(Text content)
         {
-            m_product.AddText(content, ExamHeader.TITLE);
+            M_Product.AddText(content, ExamHeader.TITLE);
             return this;
         }
         public ExamHeaderBuilder Semester(Text content)
         {
-            m_product.AddText(content, ExamHeader.SEMESTER);
+            M_Product.AddText(content, ExamHeader.SEMESTER);
             return this;
         }
         public ExamHeaderBuilder Date(Text content)
         {
-            m_product.AddText(content, ExamHeader.DATE);
+            M_Product.AddText(content, ExamHeader.DATE);
             return this;
         }
         public ExamHeaderBuilder Duration(Text content)
         {
-            m_product.AddText(content, ExamHeader.DURATION);
+            M_Product.AddText(content, ExamHeader.DURATION);
             return this;
         }
         public ExamHeaderBuilder Teacher(Text content)
         {
-            m_product.AddText(content, ExamHeader.TEACHER);
+            M_Product.AddText(content, ExamHeader.TEACHER);
             return this;
         }
         public ExamHeaderBuilder StudentName(Text content)
         {
-            m_product.AddText(content, ExamHeader.STUDENTNAME);
+            M_Product.AddText(content, ExamHeader.STUDENTNAME);
             return this;
         }
         public ExamBuilder End()
@@ -99,21 +102,23 @@ namespace ExamDSLCORE.ASTExamBuilders
     }
 
     // Question : Header Gravity Wording Solution Subquestions? 
-    public class ExamQuestionBuilder : AExamBuilder
-    {
+    public class ExamQuestionBuilder : IExamBuilder<ExamQuestion> {
         // type of exam ( multiple choice, simple answer, 
         private int m_questionType;
+        public ExamQuestion M_Product { get ; }
+
+        public IBuilder M_Parent { get; }
 
         public ExamQuestionBuilder(ExamBuilder parent = null)
         {
-            m_product = new ExamQuestion();
-            m_parent = parent;
+            M_Product = new ExamQuestion();
+            M_Parent= parent;
         }
 
         public ExamQuestionBuilder(ExamQuestion question,
             ExamBuilder parent = null) {
-            m_product = question;
-            m_parent = parent;
+            M_Product = question;
+            M_Parent = parent;
         }
 
         public static ExamQuestionBuilder exam()
@@ -123,27 +128,27 @@ namespace ExamDSLCORE.ASTExamBuilders
 
         public ExamQuestionBuilder Header(Text content)
         {
-            m_product.AddText(content, ExamQuestion.HEADER);
+            M_Product.AddText(content, ExamQuestion.HEADER);
             return this;
         }
         public ExamQuestionBuilder Gravity(Text content)
         {
-            m_product.AddText(content, ExamQuestion.WEIGHT);
+            M_Product.AddText(content, ExamQuestion.WEIGHT);
             return this;
         }
         public ExamQuestionBuilder Wording(Text content)
         {
-            m_product.AddText(content, ExamQuestion.WORDING);
+            M_Product.AddText(content, ExamQuestion.WORDING);
             return this;
         }
         public ExamQuestionBuilder Solution(Text content)
         {
-            m_product.AddText(content, ExamQuestion.SOLUTION);
+            M_Product.AddText(content, ExamQuestion.SOLUTION);
             return this;
         }
         public ExamQuestionBuilder SubQuestion(Text content)
         {
-            m_product.AddText(content, ExamQuestion.SUBQUESTION);
+            M_Product.AddText(content, ExamQuestion.SUBQUESTION);
             return this;
         }
         public ExamBuilder End()
