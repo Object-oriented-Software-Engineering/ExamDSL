@@ -18,7 +18,7 @@ namespace ExamDSL
 
             for (int i = 0; i < node.MContexts; i++) {
                 for (int j = 0; j < node.GetNumberOfContextNodes(i); j++) {
-                    staticText.AddText(Visit(node.GetChild(i, j)), 0);
+                    staticText.AddNode(Visit(node.GetChild(i, j)), 0);
                 }
             }
             return staticText;
@@ -30,7 +30,7 @@ namespace ExamDSL
 
             for (int i = 0; i < node.MContexts; i++) {
                 for (int j = 0; j < node.GetNumberOfContextNodes(i); j++) {
-                    staticText.AddText(Visit(node.GetChild(i, j)), 0);
+                    staticText.AddNode(Visit(node.GetChild(i, j)), 0);
                 }
             }
             return staticText;
@@ -42,7 +42,7 @@ namespace ExamDSL
 
             for (int i = 0; i < node.MContexts; i++) {
                 for (int j = 0; j < node.GetNumberOfContextNodes(i); j++) {
-                    staticText.AddText(Visit(node.GetChild(i, j)), 0);
+                    staticText.AddNode(Visit(node.GetChild(i, j)), 0);
                 }
             }
             return staticText;
@@ -51,7 +51,7 @@ namespace ExamDSL
         public override StaticTextSymbol VisitText(Text node, params DSLSymbol[] args) {
             StaticTextSymbol staticText = new StaticTextSymbol("");
             for (int i = 0; i < node.GetNumberOfContextNodes(0); i++) {
-                staticText.AddText(Visit(node.GetChild(0, i)),0);
+                staticText.AddNode(Visit(node.GetChild(0, i)),0);
             }
             return staticText;
         }

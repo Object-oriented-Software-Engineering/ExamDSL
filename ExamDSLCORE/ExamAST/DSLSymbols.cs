@@ -7,17 +7,19 @@ using System.Threading.Tasks;
 using ExamDSL;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ExamDSLCORE.ExamAST
-{
+namespace ExamDSLCORE.ExamAST {
 
-    public abstract class DSLSymbol : CEmmitableTextContainer, IASTVisitableNode, ILabelled
-    {
+    public abstract class DSLSymbol : IASTVisitableNode, ILabelled {
+        // Type of DSLSymbol
         private int m_type;
+        // SerialNumber refers to the Graphiviz
         private int m_serialNumber;
-        // open for modification by subclasses
-        protected string m_nodeName;
-        private ASTComposite m_parent;
         private static int ms_serialCounter;
+        // String name for Graphviz
+        protected string m_nodeName;
+        // Support for tree structure
+        private ASTComposite m_parent;
+
         // Either will use this member or there has to be
         // a static dictionary to map ASTNode to the corresponding
         // link hierarchy node. Trees have many applications 
@@ -25,8 +27,7 @@ namespace ExamDSLCORE.ExamAST
         // So this link is necessary.
         private object m_hierarchyBridgeLink;
 
-        public object HierarchyBridgeLink
-        {
+        public object HierarchyBridgeLink {
             get => m_hierarchyBridgeLink;
             set => m_hierarchyBridgeLink = value ??
                 throw new ArgumentNullException(nameof(value));
@@ -44,158 +45,111 @@ namespace ExamDSLCORE.ExamAST
 
         public static int MsSerialCounter => ms_serialCounter;
 
-        public DSLSymbol(int mType)
-        {
+        public DSLSymbol(int mType) {
             m_type = mType;
             m_serialNumber = ms_serialCounter++;
             m_nodeName = "Node" + GetType().Name + m_serialNumber;
             m_parent = null;
         }
 
-        public virtual void SetParent(ASTComposite parent)
-        {
+        public virtual void SetParent(ASTComposite parent) {
             m_parent = parent;
         }
 
         public virtual Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
-            params Params[] info)
-        {
+            params Params[] info) {
             return v.Visit(this);
         }
-
     }
 
-    public abstract class ASTComposite : DSLSymbol, IASTComposite
-    {
+    public abstract class ASTComposite : DSLSymbol, IASTComposite {
 
+        // Support for tree structure
         List<DSLSymbol>[] m_children;
 
         public int MContexts => m_children.Length;
-
+        
         public ASTComposite(int contexts, int mType) :
-            base(mType)
-        {
+            base(mType) {
             m_children = new List<DSLSymbol>[contexts];
-            for (int i = 0; i < contexts; i++)
-            {
+            for (int i = 0; i < contexts; i++) {
                 m_children[i] = new List<DSLSymbol>();
             }
         }
+        // public int GetNumberOfContextNodes(int context)
+        // public IEnumerable<DSLSymbol> GetContextChildren(int context) 
+        // public DSLSymbol GetChild(int context, int index = 0)
+        // public void AddNode(DSLSymbol code, int context = -1)
+        // public void AddNode(string text, int context)
+        
 
-        public int GetNumberOfContextNodes(int context)
-        {
-            if (context < m_children.Length)
-            {
-                return m_children[context].Count;
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("context index out of range");
-            }
-        }
-
-        public IEnumerable<DSLSymbol> GetContextChildren(int context)
-        {
-            if (context < m_children.Length)
-            {
-                foreach (DSLSymbol node in m_children[context])
-                {
-                    yield return node;
-                }
-            }
-            else
-            {
-                throw new ArgumentOutOfRangeException("node index out of range");
-            }
-        }
+        // public IEnumerator<IASTVisitableNode> GetEnumerator() 
+        // IEnumerator IEnumerable.GetEnumerator() 
+        // public IASTIterator CreateIterator() {
+        // public IASTIterator CreateContextIterator(int context) 
+        // public override Return Accept<Return, Params>(IASTBaseVisitor<Return,
+        //    Params> v, params Params[] info) 
+        // public int GetNumberOfContextNodes(int context);
+        // public IEnumerable<DSLSymbol> GetContextChildren(int context);
 
 
-        public DSLSymbol GetChild(int context, int index = 0)
-        {
-            if (context < m_children.Length)
-            {
-                if (index < m_children[context].Count)
-                {
+        public DSLSymbol GetChild(int context, int index = 0) {
+            if (context < m_children.Length) {
+                if (index < m_children[context].Count) {
                     return m_children[context][index];
-                }
-                else
-                {
+                } else {
                     throw new ArgumentOutOfRangeException("node index out of range");
                 }
-            }
-            else
-            {
+            } else {
                 throw new ArgumentOutOfRangeException("context index out of range");
             }
         }
 
-        public override void AddText(DSLSymbol code, int context = -1)
-        {
-            if (context < m_children.Length)
-            {
+        public void AddNode(DSLSymbol code, int context = -1) {
+            if (context < m_children.Length) {
                 m_children[context].Add(code);
                 code.SetParent(this);
-            }
-            else
-            {
+            } else {
                 throw new ArgumentOutOfRangeException("context index out of range");
             }
         }
 
-        public override void AddText(string text, int context)
-        {
+        public void AddNode(string text, int context) {
             StaticTextSymbol container = new StaticTextSymbol(text);
-            AddText(container, context);
+            AddNode(container, context);
         }
 
-        public override void AddNewLine(int context)
-        {
-            StaticTextSymbol container = new StaticTextSymbol("");
-            container.AddNewLine();
-            AddText(container, context);
-        }
-
-        public IEnumerator<IASTVisitableNode> GetEnumerator()
-        {
+        public IEnumerator<IASTVisitableNode> GetEnumerator() {
             return new ASTCompositeEnumerator(this);
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
+        IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
         }
 
-        public IASTIterator CreateIterator()
-        {
+        public IASTIterator CreateIterator() {
             return new ASTChildrenIterator(this);
         }
 
-        public IASTIterator CreateContextIterator(int context)
-        {
+        public IASTIterator CreateContextIterator(int context) {
             return new ASTContextIterator(this, context);
         }
 
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return,
-            Params> v, params Params[] info)
-        {
+            Params> v, params Params[] info) {
             return v.Visit(this, info);
         }
     }
 
-    public abstract class ASTLeaf : DSLSymbol
-    {
-        private StringBuilder m_stringLiteral;
+    public abstract class ASTLeaf : DSLSymbol {
+        
 
-        public string MStringLiteral => m_stringLiteral.ToString();
-
-        public ASTLeaf(string leafLiteral, int mType) :
-            base(mType)
-        {
-            m_stringLiteral = new StringBuilder(leafLiteral);
+        public ASTLeaf( int mType) :
+            base(mType) {
         }
 
-        public override void AddText(string text, int context = -1)
+        /*public void AddText(string text, int context = -1)
         {
             string[] lines = text.Split(new[] { '\n', '\r' },
                 StringSplitOptions.RemoveEmptyEntries);
@@ -208,9 +162,9 @@ namespace ExamDSLCORE.ExamAST
                     m_stringLiteral.Append(new string('\t', M_NestingLevel));
                 }
             }
-        }
+        }*/
 
-        public override void AddText(DSLSymbol code, int context)
+        /*public override void AddText(DSLSymbol code, int context)
         {
             string str = code.ToString();
             AddText(str, context);
@@ -220,11 +174,10 @@ namespace ExamDSLCORE.ExamAST
         {
             m_stringLiteral.Append("\r\n");
             m_stringLiteral.Append(new string('\t', M_NestingLevel));
-        }
+        }*/
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return,
-            Params> v, params Params[] info)
-        {
+            Params> v, params Params[] info) {
             return v.Visit(this, info);
         }
     }
