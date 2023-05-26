@@ -18,6 +18,15 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
             RandomInteger Y = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0, 10)));
             RandomInteger Z = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0, 10)));
 
+
+            // Y : A Text D
+            // F : J Text K
+
+            // Text : a b c
+
+            //  Y  Text()
+            //  F  Text()
+
             Create().
                 header().
                 Title(Text.T("Arithmetic Examination"))

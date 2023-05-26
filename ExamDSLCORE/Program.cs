@@ -50,8 +50,8 @@ namespace ExamDSL
             ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam,null);
             ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
-            StaticTextSymbol x=textPrinter.Visit(exam, null);
-            Console.WriteLine(x.MStringLiteral);
+            /*StaticTextSymbol x=textPrinter.Visit(exam, null);
+            Console.WriteLine(x.MStringLiteral);*/
 
         }
     }

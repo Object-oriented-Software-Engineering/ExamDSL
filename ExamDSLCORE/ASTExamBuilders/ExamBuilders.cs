@@ -3,6 +3,7 @@ using ExamDSLCORE.ExamAST;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -185,7 +186,8 @@ namespace ExamDSLCORE.ASTExamBuilders {
             return this;
         }
         public ExamQuestionBuilder Wording(Text content) {
-            M_Product.AddNode(content, ExamQuestion.WORDING);
+            TextBuilder newtext = new TextBuilder();
+            M_Product.AddNode(newtext.M_Product, ExamQuestion.WORDING);
             return this;
         }
         public ExamQuestionBuilder Solution(Text content) {
@@ -201,32 +203,67 @@ namespace ExamDSLCORE.ASTExamBuilders {
         }
     }
 
-    public class ExamQuestionWordingBuilder : IExamBuilder<Text> {
-        
+    public class TextBuilder: IExamBuilder<Text> {
+        private TextBuilder m_parent;
         public Text M_Product { get; }
-        public IBuilder M_Parent { get; }
+        public TextBuilder M_Parent => m_parent;
 
-        public ExamQuestionWordingBuilder(ExamQuestionBuilder parent) {
+        Stack<ASTComposite> m_headStack = new Stack<ASTComposite>();
+
+        public TextBuilder(TextBuilder mParent=null) {
+            m_parent = mParent;
             M_Product = new Text();
-            M_Parent = parent;
+            m_headStack.Push(M_Product);
         }
 
-        public ExamQuestionWordingBuilder TextL(string text) {
-            return null;
+        public TextBuilder TextL(string text) {
+            Text(text);
+            m_headStack.Peek().AddNode(new NewLineSymbol());
+            return this;
         }
 
-        public ExamQuestionWordingBuilder Text(string text) {
-            return null;
+        public TextBuilder Text(string text) {
+            StaticTextSymbol st = new StaticTextSymbol(text);
+            m_headStack.Peek().AddNode(st, 0);
+            return this;
         }
 
-        public ExamQuestionWordingBuilder EnterScope() {
-            return null;
+        public TextBuilder EnterScope() {
+           // 1. Create a ScopeSymbol Node
+           ScopeSymbol newsScopeSymbol = new ScopeSymbol();
+           m_headStack.Push(newsScopeSymbol);
+
+           // 2. Add ScopeNode to current TextSymbol
+           m_headStack.Peek().AddNode(newsScopeSymbol, 0);
+           
+           return this;
         }
-        public ExamQuestionWordingBuilder ExitScope() {
-            return null;
+        public TextBuilder ExitScope() {
+            m_headStack.Pop();
+            return this;
         }
 
+        public TextBuilder OpenNumberedList() {
+            // 1. Create a ScopeSymbol Node
+            NumberedList newNumberedList = new NumberedList();
+            m_headStack.Push(newNumberedList);
+            // 2. Add ScopeNode to current TextSymbol
+            m_headStack.Peek().AddNode(newNumberedList, 0);
 
+            return this;
+        }
+        public TextBuilder CloseNumberedList() {
+            m_headStack.Pop();
+            return this;
+        }
+        public TextBuilder NewLine() {
+            // 1. Create a ScopeSymbol Node
+            NewLineSymbol newLine = new NewLineSymbol();
+            // 2. Add ScopeNode to current TextSymbol
+            m_headStack.Peek().AddNode(newLine, 0);
 
+            return this;
+        }
     }
+
 }

@@ -14,15 +14,20 @@ namespace ExamDSLCORE.ExamAST {
     public class TextFormattingProperties : ICloneable<TextFormattingProperties> {
         private Indentation m_Indentation;
         private FNumberedItem m_NumberedItem;
+        private FNewLines m_newLineType;
         
         public Indentation M_Indentation {
             get => m_Indentation;
             private set => m_Indentation = value;
         }
-
         public FNumberedItem M_NumberedItem {
             get => m_NumberedItem;
             private set => m_NumberedItem = value;
+        }
+
+        public FNewLines MNewLineType {
+            get => m_newLineType;
+            private set=> m_newLineType = value ;
         }
 
         public TextFormattingProperties SetIndentation(Indentation i) {
@@ -30,11 +35,18 @@ namespace ExamDSLCORE.ExamAST {
             newobject.M_Indentation = i;
             return newobject;
         }
-        
+
+        public TextFormattingProperties SetNewLineType(FNewLines type) {
+            TextFormattingProperties newobject = Clone();
+            newobject.MNewLineType = type;
+            return newobject;
+        }
+
         public TextFormattingProperties Clone() {
             TextFormattingProperties newobject = new TextFormattingProperties() {
                 M_Indentation = m_Indentation,
-                M_NumberedItem = m_NumberedItem
+                M_NumberedItem = m_NumberedItem,
+                MNewLineType = m_newLineType
             };
             return newobject;
         }
@@ -43,7 +55,40 @@ namespace ExamDSLCORE.ExamAST {
         }
     }
 
+    public class FNewLines : ICloneable<FNewLines> {
 
+        private const int NLType_Windows = 0,
+            NLType_Linux = 1;
+
+        public enum NLType : int {
+            AT_WINDOWS = 0,
+            AT_LINUX
+        };
+
+        private int m_newlineType = 0;
+
+        public int M_NewlineType {
+            get => m_newlineType;
+            private set => m_newlineType = value;
+        }
+
+        public FNewLines SetNewLineType(int spaces) {
+            FNewLines newobject = Clone();
+            newobject.M_NewlineType = spaces;
+            return newobject;
+        }
+
+        public FNewLines Clone() {
+            FNewLines newobject = new FNewLines() {
+                M_NewlineType = m_newlineType
+            };
+            return newobject;
+        }
+
+        object ICloneable.Clone() {
+            return Clone();
+        }
+    }
 
     public class FNumberedItem : ICloneable<FNumberedItem> {
         private const int ArithType_Natural = 0,
@@ -65,7 +110,15 @@ namespace ExamDSLCORE.ExamAST {
             private set => m_arithmeticUnit = value;
         }
 
+
         public FNumberedItem() { }
+
+        public FNumberedItem SetNumberType(int nttype) {
+            FNumberedItem newobject = Clone();
+            newobject.m_arithmeticUnit = nttype;
+            return newobject;
+        }
+
         public FNumberedItem Clone() {
             FNumberedItem newobject = new FNumberedItem() {
                 M_ArithmeticUnit = m_arithmeticUnit
@@ -101,7 +154,7 @@ namespace ExamDSLCORE.ExamAST {
             private set => m_unitType = value;
         }
         public Indentation() { }
-
+        
         object ICloneable.Clone() {
             return Clone();
         }

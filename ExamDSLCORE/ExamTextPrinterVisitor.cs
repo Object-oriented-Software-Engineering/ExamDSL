@@ -7,61 +7,61 @@ using ExamDSLCORE.ExamAST;
 
 namespace ExamDSL
 {
-    internal class ExamTextPrinterVisitor : DSLBaseVisitor<StaticTextSymbol,DSLSymbol > {
+    internal class ExamTextPrinterVisitor : DSLBaseVisitor<Text,DSLSymbol > {
         public ExamTextPrinterVisitor() {
             SymbolMemory.Reset();
         }
 
-        public override StaticTextSymbol VisitExam(Exam node,
+        public override Text VisitExam(Exam node,
             params DSLSymbol[] args) {
-            StaticTextSymbol staticText = new StaticTextSymbol();
+            Text Text = new Text();
 
             for (int i = 0; i < node.MContexts; i++) {
                 for (int j = 0; j < node.GetNumberOfContextNodes(i); j++) {
-                    staticText.AddNode(Visit(node.GetChild(i, j)), 0);
+                    Text.AddNode(Visit(node.GetChild(i, j)), 0);
                 }
             }
-            return staticText;
+            return Text;
         }
 
-        public override StaticTextSymbol VisitExamHeader(ExamHeader node,
+        public override Text VisitExamHeader(ExamHeader node,
             params DSLSymbol[] args) {
-            StaticTextSymbol staticText = new StaticTextSymbol();
+            Text Text = new Text();
 
             for (int i = 0; i < node.MContexts; i++) {
                 for (int j = 0; j < node.GetNumberOfContextNodes(i); j++) {
-                    staticText.AddNode(Visit(node.GetChild(i, j)), 0);
+                    Text.AddNode(Visit(node.GetChild(i, j)), 0);
                 }
             }
-            return staticText;
+            return Text;
         }
 
-        public override StaticTextSymbol VisitExamQuestion(ExamQuestion node,
+        public override Text VisitExamQuestion(ExamQuestion node,
             params DSLSymbol[] args) {
-            StaticTextSymbol staticText = new StaticTextSymbol();
+            Text Text = new Text();
 
             for (int i = 0; i < node.MContexts; i++) {
                 for (int j = 0; j < node.GetNumberOfContextNodes(i); j++) {
-                    staticText.AddNode(Visit(node.GetChild(i, j)), 0);
+                    Text.AddNode(Visit(node.GetChild(i, j)), 0);
                 }
             }
-            return staticText;
+            return Text;
         }
 
-        public override StaticTextSymbol VisitText(Text node, params DSLSymbol[] args) {
-            StaticTextSymbol staticText = new StaticTextSymbol("");
+        public override Text VisitText(Text node, params DSLSymbol[] args) {
+            Text Text = new Text();
             for (int i = 0; i < node.GetNumberOfContextNodes(0); i++) {
-                staticText.AddNode(Visit(node.GetChild(0, i)),0);
+                Text.AddNode(Visit(node.GetChild(0, i)),0);
             }
-            return staticText;
+            return Text;
         }
 
-        public override StaticTextSymbol VisitLeaf(ASTLeaf node, params DSLSymbol[] args) {
-            StaticTextSymbol staticText;
+        public override Text VisitLeaf(ASTLeaf node, params DSLSymbol[] args) {
+            Text Text;
             switch ((ExamSymbolType)node.MType) {
                 case ExamSymbolType.ST_STATICTEXT:
-                    staticText = node as StaticTextSymbol;
-                    return staticText;
+                    Text = node as Text;
+                    return Text;
                 case ExamSymbolType.ST_MACROTEXT:
                     TextMacroSymbol textMacro = node as TextMacroSymbol;
                     return textMacro.Evaluate();

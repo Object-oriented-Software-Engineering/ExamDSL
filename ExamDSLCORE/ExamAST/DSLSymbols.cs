@@ -25,12 +25,12 @@ namespace ExamDSLCORE.ExamAST {
         // link hierarchy node. Trees have many applications 
         // most of the times they extend to an application domain
         // So this link is necessary.
-        private object m_hierarchyBridgeLink;
+        private TextFormattingProperties m_formatting;
 
-        public object HierarchyBridgeLink {
-            get => m_hierarchyBridgeLink;
-            set => m_hierarchyBridgeLink = value ??
-                throw new ArgumentNullException(nameof(value));
+        public TextFormattingProperties M_Formatting {
+            get => m_formatting;
+            set => m_formatting = value ??
+                                  throw new ArgumentNullException(nameof(value));
         }
 
         public int MType => m_type;
@@ -81,7 +81,7 @@ namespace ExamDSLCORE.ExamAST {
         // public DSLSymbol GetChild(int context, int index = 0)
         // public void AddNode(DSLSymbol code, int context = -1)
         // public void AddNode(string text, int context)
-        
+
 
         // public IEnumerator<IASTVisitableNode> GetEnumerator() 
         // IEnumerator IEnumerable.GetEnumerator() 
@@ -92,6 +92,13 @@ namespace ExamDSLCORE.ExamAST {
         // public int GetNumberOfContextNodes(int context);
         // public IEnumerable<DSLSymbol> GetContextChildren(int context);
 
+        public int GetNumberOfContextNodes(int context) {
+            if (context < m_children.Length) {
+                return m_children[context].Count;
+            } else {
+                throw new ArgumentOutOfRangeException("context index out of range");
+            }
+        }
 
         public DSLSymbol GetChild(int context, int index = 0) {
             if (context < m_children.Length) {
@@ -102,6 +109,16 @@ namespace ExamDSLCORE.ExamAST {
                 }
             } else {
                 throw new ArgumentOutOfRangeException("context index out of range");
+            }
+        }
+
+        public IEnumerable<DSLSymbol> GetContextChildren(int context) {
+            if (context < m_children.Length) {
+                foreach (DSLSymbol node in m_children[context]) {
+                    yield return node;
+                }
+            } else {
+                throw new ArgumentOutOfRangeException("node index out of range");
             }
         }
 

@@ -9,9 +9,9 @@ using ExamDSLCORE;
 
 public enum ExamSymbolType {
     ST_EXAM, ST_EXAMHEADER, ST_EXAMHEADERTITLE, ST_EXAMHEADERSEMESTER,
-    ST_EXAMHEADERDURATION, ST_EXAMQUESTION, ST_EXAMHEADERTEACHER,
+    ST_EXAMHEADERDURATION, ST_EXAMQUESTION,ST_EXAMQUESTIONWORDING, ST_EXAMHEADERTEACHER,
     ST_EXAMHEADERSTUDENTNAME, ST_EXAMHEADERDEPARTMENTNAME, ST_EXAMHEADERDATE,
-    ST_COMPOSITETEXT, 
+    ST_COMPOSITETEXT, ST_NUMBEREDLIST,
     ST_STATICTEXT, ST_MACROTEXT, ST_NEWLINE,ST_SCOPE
 }
 
@@ -111,13 +111,23 @@ namespace ExamDSLCORE.ExamAST {
         }
     }
 
+    public class ExamQuestionWording : ASTComposite {
+        public const int CONTENT =0;
+        public readonly string[] mc_contextNames = { "CONTENT"};
+
+        public ExamQuestionWording() :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWORDING) {
+
+        }
+    }
+
     //      Text : StaticText
     //           | TextObject
     //           | Text
     public class Text : ASTComposite {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
-        private Text() :
+        public Text() :
             base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) { }
 
         /*         
@@ -129,7 +139,6 @@ namespace ExamDSLCORE.ExamAST {
             public Text Append(string s) 
             public Text Append(DSLSymbol s)
         */
-
         public static Text T(string s) {
             Text newText = new Text();
             StaticTextSymbol st = new StaticTextSymbol(s);
@@ -154,15 +163,32 @@ namespace ExamDSLCORE.ExamAST {
             return this;
         }
 
+        public Text EnterScope() {
+            return this;
+        }
+
+        public Text ExitScope() {
+            return this;
+        }
+
+        public Text NewLine() {
+            return this;
+        }
+
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
                                                         params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitText(this, info);
         }
     }
 
-    public class Scope : ASTLeaf {
-        public Scope() :
-            base((int)ExamSymbolType.ST_SCOPE) { }
+    public class ScopeSymbol : ASTComposite {
+        public ScopeSymbol() :
+            base(1,(int)ExamSymbolType.ST_SCOPE) { }
+    }
+
+    public class NumberedList : ASTComposite {
+        public NumberedList() :
+            base(1, (int)ExamSymbolType.ST_NUMBEREDLIST) { }
     }
 
     public class NewLineSymbol : ASTLeaf {
