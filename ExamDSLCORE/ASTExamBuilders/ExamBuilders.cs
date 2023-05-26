@@ -62,32 +62,37 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public ExamHeaderBuilder Title(Text content) {
             ExamHeaderTitleBuilder newtitle = new ExamHeaderTitleBuilder(this);
             M_Product.AddNode(newtitle.M_Product, ExamHeader.TITLE);
-            newtitle.M_Product.AddNode(content,0);
+            newtitle.M_Product.AddNode(content,ExamHeaderTitle.TEXT);
             return this;
         }
         public ExamHeaderBuilder Semester(Text content) {
             ExamHeaderSemesterBuilder newsemester = new ExamHeaderSemesterBuilder(this);
             M_Product.AddNode(newsemester.M_Product, ExamHeader.SEMESTER);
+            newsemester.M_Product.AddNode(content, ExamHeaderSemester.TEXT);
             return this;
         }
         public ExamHeaderBuilder Date(Text content) {
             ExamHeaderDateBuilder newdate = new ExamHeaderDateBuilder(this);
             M_Product.AddNode(newdate.M_Product, ExamHeader.DATE);
+            newdate.M_Product.AddNode(content, ExamHeaderDate.TEXT);
             return this;
         }
         public ExamHeaderBuilder Duration(Text content) {
-            ExamHeaderDurationBuilder newdate = new ExamHeaderDurationBuilder(this);
-            M_Product.AddNode(newdate.M_Product, ExamHeader.DURATION);
+            ExamHeaderDurationBuilder newduration = new ExamHeaderDurationBuilder(this);
+            M_Product.AddNode(newduration.M_Product, ExamHeader.DURATION);
+            newduration.M_Product.AddNode(content, ExamHeaderDuration.TEXT);
             return this;
         }
         public ExamHeaderBuilder Teacher(Text content) {
-            ExamHeaderTeacherBuilder newdate = new ExamHeaderTeacherBuilder(this);
-            M_Product.AddNode(newdate.M_Product, ExamHeader.TEACHER);
+            ExamHeaderTeacherBuilder newteacher = new ExamHeaderTeacherBuilder(this);
+            M_Product.AddNode(newteacher.M_Product, ExamHeader.TEACHER);
+            newteacher.M_Product.AddNode(content, ExamHeaderTeacher.TEXT);
             return this;
         }
         public ExamHeaderBuilder StudentName(Text content) {
-            ExamHeaderStudentBuilder newdate = new ExamHeaderStudentBuilder(this);
-            M_Product.AddNode(newdate.M_Product, ExamHeader.STUDENTNAME);
+            ExamHeaderStudentBuilder newStudent = new ExamHeaderStudentBuilder(this);
+            M_Product.AddNode(newStudent.M_Product, ExamHeader.STUDENTNAME);
+            newStudent.M_Product.AddNode(content, ExamHeaderStudentName.TEXT);
             return this;
         }
         public ExamBuilder End() {

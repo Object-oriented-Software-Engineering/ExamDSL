@@ -170,13 +170,13 @@ namespace ExamDSLCORE.ExamAST {
         public static Text T(string s) {
             Text newText = new Text();
             StaticTextSymbol st = new StaticTextSymbol(s);
-            newText.AddNode(st, 0);
+            newText.AddNode(st, Text.CONTENT);
             return newText;
         }
 
         public static Text T(DSLSymbol s) {
             Text newText = new Text();
-            newText.AddNode(s, 0);
+            newText.AddNode(s, Text.CONTENT);
             return newText;
         }
 
@@ -257,9 +257,6 @@ namespace ExamDSLCORE.ExamAST {
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitTextMacro(this, info);
-        }
-        public override string ToString() {
-            return Evaluate().ToString();
         }
     }
 }

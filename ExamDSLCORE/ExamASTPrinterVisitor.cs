@@ -233,9 +233,6 @@ namespace ExamDSL
             }
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
 
-            CreateContextSubgraph(n, Text.CONTENT,
-                n.mc_contextNames[Text.CONTENT]);
-
             return base.VisitText(node, n);
         }
 
@@ -257,12 +254,12 @@ namespace ExamDSL
         }
 
         public override int VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
-            m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node.MText}\";");
+            m_dotFile.WriteLine($"\"{node.MParent.MNodeName}\"->\"{node.MText}\";");
             return 0;
         }
 
         public override int VisitTextMacro(TextMacroSymbol node, params DSLSymbol[] args) {
-            m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node?.Evaluate()}\";");
+            m_dotFile.WriteLine($"\"{node.MParent.MNodeName}\"->\"{node?.Evaluate()}\";");
             return 0;
         }
     }

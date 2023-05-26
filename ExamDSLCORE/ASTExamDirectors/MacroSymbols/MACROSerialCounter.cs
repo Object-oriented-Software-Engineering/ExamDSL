@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace ExamDSLCORE.ASTExamDirectors.MacroSymbols {
     public class SerialCounter : TextMacroSymbol {
         private int m_currentNumber = 1;
+        public int MCurrentNumber => m_currentNumber;
 
         public SerialCounter() :
             base("SERIAL_COUNTER") {
