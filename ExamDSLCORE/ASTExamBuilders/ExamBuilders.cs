@@ -62,6 +62,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public ExamHeaderBuilder Title(Text content) {
             ExamHeaderTitleBuilder newtitle = new ExamHeaderTitleBuilder(this);
             M_Product.AddNode(newtitle.M_Product, ExamHeader.TITLE);
+            newtitle.M_Product.AddNode(content,0);
             return this;
         }
         public ExamHeaderBuilder Semester(Text content) {

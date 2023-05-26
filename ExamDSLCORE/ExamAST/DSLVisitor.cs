@@ -40,28 +40,27 @@ namespace ExamDSLCORE.ExamAST {
         public virtual Result VisitExamHeader(ExamHeader node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamTitle(ExamHeaderTitle node, params Params[] args) {
+        public virtual Result VisitExamHeaderTitle(ExamHeaderTitle node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamSemester(ExamHeaderSemester node, params Params[] args) {
+        public virtual Result VisitExamHeaderSemester(ExamHeaderSemester node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamHeader(ExamHeaderDate node, params Params[] args) {
+        public virtual Result VisitExamHeaderDate(ExamHeaderDate node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamDate(ExamHeaderDate node, params Params[] args) {
+        public virtual Result VisitExamHeaderDepartmentName(ExamHeaderDepartmentName node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamDepartmentName(ExamHeaderDepartmentName node, params Params[] args) {
+        public virtual Result VisitExamHeaderDuration(ExamHeaderDuration node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamDuration(ExamHeaderDuration node, params Params[] args) {
+        public virtual Result VisitExamHeaderTeacher(ExamHeaderTeacher node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamTeacher(ExamHeaderTeacher node, params Params[] args) {
+        public virtual Result VisitExamHeaderStudentName(ExamHeaderStudentName node, params Params[] args) {
             return VisitChildren(node, args);
         }
-
         public virtual Result VisitExamQuestion(ExamQuestion node, params Params[] args) {
             return VisitChildren(node, args);
         }
@@ -74,6 +73,13 @@ namespace ExamDSLCORE.ExamAST {
         public virtual Result VisitNewLine(NewLineSymbol node, params Params[] args) {
             return default;
         }
+        public virtual Result VisitStaticText(StaticTextSymbol node, params Params[] args) {
+            return default;
+        }
+        public virtual Result VisitTextMacro(TextMacroSymbol node, params Params[] args) {
+            return default;
+        }
+
 
 
     }

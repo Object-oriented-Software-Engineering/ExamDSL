@@ -26,7 +26,7 @@ namespace ExamDSL
 
             Initialize();
 
-            /*TextMacroSymbol X = MacroFactory.CreateSerialCounter();
+            TextMacroSymbol X = MacroFactory.CreateSerialCounter();
             TextMacroSymbol Y = MacroFactory.CreateRandomInteger(1,10);
             TextMacroSymbol Z = MacroFactory.CreateRandomInteger(1,10); 
 
@@ -36,8 +36,8 @@ namespace ExamDSL
                     Title(Text.T("Arithmetic Examination"))
                     .Semester(Text.T("Winter Semester ")).
                      Date(Text.T("23/2/2023")).
-                End().
-                question().
+                End();//.
+                /*question().
                     Header(Text.T("Exercise ").Append(X).Append(")")).
                     Wording(Text.T($"Find the sum of {Y} + {Z}")).
                 End().
@@ -45,10 +45,8 @@ namespace ExamDSL
                     Header(Text.T("Exercise ").Append(X).Append(")")).
                     Wording(Text.T("Find the sum of 55 + 66")).
                 End();*/
-            Exam exam = new TestExam().Compose() as Exam;
-            
             ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
-            printer.Visit(exam,null);
+            printer.Visit(exam.M_Product,null);
             ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
             /*StaticTextSymbol x=textPrinter.Visit(exam, null);
             Console.WriteLine(x.MStringLiteral);*/

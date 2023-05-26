@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="bin\Debug\net6.0\test.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Debug\net6.0\test.dot" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Randomizer\Randomizer\Randomizer\Randomizer.csproj" />
   </ItemGroup>
 

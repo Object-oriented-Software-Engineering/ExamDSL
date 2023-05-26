@@ -12,8 +12,7 @@ namespace ExamDSLCORE.ExamAST
         // Visit a specific node and send a variable number of
         // arguments. The responsibility of the type and sequence
         // of arguments is on the user. ( box/unboxing for scalars)
-        public virtual Return Visit(IASTVisitableNode node, params Params[] info)
-        {
+        public virtual Return Visit(IASTVisitableNode node, params Params[] info) {
             return node.Accept(this, info);
         }
 
