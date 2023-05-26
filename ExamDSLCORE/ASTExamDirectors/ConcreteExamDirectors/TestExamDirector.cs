@@ -29,7 +29,9 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
 
             Create().
                 header().
-                Title(Text.T("Arithmetic Examination"))
+                Title(
+                    Text.T("Arithmetic Examination")
+                    )
                 .Semester(Text.T("Winter Semester ")).
                 Date(Text.T("23/2/2023")).
                 End().

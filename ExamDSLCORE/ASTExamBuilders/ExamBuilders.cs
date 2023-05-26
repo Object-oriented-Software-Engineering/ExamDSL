@@ -221,13 +221,11 @@ namespace ExamDSLCORE.ASTExamBuilders {
             m_headStack.Peek().AddNode(new NewLineSymbol());
             return this;
         }
-
         public TextBuilder Text(string text) {
             StaticTextSymbol st = new StaticTextSymbol(text);
             m_headStack.Peek().AddNode(st, 0);
             return this;
         }
-
         public TextBuilder EnterScope() {
            // 1. Create a ScopeSymbol Node
            ScopeSymbol newsScopeSymbol = new ScopeSymbol();
@@ -242,7 +240,6 @@ namespace ExamDSLCORE.ASTExamBuilders {
             m_headStack.Pop();
             return this;
         }
-
         public TextBuilder OpenNumberedList() {
             // 1. Create a ScopeSymbol Node
             NumberedList newNumberedList = new NumberedList();

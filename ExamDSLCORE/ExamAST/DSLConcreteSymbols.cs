@@ -50,6 +50,11 @@ namespace ExamDSLCORE.ExamAST {
         public readonly string[] mc_contextNames = { "TEXT"};
         public ExamHeaderTitle() : 
             base(1, (int)ExamSymbolType.ST_EXAMHEADERTITLE) { }
+
+        public override Return Accept<Return, Params>(
+            IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return base.Accept(v, info);
+        }
     }
 
     public class ExamHeaderSemester : ASTComposite {
@@ -106,7 +111,8 @@ namespace ExamDSLCORE.ExamAST {
             base(5, (int)ExamSymbolType.ST_EXAMQUESTION) {
         }
 
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+        public override Return Accept<Return, Params>(
+            IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestion(this, info);
         }
     }
@@ -163,17 +169,9 @@ namespace ExamDSLCORE.ExamAST {
             return this;
         }
 
-        public Text EnterScope() {
-            return this;
-        }
+        
 
-        public Text ExitScope() {
-            return this;
-        }
-
-        public Text NewLine() {
-            return this;
-        }
+       
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
                                                         params Params[] info) {
@@ -184,6 +182,11 @@ namespace ExamDSLCORE.ExamAST {
     public class ScopeSymbol : ASTComposite {
         public ScopeSymbol() :
             base(1,(int)ExamSymbolType.ST_SCOPE) { }
+
+        public override Return Accept<Return, Params>(
+            IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitScope(this, info);
+        }
     }
 
     public class NumberedList : ASTComposite {
@@ -194,6 +197,10 @@ namespace ExamDSLCORE.ExamAST {
     public class NewLineSymbol : ASTLeaf {
         public NewLineSymbol() : 
             base( (int)ExamSymbolType.ST_NEWLINE) { }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return,Params>).VisitNewLine(this,info);
+        }
     }
 
     public class StaticTextSymbol : ASTLeaf {
