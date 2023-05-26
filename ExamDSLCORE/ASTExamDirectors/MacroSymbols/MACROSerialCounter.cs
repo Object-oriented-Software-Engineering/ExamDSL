@@ -12,7 +12,6 @@ namespace ExamDSLCORE.ASTExamDirectors.MacroSymbols {
 
         public SerialCounter() :
             base("SERIAL_COUNTER") {
-
         }
 
         public override void Reset() {
