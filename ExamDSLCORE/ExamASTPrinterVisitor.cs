@@ -315,7 +315,8 @@ namespace ExamDSL
         }
 
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
-            return base.VisitNewLine(node, args);
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
+            return 0;
         }
 
         public override int VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {

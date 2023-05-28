@@ -275,8 +275,13 @@ namespace ExamDSLCORE.ExamAST {
     }
 
     public class NewLineSymbol : ASTLeaf {
-        public NewLineSymbol() : 
-            base( (int)ExamSymbolType.ST_NEWLINE) { }
+        private string m_newLine;
+        public string MNewLine => m_newLine;
+
+        public NewLineSymbol() :
+            base((int)ExamSymbolType.ST_NEWLINE) {
+            m_newLine = "\n";
+        }
 
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {

@@ -37,7 +37,7 @@ namespace ExamDSL
                     .Date("23/2/2023").
                 End().
                 question().
-                    Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")")).
+                    Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")").NewLine()).
                     Wording($"Find the sum of {Y} + {Z}").
                 End().
                 question(). 

@@ -58,5 +58,10 @@ namespace ExamDSL
             m_text.Append(node.MText);
             return base.VisitStaticText(node, args);
         }
+
+        public override StringBuilder VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
+            m_text.Append(node.MNewLine);
+            return base.VisitNewLine(node, args);
+        }
     }
 }
