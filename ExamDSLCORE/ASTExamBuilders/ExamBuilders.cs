@@ -58,40 +58,40 @@ namespace ExamDSLCORE.ASTExamBuilders {
             M_Parent = parent;
         }
 
-        public ExamHeaderBuilder Title(Text content) {
+        public ExamHeaderBuilder Title(TextBuilder content) {
             ExamHeaderTitleBuilder newtitle = new ExamHeaderTitleBuilder(this);
             M_Product.AddNode(newtitle.M_Product, ExamHeader.TITLE);
-            newtitle.M_Product.AddNode(content,ExamHeaderTitle.TEXT);
+            newtitle.M_Product.AddNode(content.M_Product,ExamHeaderTitle.TEXT);
             return this;
         }
-        public ExamHeaderBuilder Semester(Text content) {
+        public ExamHeaderBuilder Semester(TextBuilder content) {
             ExamHeaderSemesterBuilder newsemester = new ExamHeaderSemesterBuilder(this);
             M_Product.AddNode(newsemester.M_Product, ExamHeader.SEMESTER);
-            newsemester.M_Product.AddNode(content, ExamHeaderSemester.TEXT);
+            newsemester.M_Product.AddNode(content.M_Product, ExamHeaderSemester.TEXT);
             return this;
         }
-        public ExamHeaderBuilder Date(Text content) {
+        public ExamHeaderBuilder Date(TextBuilder content) {
             ExamHeaderDateBuilder newdate = new ExamHeaderDateBuilder(this);
             M_Product.AddNode(newdate.M_Product, ExamHeader.DATE);
-            newdate.M_Product.AddNode(content, ExamHeaderDate.TEXT);
+            newdate.M_Product.AddNode(content.M_Product, ExamHeaderDate.TEXT);
             return this;
         }
-        public ExamHeaderBuilder Duration(Text content) {
+        public ExamHeaderBuilder Duration(TextBuilder content) {
             ExamHeaderDurationBuilder newduration = new ExamHeaderDurationBuilder(this);
             M_Product.AddNode(newduration.M_Product, ExamHeader.DURATION);
-            newduration.M_Product.AddNode(content, ExamHeaderDuration.TEXT);
+            newduration.M_Product.AddNode(content.M_Product, ExamHeaderDuration.TEXT);
             return this;
         }
-        public ExamHeaderBuilder Teacher(Text content) {
+        public ExamHeaderBuilder Teacher(TextBuilder content) {
             ExamHeaderTeacherBuilder newteacher = new ExamHeaderTeacherBuilder(this);
             M_Product.AddNode(newteacher.M_Product, ExamHeader.TEACHER);
-            newteacher.M_Product.AddNode(content, ExamHeaderTeacher.TEXT);
+            newteacher.M_Product.AddNode(content.M_Product, ExamHeaderTeacher.TEXT);
             return this;
         }
-        public ExamHeaderBuilder StudentName(Text content) {
+        public ExamHeaderBuilder StudentName(TextBuilder content) {
             ExamHeaderStudentBuilder newStudent = new ExamHeaderStudentBuilder(this);
             M_Product.AddNode(newStudent.M_Product, ExamHeader.STUDENTNAME);
-            newStudent.M_Product.AddNode(content, ExamHeaderStudentName.TEXT);
+            newStudent.M_Product.AddNode(content.M_Product, ExamHeaderStudentName.TEXT);
             return this;
         }
         public ExamBuilder End() {
@@ -178,34 +178,34 @@ namespace ExamDSLCORE.ASTExamBuilders {
             M_Parent = parent;
         }
         
-        public ExamQuestionBuilder Header(Text content) {
+        public ExamQuestionBuilder Header(TextBuilder content) {
             ExamQuestionHeader header = new ExamQuestionHeader();
             M_Product.AddNode(header,ExamQuestion.HEADER);
-            header.AddNode(content, ExamQuestionHeader.CONTENT);
+            header.AddNode(content.M_Product, ExamQuestionHeader.CONTENT);
             return this;
         }
-        public ExamQuestionBuilder Weight(Text content) {
+        public ExamQuestionBuilder Weight(TextBuilder content) {
             ExamQuestionWeight weight = new ExamQuestionWeight();
             M_Product.AddNode(weight, ExamQuestion.WEIGHT);
-            weight.AddNode(content, ExamQuestionWeight.CONTENT);
+            weight.AddNode(content.M_Product, ExamQuestionWeight.CONTENT);
             return this;
         }
-        public ExamQuestionBuilder Wording(Text content) {
+        public ExamQuestionBuilder Wording(TextBuilder content) {
             ExamQuestionWording wording = new ExamQuestionWording();
             M_Product.AddNode(wording, ExamQuestion.WORDING);
-            wording.AddNode(content, ExamQuestionWording.CONTENT);
+            wording.AddNode(content.M_Product, ExamQuestionWording.CONTENT);
             return this;
         }
-        public ExamQuestionBuilder Solution(Text content) {
+        public ExamQuestionBuilder Solution(TextBuilder content) {
             ExamQuestionSolution solution = new ExamQuestionSolution();
             M_Product.AddNode(solution, ExamQuestion.SOLUTION);
-            solution.AddNode(content, ExamQuestionSolution.CONTENT);
+            solution.AddNode(content.M_Product, ExamQuestionSolution.CONTENT);
             return this;
         }
-        public ExamQuestionBuilder SubQuestion(Text content) {
+        public ExamQuestionBuilder SubQuestion(TextBuilder content) {
             ExamQuestionSubQuestion subQuestion = new ExamQuestionSubQuestion();
             M_Product.AddNode(subQuestion, ExamQuestion.SUBQUESTION);
-            subQuestion.AddNode(content, ExamQuestionSubQuestion.CONTENT);
+            subQuestion.AddNode(content.M_Product, ExamQuestionSubQuestion.CONTENT);
             return this;
         }
         public ExamBuilder End() {
@@ -224,6 +224,14 @@ namespace ExamDSLCORE.ASTExamBuilders {
             m_parent = mParent;
             M_Product = new Text();
             m_headStack.Push(M_Product);
+        }
+
+        public static implicit operator TextBuilder(string s) {
+            return new TextBuilder().Text(s);
+        }
+
+        public static TextBuilder T() {
+            return new TextBuilder();
         }
 
         public TextBuilder TextL(string text) {
@@ -269,6 +277,11 @@ namespace ExamDSLCORE.ASTExamBuilders {
             // 2. Add ScopeNode to current TextSymbol
             m_headStack.Peek().AddNode(newLine, 0);
 
+            return this;
+        }
+        public TextBuilder TextMacro(TextMacroSymbol macro) {
+            StaticTextSymbol s=macro.Evaluate();
+            m_headStack.Peek().AddNode(s, 0);
             return this;
         }
     }

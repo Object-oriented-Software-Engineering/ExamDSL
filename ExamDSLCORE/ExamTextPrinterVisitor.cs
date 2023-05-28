@@ -10,12 +10,11 @@ namespace ExamDSL
     internal class ExamTextPrinterVisitor : DSLBaseVisitor<StringBuilder,DSLSymbol > {
         private StringBuilder m_text=new StringBuilder();
 
+        public StringBuilder MText => m_text;
 
         public ExamTextPrinterVisitor() {
             SymbolMemory.Reset();
         }
-
-
         public override StringBuilder VisitExam(Exam node,
             params DSLSymbol[] args) {
             
@@ -27,7 +26,6 @@ namespace ExamDSL
             }
             return m_text;
         }
-
         public override StringBuilder VisitExamHeader(ExamHeader node,
             params DSLSymbol[] args) {
             
@@ -38,7 +36,6 @@ namespace ExamDSL
             }
             return m_text;
         }
-
         public override StringBuilder VisitExamQuestion(ExamQuestion node,
             params DSLSymbol[] args) {
             Text Text = new Text();
@@ -50,7 +47,6 @@ namespace ExamDSL
             }
             return m_text;
         }
-
         public override StringBuilder VisitText(Text node, params DSLSymbol[] args) {
             Text Text = new Text();
             for (int i = 0; i < node.GetNumberOfContextNodes(0); i++) {
@@ -58,15 +54,9 @@ namespace ExamDSL
             }
             return m_text;
         }
-
         public override StringBuilder VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
             m_text.Append(node.MText);
             return base.VisitStaticText(node, args);
         }
-
-        public override StringBuilder VisitTextMacro(TextMacroSymbol node, params DSLSymbol[] args) {
-            return base.VisitTextMacro(node, args);
-        }
-
     }
 }

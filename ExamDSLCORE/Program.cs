@@ -32,23 +32,23 @@ namespace ExamDSL
             // Text Structural representation description of the exam
             var exam = ExamBuilder.exam().
                 header().
-                    Title(Text.T("Arithmetic Examination"))
-                    .Semester(Text.T("Winter Semester ")).
-                     Date(Text.T("23/2/2023")).
+                    Title("Arithmetic Examination")
+                    .Semester("Winter Semester ")
+                    .Date("23/2/2023").
                 End().
                 question().
-                    Header(Text.T("Exercise ").Append(X).Append(")")).
-                    Wording(Text.T($"Find the sum of {Y} + {Z}")).
+                    Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")")).
+                    Wording($"Find the sum of {Y} + {Z}").
                 End().
-                question(). // Bug !!! SerialCounter keeps the last parent from the second append
-                    Header(Text.T("Exercise ").Append(X).Append(")")).
-                    Wording(Text.T("Find the sum of 55 + 66")).
+                question(). 
+                    Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")")).
+                    Wording("Find the sum of 55 + 66").
                 End();
             ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam.M_Product,null);
             ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
             textPrinter.Visit(exam.M_Product, null);
-            //Console.WriteLine(x.MStringLiteral);*/
+            Console.WriteLine(textPrinter.MText);
 
         }
     }

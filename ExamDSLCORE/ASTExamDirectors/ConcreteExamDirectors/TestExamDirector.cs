@@ -27,7 +27,7 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
             //  Y  Text()
             //  F  Text()
 
-            Create().
+            /*Create().
                 header().
                 Title(
                     Text.T("Arithmetic Examination")
@@ -42,7 +42,7 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
                 question().
                 Header(Text.T("Exercise ").Append(X).Append(")")).
                 Wording(Text.T("Find the sum of 55 + 66")).
-                End();
+                End();*/
             return m_examAST.M_Product;
         }
     }
