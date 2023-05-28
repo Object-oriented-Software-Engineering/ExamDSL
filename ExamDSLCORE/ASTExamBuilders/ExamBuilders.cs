@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,13 +35,11 @@ namespace ExamDSLCORE.ASTExamBuilders {
             M_Product.AddNode(headerBuilder.M_Product, Exam.HEADER);
             return headerBuilder;
         }
-
         public ExamQuestionBuilder question() {
             var questionBuilder = new ExamQuestionBuilder(this);
             M_Product.AddNode(questionBuilder.M_Product, Exam.QUESTIONS);
             return questionBuilder;
         }
-
         public ExamQuestionBuilder question(ExamQuestion question) {
             var questionBuilder = new ExamQuestionBuilder(question, this);
             M_Product.AddNode(question, Exam.QUESTIONS);
@@ -178,30 +177,35 @@ namespace ExamDSLCORE.ASTExamBuilders {
             M_Product = question;
             M_Parent = parent;
         }
-
-        public static ExamQuestionBuilder exam() {
-            return new ExamQuestionBuilder();
-        }
-
+        
         public ExamQuestionBuilder Header(Text content) {
-            M_Product.AddNode(content, ExamQuestion.HEADER);
+            ExamQuestionHeader header = new ExamQuestionHeader();
+            M_Product.AddNode(header,ExamQuestion.HEADER);
+            header.AddNode(content, ExamQuestionHeader.CONTENT);
             return this;
         }
-        public ExamQuestionBuilder Gravity(Text content) {
-            M_Product.AddNode(content, ExamQuestion.WEIGHT);
+        public ExamQuestionBuilder Weight(Text content) {
+            ExamQuestionWeight weight = new ExamQuestionWeight();
+            M_Product.AddNode(weight, ExamQuestion.WEIGHT);
+            weight.AddNode(content, ExamQuestionWeight.CONTENT);
             return this;
         }
         public ExamQuestionBuilder Wording(Text content) {
-            TextBuilder newtext = new TextBuilder();
-            M_Product.AddNode(newtext.M_Product, ExamQuestion.WORDING);
+            ExamQuestionWording wording = new ExamQuestionWording();
+            M_Product.AddNode(wording, ExamQuestion.WORDING);
+            wording.AddNode(content, ExamQuestionWording.CONTENT);
             return this;
         }
         public ExamQuestionBuilder Solution(Text content) {
-            M_Product.AddNode(content, ExamQuestion.SOLUTION);
+            ExamQuestionSolution solution = new ExamQuestionSolution();
+            M_Product.AddNode(solution, ExamQuestion.SOLUTION);
+            solution.AddNode(content, ExamQuestionSolution.CONTENT);
             return this;
         }
         public ExamQuestionBuilder SubQuestion(Text content) {
-            M_Product.AddNode(content, ExamQuestion.SUBQUESTION);
+            ExamQuestionSubQuestion subQuestion = new ExamQuestionSubQuestion();
+            M_Product.AddNode(subQuestion, ExamQuestion.SUBQUESTION);
+            subQuestion.AddNode(content, ExamQuestionSubQuestion.CONTENT);
             return this;
         }
         public ExamBuilder End() {

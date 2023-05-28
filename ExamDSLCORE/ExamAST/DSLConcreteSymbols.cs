@@ -9,10 +9,16 @@ using ExamDSLCORE;
 
 public enum ExamSymbolType {
     ST_EXAM, ST_EXAMHEADER, ST_EXAMHEADERTITLE, ST_EXAMHEADERSEMESTER,
-    ST_EXAMHEADERDURATION, ST_EXAMQUESTION,ST_EXAMQUESTIONWORDING, ST_EXAMHEADERTEACHER,
+    ST_EXAMHEADERDURATION, ST_EXAMQUESTION, ST_EXAMHEADERTEACHER,
+    ST_EXAMQUESTIONHEADER, ST_EXAMQUESTIONWEIGHT, ST_EXAMQUESTIONWORDING,
+    ST_EXAMQUESTIONSOLUTION, ST_EXAMQUESTIONSUBQUESTION,
     ST_EXAMHEADERSTUDENTNAME, ST_EXAMHEADERDEPARTMENTNAME, ST_EXAMHEADERDATE,
     ST_COMPOSITETEXT, ST_NUMBEREDLIST,
     ST_STATICTEXT, ST_MACROTEXT, ST_NEWLINE,ST_SCOPE
+
+
+
+    
 }
 
 namespace ExamDSLCORE.ExamAST {
@@ -147,8 +153,62 @@ namespace ExamDSLCORE.ExamAST {
             base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWORDING) {
 
         }
-    }
 
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return,Params>).VisitExamQuestionWording(this, info);
+        }
+    }
+    public class ExamQuestionHeader : ASTComposite {
+        public const int CONTENT = 0;
+        public readonly string[] mc_contextNames = { "CONTENT" };
+
+        public ExamQuestionHeader() :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONHEADER) {
+
+        }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionHeader(this, info);
+        }
+    }
+    public class ExamQuestionWeight : ASTComposite {
+        public const int CONTENT = 0;
+        public readonly string[] mc_contextNames = { "CONTENT" };
+
+        public ExamQuestionWeight() :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWEIGHT) {
+
+        }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionWeight(this, info);
+        }
+    }
+    public class ExamQuestionSolution : ASTComposite {
+        public const int CONTENT = 0;
+        public readonly string[] mc_contextNames = { "CONTENT" };
+
+        public ExamQuestionSolution() :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSOLUTION) {
+        }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionSolution(this, info);
+        }
+    }
+    public class ExamQuestionSubQuestion : ASTComposite {
+        public const int CONTENT = 0;
+        public readonly string[] mc_contextNames = { "CONTENT" };
+
+        public ExamQuestionSubQuestion() :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSUBQUESTION) {
+        }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionSubQuestion(this, info);
+        }
+    }
+    
     //      Text : StaticText
     //           | TextObject
     //           | Text
@@ -257,6 +317,10 @@ namespace ExamDSLCORE.ExamAST {
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitTextMacro(this, info);
+        }
+
+        public override string ToString() {
+            return Evaluate().MText;
         }
     }
 }

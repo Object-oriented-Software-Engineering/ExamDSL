@@ -23,7 +23,6 @@ namespace ExamDSL
 
         static void Main(string[] args) {
             // Program
-
             Initialize();
 
             TextMacroSymbol X = MacroFactory.CreateSerialCounter();
@@ -41,15 +40,15 @@ namespace ExamDSL
                     Header(Text.T("Exercise ").Append(X).Append(")")).
                     Wording(Text.T($"Find the sum of {Y} + {Z}")).
                 End().
-                question().
+                question(). // Bug !!! SerialCounter keeps the last parent from the second append
                     Header(Text.T("Exercise ").Append(X).Append(")")).
                     Wording(Text.T("Find the sum of 55 + 66")).
                 End();
             ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam.M_Product,null);
-            //ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
-            /*StaticTextSymbol x=textPrinter.Visit(exam, null);
-            Console.WriteLine(x.MStringLiteral);*/
+            ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
+            textPrinter.Visit(exam.M_Product, null);
+            //Console.WriteLine(x.MStringLiteral);*/
 
         }
     }

@@ -61,6 +61,21 @@ namespace ExamDSLCORE.ExamAST {
         public virtual Result VisitExamHeaderStudentName(ExamHeaderStudentName node, params Params[] args) {
             return VisitChildren(node, args);
         }
+        public virtual Result VisitExamQuestionHeader(ExamQuestionHeader node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitExamQuestionWeight(ExamQuestionWeight node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitExamQuestionWording(ExamQuestionWording node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitExamQuestionSolution(ExamQuestionSolution node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitExamQuestionSubQuestion(ExamQuestionSubQuestion node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
         public virtual Result VisitExamQuestion(ExamQuestion node, params Params[] args) {
             return VisitChildren(node, args);
         }

@@ -18,7 +18,7 @@ namespace ExamDSLCORE.ExamAST {
         // String name for Graphviz
         protected string m_nodeName;
         // Support for tree structure
-        private ASTComposite m_parent;
+        private List<ASTComposite> m_parent;
 
         // Either will use this member or there has to be
         // a static dictionary to map ASTNode to the corresponding
@@ -41,7 +41,7 @@ namespace ExamDSLCORE.ExamAST {
         // Node label is open for changes as is virtual
         public virtual string MNodeName => m_nodeName;
 
-        public ASTComposite MParent => m_parent;
+        public ASTComposite MParent => m_parent[0];
 
         public static int MsSerialCounter => ms_serialCounter;
 
@@ -49,11 +49,11 @@ namespace ExamDSLCORE.ExamAST {
             m_type = mType;
             m_serialNumber = ms_serialCounter++;
             m_nodeName = "Node" + GetType().Name + m_serialNumber;
-            m_parent = null;
+            m_parent = new List<ASTComposite>();
         }
 
         public virtual void SetParent(ASTComposite parent) {
-            m_parent = parent;
+            m_parent.Add(parent);
         }
 
         public virtual Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,

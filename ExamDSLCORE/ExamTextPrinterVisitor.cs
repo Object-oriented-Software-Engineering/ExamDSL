@@ -9,9 +9,12 @@ namespace ExamDSL
 {
     internal class ExamTextPrinterVisitor : DSLBaseVisitor<StringBuilder,DSLSymbol > {
         private StringBuilder m_text=new StringBuilder();
+
+
         public ExamTextPrinterVisitor() {
             SymbolMemory.Reset();
         }
+
 
         public override StringBuilder VisitExam(Exam node,
             params DSLSymbol[] args) {

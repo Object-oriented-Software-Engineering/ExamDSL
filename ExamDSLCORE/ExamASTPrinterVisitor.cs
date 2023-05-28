@@ -226,6 +226,71 @@ namespace ExamDSL
             return base.VisitExamHeaderStudentName(node, n);
         }
 
+        public override int VisitExamQuestionHeader(ExamQuestionHeader node, params DSLSymbol[] args) {
+            ExamQuestionHeader n = node as ExamQuestionHeader;
+            if (n == null) {
+                throw new InvalidCastException("Expected Assignment type");
+            }
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+
+            CreateContextSubgraph(n, ExamQuestionHeader.CONTENT,
+                n.mc_contextNames[ExamQuestionHeader.CONTENT]);
+
+            return base.VisitExamQuestionHeader(node, n);
+        }
+
+        public override int VisitExamQuestionWeight(ExamQuestionWeight node, params DSLSymbol[] args) {
+            ExamQuestionWeight n = node as ExamQuestionWeight;
+            if (n == null) {
+                throw new InvalidCastException("Expected Assignment type");
+            }
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+
+            CreateContextSubgraph(n, ExamQuestionWeight.CONTENT,
+                n.mc_contextNames[ExamQuestionWeight.CONTENT]);
+
+            return base.VisitExamQuestionWeight(node, n);
+        }
+
+        public override int VisitExamQuestionWording(ExamQuestionWording node, params DSLSymbol[] args) {
+            ExamQuestionWording n = node as ExamQuestionWording;
+            if (n == null) {
+                throw new InvalidCastException("Expected Assignment type");
+            }
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+
+            CreateContextSubgraph(n, ExamQuestionWording.CONTENT,
+                n.mc_contextNames[ExamQuestionWording.CONTENT]);
+
+            return base.VisitExamQuestionWording(node, n);
+        }
+
+        public override int VisitExamQuestionSolution(ExamQuestionSolution node, params DSLSymbol[] args) {
+            ExamQuestionSolution n = node as ExamQuestionSolution;
+            if (n == null) {
+                throw new InvalidCastException("Expected Assignment type");
+            }
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+
+            CreateContextSubgraph(n, ExamQuestionSolution.CONTENT,
+                n.mc_contextNames[ExamQuestionSolution.CONTENT]);
+
+            return base.VisitExamQuestionSolution(node, n);
+        }
+
+        public override int VisitExamQuestionSubQuestion(ExamQuestionSubQuestion node, params DSLSymbol[] args) {
+            ExamQuestionSubQuestion n = node as ExamQuestionSubQuestion;
+            if (n == null) {
+                throw new InvalidCastException("Expected Assignment type");
+            }
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+
+            CreateContextSubgraph(n, ExamQuestionSubQuestion.CONTENT,
+                n.mc_contextNames[ExamQuestionSubQuestion.CONTENT]);
+
+            return base.VisitExamQuestionSubQuestion(node, n);
+        }
+
         public override int VisitText(Text node, params DSLSymbol[] args) {
             Text n = node as Text;
             if (n == null) {
@@ -254,13 +319,16 @@ namespace ExamDSL
         }
 
         public override int VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
-            m_dotFile.WriteLine($"\"{node.MParent.MNodeName}\"->\"{node.MText}\";");
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MText}\";");
             return 0;
         }
 
         public override int VisitTextMacro(TextMacroSymbol node, params DSLSymbol[] args) {
-            m_dotFile.WriteLine($"\"{node.MParent.MNodeName}\"->\"{node?.Evaluate()}\";");
+            // Bug corrected: use args[0] as the actual parent of the current node
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node?.Evaluate()}\";");
             return 0;
         }
+
     }
 }
