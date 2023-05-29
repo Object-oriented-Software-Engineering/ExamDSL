@@ -9,7 +9,10 @@ using ExamDSLCORE.ASTExamDirectors.ConcreteDirectors;
 using ExamDSLCORE.ASTExamDirectors.MacroSymbols;
 using ExamDSLCORE.ExamAST;
 using Randomizer;
-
+// TODO MAJOR FEATURES
+// TODO 1: Get application formatting settings from settings file
+// TODO 2: Application extensibility through reflection
+// TODO 3: Just In Time C# code compilation and execution
 
 namespace ExamDSL
 {

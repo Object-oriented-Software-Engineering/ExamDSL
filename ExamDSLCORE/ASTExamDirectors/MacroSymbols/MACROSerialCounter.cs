@@ -18,16 +18,12 @@ namespace ExamDSLCORE.ASTExamDirectors.MacroSymbols {
             m_currentNumber = 1;
         }
 
-        public override StaticTextSymbol Evaluate() {
-            StaticTextSymbol staticText =
-                new StaticTextSymbol(Convert.ToString(m_currentNumber++));
-            return staticText;
+        public override string Evaluate() {
+           return Convert.ToString(m_currentNumber++);
         }
 
-        public override StaticTextSymbol GetText() {
-            StaticTextSymbol staticText =
-                new StaticTextSymbol(Convert.ToString(m_currentNumber));
-            return staticText;
+        public override string GetText() {
+            return Convert.ToString(m_currentNumber);
         }
     }
 }

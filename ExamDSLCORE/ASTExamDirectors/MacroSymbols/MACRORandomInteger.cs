@@ -19,21 +19,17 @@ namespace ExamDSLCORE.ASTExamDirectors.MacroSymbols {
         }
 
 
-        public override StaticTextSymbol Evaluate() {
+        public override string Evaluate() {
             int m = m_generator.Next();
-            StaticTextSymbol staticText =
-                new StaticTextSymbol(Convert.ToString(m));
-            return staticText;
+            return Convert.ToString(m);
         }
 
         public override void Reset() {
             Evaluate();
         }
 
-        public override StaticTextSymbol GetText() {
-            StaticTextSymbol staticText =
-                new StaticTextSymbol(Convert.ToString(m_integer));
-            return staticText;
+        public override string GetText() {
+            return Convert.ToString(m_integer);
         }
     }
 }

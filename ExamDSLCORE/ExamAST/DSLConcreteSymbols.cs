@@ -27,8 +27,9 @@ namespace ExamDSLCORE.ExamAST {
         public const int HEADER = 0, QUESTIONS = 1;
         public readonly string[] mc_contextNames = { "HEADER", "QUESTIONS" };
 
-        public Exam() :
-            base(2, (int)ExamSymbolType.ST_EXAM) { }
+        public Exam(TextFormattingProperties formatting) :
+            base(2, (int)ExamSymbolType.ST_EXAM,
+                formatting) { }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExam(this);
@@ -41,8 +42,8 @@ namespace ExamDSLCORE.ExamAST {
         public readonly string[] mc_contextNames = { "TITLE", "SEMESTER", "DATE", 
             "DURATION", "TEACHER", "STUDENTNAME", "DEPARTMENT" };
 
-        public ExamHeader() :
-            base(7, (int)ExamSymbolType.ST_EXAMHEADER) {
+        public ExamHeader(TextFormattingProperties formatting) :
+            base(7, (int)ExamSymbolType.ST_EXAMHEADER,formatting) {
         }
 
         public override Return Accept<Return, Params>(
@@ -54,8 +55,8 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderTitle : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT"};
-        public ExamHeaderTitle() : 
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERTITLE) { }
+        public ExamHeaderTitle(TextFormattingProperties formatting) : 
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERTITLE,formatting) { }
 
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
@@ -66,8 +67,8 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderSemester : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderSemester() : 
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERSEMESTER) { }
+        public ExamHeaderSemester(TextFormattingProperties formatting) : 
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERSEMESTER,formatting) { }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderSemester(this, info);
@@ -77,8 +78,8 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderDate : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderDate() :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERDATE) { }
+        public ExamHeaderDate(TextFormattingProperties formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERDATE,formatting) { }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDate(this, info);
@@ -87,8 +88,8 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderDuration : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderDuration() : 
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERDURATION) { }
+        public ExamHeaderDuration(TextFormattingProperties formatting) : 
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERDURATION,formatting) { }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDuration(this, info);
@@ -98,8 +99,8 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderTeacher : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderTeacher() :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERTEACHER) { }
+        public ExamHeaderTeacher(TextFormattingProperties formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERTEACHER,formatting) { }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderTeacher(this, info);
@@ -109,8 +110,8 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderStudentName : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderStudentName() :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERSTUDENTNAME) { }
+        public ExamHeaderStudentName(TextFormattingProperties formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERSTUDENTNAME,formatting) { }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderStudentName(this, info);
@@ -120,8 +121,8 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderDepartmentName : ASTComposite {
         public const int TEXT = 0, LOGO=1;
         public readonly string[] mc_contextNames = { "TEXT", "LOGO" };
-        public ExamHeaderDepartmentName() :
-            base(2, (int)ExamSymbolType.ST_EXAMHEADERDEPARTMENTNAME) { }
+        public ExamHeaderDepartmentName(TextFormattingProperties formatting) :
+            base(2, (int)ExamSymbolType.ST_EXAMHEADERDEPARTMENTNAME,formatting) { }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDepartmentName(this, info);
@@ -135,8 +136,8 @@ namespace ExamDSLCORE.ExamAST {
         public readonly string[] mc_contextNames = { "HEADER",
             "WEIGHT", "WORDING", "SOLUTION", "SUBQUESTION" };
 
-        public ExamQuestion() :
-            base(5, (int)ExamSymbolType.ST_EXAMQUESTION) {
+        public ExamQuestion(TextFormattingProperties formatting) :
+            base(5, (int)ExamSymbolType.ST_EXAMQUESTION,formatting) {
         }
 
         public override Return Accept<Return, Params>(
@@ -149,8 +150,8 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT =0;
         public readonly string[] mc_contextNames = { "CONTENT"};
 
-        public ExamQuestionWording() :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWORDING) {
+        public ExamQuestionWording(TextFormattingProperties formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWORDING,formatting) {
 
         }
 
@@ -162,8 +163,8 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
 
-        public ExamQuestionHeader() :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONHEADER) {
+        public ExamQuestionHeader(TextFormattingProperties formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONHEADER,formatting) {
 
         }
 
@@ -175,8 +176,8 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
 
-        public ExamQuestionWeight() :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWEIGHT) {
+        public ExamQuestionWeight(TextFormattingProperties formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWEIGHT,formatting) {
 
         }
 
@@ -188,8 +189,8 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
 
-        public ExamQuestionSolution() :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSOLUTION) {
+        public ExamQuestionSolution(TextFormattingProperties formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSOLUTION,formatting) {
         }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
@@ -200,8 +201,8 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
 
-        public ExamQuestionSubQuestion() :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSUBQUESTION) {
+        public ExamQuestionSubQuestion(TextFormattingProperties formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSUBQUESTION,formatting) {
         }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
@@ -215,8 +216,8 @@ namespace ExamDSLCORE.ExamAST {
     public class Text : ASTComposite {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
-        public Text() :
-            base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) { }
+        public Text(TextFormattingProperties context) :
+            base(1, (int)ExamSymbolType.ST_COMPOSITETEXT,context) { }
 
         /*         
          // Creates the first text symbol
@@ -228,20 +229,20 @@ namespace ExamDSLCORE.ExamAST {
             public Text Append(DSLSymbol s)
         */
         public static Text T(string s) {
-            Text newText = new Text();
-            StaticTextSymbol st = new StaticTextSymbol(s);
+            Text newText = new Text(TextFormattingProperties.MFormatContext);
+            StaticTextSymbol st = new StaticTextSymbol(s,TextFormattingProperties.MFormatContext);
             newText.AddNode(st, Text.CONTENT);
             return newText;
         }
 
         public static Text T(DSLSymbol s) {
-            Text newText = new Text();
+            Text newText = new Text(TextFormattingProperties.MFormatContext);
             newText.AddNode(s, Text.CONTENT);
             return newText;
         }
 
         public Text Append(string s) {
-            StaticTextSymbol st = new StaticTextSymbol(s);
+            StaticTextSymbol st = new StaticTextSymbol(s,TextFormattingProperties.MFormatContext);
             AddNode(st, 0);
             return this;
         }
@@ -260,8 +261,8 @@ namespace ExamDSLCORE.ExamAST {
     public class ScopeSymbol : ASTComposite {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
-        public ScopeSymbol() :
-            base(1,(int)ExamSymbolType.ST_SCOPE) { }
+        public ScopeSymbol(TextFormattingProperties context) :
+            base(1,(int)ExamSymbolType.ST_SCOPE,context) { }
 
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
@@ -270,16 +271,16 @@ namespace ExamDSLCORE.ExamAST {
     }
 
     public class NumberedList : ASTComposite {
-        public NumberedList() :
-            base(1, (int)ExamSymbolType.ST_NUMBEREDLIST) { }
+        public NumberedList(TextFormattingProperties context) :
+            base(1, (int)ExamSymbolType.ST_NUMBEREDLIST,context) { }
     }
 
     public class NewLineSymbol : ASTLeaf {
         private string m_newLine;
         public string MNewLine => m_newLine;
 
-        public NewLineSymbol() :
-            base((int)ExamSymbolType.ST_NEWLINE) {
+        public NewLineSymbol(TextFormattingProperties context) :
+            base((int)ExamSymbolType.ST_NEWLINE,context) {
             m_newLine = "\n";
         }
 
@@ -293,8 +294,8 @@ namespace ExamDSLCORE.ExamAST {
         private string m_text;
         public string MText => m_text;
 
-        public StaticTextSymbol(string content) :
-            base((int)ExamSymbolType.ST_STATICTEXT) {
+        public StaticTextSymbol(string content,TextFormattingProperties context) :
+            base((int)ExamSymbolType.ST_STATICTEXT,context) {
             m_text = content;
         }
 
@@ -316,16 +317,12 @@ namespace ExamDSLCORE.ExamAST {
             mc_macroID = id;
             SymbolMemory.Register(this);
         }
-        public abstract StaticTextSymbol Evaluate();
+        public abstract string Evaluate();
         public abstract void Reset();
-        public abstract StaticTextSymbol GetText();
+        public abstract string GetText();
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitTextMacro(this, info);
-        }
-
-        public override string ToString() {
-            return Evaluate().MText;
         }
     }
 }

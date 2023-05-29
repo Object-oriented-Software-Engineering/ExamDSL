@@ -45,11 +45,12 @@ namespace ExamDSLCORE.ExamAST {
 
         public static int MsSerialCounter => ms_serialCounter;
 
-        public DSLSymbol(int mType) {
+        public DSLSymbol(int mType,TextFormattingProperties formatting=null) {
             m_type = mType;
             m_serialNumber = ms_serialCounter++;
             m_nodeName = "Node" + GetType().Name + m_serialNumber;
             m_parent = new List<ASTComposite>();
+            m_formatting = formatting;
         }
 
         public virtual void SetParent(ASTComposite parent) {
@@ -69,8 +70,9 @@ namespace ExamDSLCORE.ExamAST {
 
         public int MContexts => m_children.Length;
         
-        public ASTComposite(int contexts, int mType) :
-            base(mType) {
+        public ASTComposite(int contexts, int mType,
+            TextFormattingProperties formatting=null) :
+            base(mType,formatting) {
             m_children = new List<DSLSymbol>[contexts];
             for (int i = 0; i < contexts; i++) {
                 m_children[i] = new List<DSLSymbol>();
@@ -126,16 +128,12 @@ namespace ExamDSLCORE.ExamAST {
             if (context < m_children.Length) {
                 m_children[context].Add(code);
                 code.SetParent(this);
+                code.M_Formatting = this.M_Formatting;
             } else {
                 throw new ArgumentOutOfRangeException("context index out of range");
             }
         }
-
-        public void AddNode(string text, int context) {
-            StaticTextSymbol container = new StaticTextSymbol(text);
-            AddNode(container, context);
-        }
-
+        
         public IEnumerator<IASTVisitableNode> GetEnumerator() {
             return new ASTCompositeEnumerator(this);
         }
@@ -162,8 +160,8 @@ namespace ExamDSLCORE.ExamAST {
     public abstract class ASTLeaf : DSLSymbol {
         
 
-        public ASTLeaf( int mType) :
-            base(mType) {
+        public ASTLeaf( int mType,TextFormattingProperties formatting=null) :
+            base(mType,formatting) {
         }
 
         /*public void AddText(string text, int context = -1)

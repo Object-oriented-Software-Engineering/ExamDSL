@@ -15,7 +15,22 @@ namespace ExamDSLCORE.ExamAST {
         private Indentation m_Indentation;
         private FNumberedItem m_NumberedItem;
         private FNewLines m_newLineType;
-        
+
+        private static Stack<TextFormattingProperties> m_FormatContextsStack;
+
+        static TextFormattingProperties() {
+            m_FormatContextsStack = new Stack<TextFormattingProperties>();
+            m_FormatContextsStack.Push(new TextFormattingProperties());
+        }
+
+        public static TextFormattingProperties MFormatContext => m_FormatContextsStack.Peek();
+        public static void EnterContext(TextFormattingProperties context) {
+            m_FormatContextsStack.Push(context);
+        }
+        public static TextFormattingProperties LeaveContext() {
+            m_FormatContextsStack.Pop();
+            return m_FormatContextsStack.Peek();
+        }
         public Indentation M_Indentation {
             get => m_Indentation;
             private set => m_Indentation = value;
@@ -24,24 +39,30 @@ namespace ExamDSLCORE.ExamAST {
             get => m_NumberedItem;
             private set => m_NumberedItem = value;
         }
-
         public FNewLines MNewLineType {
             get => m_newLineType;
             private set=> m_newLineType = value ;
         }
-
-        public TextFormattingProperties SetIndentation(Indentation i) {
+        public TextFormattingProperties() {
+            m_Indentation = new Indentation();
+            m_NumberedItem = new FNumberedItem();
+            m_newLineType = new FNewLines();
+        }
+        public TextFormattingProperties IncreaseIndentation() {
             TextFormattingProperties newobject = Clone();
-            newobject.M_Indentation = i;
+            newobject.M_Indentation = newobject.M_Indentation++;
             return newobject;
         }
-
+        public TextFormattingProperties DecreaseIndentation() {
+            TextFormattingProperties newobject = Clone();
+            newobject.M_Indentation = newobject.M_Indentation--;
+            return newobject;
+        }
         public TextFormattingProperties SetNewLineType(FNewLines type) {
             TextFormattingProperties newobject = Clone();
             newobject.MNewLineType = type;
             return newobject;
         }
-
         public TextFormattingProperties Clone() {
             TextFormattingProperties newobject = new TextFormattingProperties() {
                 M_Indentation = m_Indentation,
@@ -65,11 +86,15 @@ namespace ExamDSLCORE.ExamAST {
             AT_LINUX
         };
 
-        private int m_newlineType = 0;
+        private int m_newlineType;
 
         public int M_NewlineType {
             get => m_newlineType;
             private set => m_newlineType = value;
+        }
+
+        public FNewLines() {
+            m_newlineType = 0;
         }
 
         public FNewLines SetNewLineType(int spaces) {
@@ -89,7 +114,6 @@ namespace ExamDSLCORE.ExamAST {
             return Clone();
         }
     }
-
     public class FNumberedItem : ICloneable<FNumberedItem> {
         private const int ArithType_Natural = 0,
             ArithType_Uppercase = 1,
@@ -103,7 +127,7 @@ namespace ExamDSLCORE.ExamAST {
             AT_LATINNUMBERS
         };
 
-        private int m_arithmeticUnit = ArithType_Natural;
+        private int m_arithmeticUnit ;
 
         public int M_ArithmeticUnit {
             get => m_arithmeticUnit;
@@ -111,7 +135,9 @@ namespace ExamDSLCORE.ExamAST {
         }
 
 
-        public FNumberedItem() { }
+        public FNumberedItem() {
+            m_arithmeticUnit = ArithType_Natural;
+        }
 
         public FNumberedItem SetNumberType(int nttype) {
             FNumberedItem newobject = Clone();
@@ -130,42 +156,30 @@ namespace ExamDSLCORE.ExamAST {
             return Clone();
         }
     }
-
     // Immutable class that represents the text indentation level
     public class Indentation : ICloneable<Indentation> {
-        private const int UnitType_Space = 0, UnitType_Tab = 1;
-        // UnitType_Space = 0 : Number of spaces per indentation level
-        // UnitType_Tab = 1 : Number of spaces per tab
+        // Spaces per indentation level
         private int m_spaces = 3;
-        // Type of unit to express indentation
-        int m_unitType = 0;
         // Indentation levels
-        private int m_Indentation = 0;
+        private int m_IndentationLevel = 0;
         public int MIndentation {
-            get => m_Indentation;
-            private set => m_Indentation = value;
+            get => m_IndentationLevel;
+            private set => m_IndentationLevel = value;
         }
         public int MSpaces {
             get => m_spaces;
             private set => m_spaces = value;
         }
-        public int MUnitType {
-            get => m_unitType;
-            private set => m_unitType = value;
+        public Indentation() {
+            m_spaces = 3;
+            m_IndentationLevel = 0;
         }
-        public Indentation() { }
-        
         object ICloneable.Clone() {
             return Clone();
         }
         public Indentation SetSpaces(int spaces) {
             Indentation newobject = Clone();
             newobject.MSpaces = spaces;
-            return newobject;
-        }
-        public Indentation SetUnitType(int type) {
-            Indentation newobject = Clone();
-            newobject.MUnitType = type;
             return newobject;
         }
         public Indentation SetIndentation(int indentation) {
@@ -175,24 +189,30 @@ namespace ExamDSLCORE.ExamAST {
         }
         public static Indentation operator ++(Indentation x) {
             Indentation newobject = x.Clone();
-            newobject.MIndentation = x.m_Indentation++;
+            newobject.MIndentation = x.m_IndentationLevel++;
             return newobject;
         }
         public static Indentation operator --(Indentation x) {
             Indentation newobject = x.Clone();
-            newobject.MIndentation = x.m_Indentation--;
+            newobject.MIndentation = x.m_IndentationLevel--;
             return newobject;
+        }
+        public string Text() {
+            StringBuilder txt=null;
+            for (int i = 0; i < m_IndentationLevel; i++) {
+                for (int j = 0; j < m_spaces; j++) {
+                    txt.Append(' ');
+                }
+            }
+            return txt.ToString();
         }
         public Indentation Clone() {
             Indentation newobject = new Indentation() {
-                MIndentation = m_Indentation,
-                MSpaces = m_spaces,
-                MUnitType = m_unitType
+                MIndentation = m_IndentationLevel,
+                MSpaces = m_spaces
             };
             return newobject;
         }
-
-
     }
 
 }

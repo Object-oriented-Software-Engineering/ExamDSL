@@ -25,7 +25,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public Exam M_Product { get; }
 
         private ExamBuilder() {
-            M_Product = new Exam();
+            M_Product = new Exam(TextFormattingProperties.MFormatContext);
         }
         public static ExamBuilder exam() {
             return new ExamBuilder();
@@ -54,14 +54,14 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public ExamHeader M_Product { get; }
 
         public ExamHeaderBuilder(ExamBuilder parent) {
-            M_Product = new ExamHeader();
+            M_Product = new ExamHeader(TextFormattingProperties.MFormatContext);
             M_Parent = parent;
         }
 
         public ExamHeaderBuilder Title(TextBuilder content) {
             ExamHeaderTitleBuilder newtitle = new ExamHeaderTitleBuilder(this);
             M_Product.AddNode(newtitle.M_Product, ExamHeader.TITLE);
-            newtitle.M_Product.AddNode(content.M_Product,ExamHeaderTitle.TEXT);
+            newtitle.M_Product.AddNode(content.M_Product, ExamHeaderTitle.TEXT);
             return this;
         }
         public ExamHeaderBuilder Semester(TextBuilder content) {
@@ -105,7 +105,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public IBuilder M_Parent { get; }
 
         public ExamHeaderTitleBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderTitle();
+            M_Product = new ExamHeaderTitle(TextFormattingProperties.MFormatContext);
         }
     }
 
@@ -115,7 +115,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public IBuilder M_Parent { get; }
 
         public ExamHeaderSemesterBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderSemester();
+            M_Product = new ExamHeaderSemester(TextFormattingProperties.MFormatContext);
         }
     }
 
@@ -125,7 +125,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public IBuilder M_Parent { get; }
 
         public ExamHeaderDateBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderDate();
+            M_Product = new ExamHeaderDate(TextFormattingProperties.MFormatContext);
         }
     }
 
@@ -135,7 +135,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public IBuilder M_Parent { get; }
 
         public ExamHeaderDurationBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderDuration();
+            M_Product = new ExamHeaderDuration(TextFormattingProperties.MFormatContext);
         }
     }
 
@@ -145,7 +145,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public IBuilder M_Parent { get; }
 
         public ExamHeaderTeacherBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderTeacher();
+            M_Product = new ExamHeaderTeacher(TextFormattingProperties.MFormatContext);
         }
     }
 
@@ -155,10 +155,9 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public IBuilder M_Parent { get; }
 
         public ExamHeaderStudentBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderStudentName();
+            M_Product = new ExamHeaderStudentName(TextFormattingProperties.MFormatContext);
         }
     }
-    
     // Question : Header Gravity Wording Solution Subquestions? 
     public class ExamQuestionBuilder : IExamBuilder<ExamQuestion> {
         // type of exam ( multiple choice, simple answer, 
@@ -168,7 +167,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public IBuilder M_Parent { get; }
 
         public ExamQuestionBuilder(ExamBuilder parent = null) {
-            M_Product = new ExamQuestion();
+            M_Product = new ExamQuestion(TextFormattingProperties.MFormatContext);
             M_Parent = parent;
         }
 
@@ -177,33 +176,32 @@ namespace ExamDSLCORE.ASTExamBuilders {
             M_Product = question;
             M_Parent = parent;
         }
-        
         public ExamQuestionBuilder Header(TextBuilder content) {
-            ExamQuestionHeader header = new ExamQuestionHeader();
-            M_Product.AddNode(header,ExamQuestion.HEADER);
+            ExamQuestionHeader header = new ExamQuestionHeader(TextFormattingProperties.MFormatContext);
+            M_Product.AddNode(header, ExamQuestion.HEADER);
             header.AddNode(content.M_Product, ExamQuestionHeader.CONTENT);
             return this;
         }
         public ExamQuestionBuilder Weight(TextBuilder content) {
-            ExamQuestionWeight weight = new ExamQuestionWeight();
+            ExamQuestionWeight weight = new ExamQuestionWeight(TextFormattingProperties.MFormatContext);
             M_Product.AddNode(weight, ExamQuestion.WEIGHT);
             weight.AddNode(content.M_Product, ExamQuestionWeight.CONTENT);
             return this;
         }
         public ExamQuestionBuilder Wording(TextBuilder content) {
-            ExamQuestionWording wording = new ExamQuestionWording();
+            ExamQuestionWording wording = new ExamQuestionWording(TextFormattingProperties.MFormatContext);
             M_Product.AddNode(wording, ExamQuestion.WORDING);
             wording.AddNode(content.M_Product, ExamQuestionWording.CONTENT);
             return this;
         }
         public ExamQuestionBuilder Solution(TextBuilder content) {
-            ExamQuestionSolution solution = new ExamQuestionSolution();
+            ExamQuestionSolution solution = new ExamQuestionSolution(TextFormattingProperties.MFormatContext);
             M_Product.AddNode(solution, ExamQuestion.SOLUTION);
             solution.AddNode(content.M_Product, ExamQuestionSolution.CONTENT);
             return this;
         }
         public ExamQuestionBuilder SubQuestion(TextBuilder content) {
-            ExamQuestionSubQuestion subQuestion = new ExamQuestionSubQuestion();
+            ExamQuestionSubQuestion subQuestion = new ExamQuestionSubQuestion(TextFormattingProperties.MFormatContext);
             M_Product.AddNode(subQuestion, ExamQuestion.SUBQUESTION);
             subQuestion.AddNode(content.M_Product, ExamQuestionSubQuestion.CONTENT);
             return this;
@@ -213,16 +211,16 @@ namespace ExamDSLCORE.ASTExamBuilders {
         }
     }
 
-    public class TextBuilder: IExamBuilder<Text> {
+    public class TextBuilder : IExamBuilder<Text> {
         private TextBuilder m_parent;
         public Text M_Product { get; }
         public TextBuilder M_Parent => m_parent;
 
         Stack<ASTComposite> m_headStack = new Stack<ASTComposite>();
 
-        public TextBuilder(TextBuilder mParent=null) {
+        public TextBuilder(TextBuilder mParent = null) {
             m_parent = mParent;
-            M_Product = new Text();
+            M_Product = new Text(TextFormattingProperties.MFormatContext);
             m_headStack.Push(M_Product);
         }
 
@@ -236,31 +234,36 @@ namespace ExamDSLCORE.ASTExamBuilders {
 
         public TextBuilder TextL(string text) {
             Text(text);
-            m_headStack.Peek().AddNode(new NewLineSymbol());
+            m_headStack.Peek().AddNode(new NewLineSymbol(TextFormattingProperties.MFormatContext));
             return this;
         }
         public TextBuilder Text(string text) {
-            StaticTextSymbol st = new StaticTextSymbol(text);
+            StaticTextSymbol st = new StaticTextSymbol(text, TextFormattingProperties.MFormatContext);
+            st.M_Formatting = m_headStack.Peek().M_Formatting;
             m_headStack.Peek().AddNode(st, 0);
             return this;
         }
         public TextBuilder EnterScope() {
-           // 1. Create a ScopeSymbol Node
-           ScopeSymbol newsScopeSymbol = new ScopeSymbol();
-           m_headStack.Push(newsScopeSymbol);
+            // 1. Create a ScopeSymbol Node
+            TextFormattingProperties newcontext = M_Product.M_Formatting.IncreaseIndentation();
+            TextFormattingProperties.EnterContext(newcontext);
+            ScopeSymbol newsScopeSymbol = new ScopeSymbol(newcontext);
 
-           // 2. Add ScopeNode to current TextSymbol
-           m_headStack.Peek().AddNode(newsScopeSymbol, 0);
-           
-           return this;
+            m_headStack.Push(newsScopeSymbol);
+
+            // 2. Add ScopeNode to current TextSymbol
+            m_headStack.Peek().AddNode(newsScopeSymbol, 0);
+
+            return this;
         }
         public TextBuilder ExitScope() {
             m_headStack.Pop();
+            TextFormattingProperties.LeaveContext();
             return this;
         }
         public TextBuilder OpenNumberedList() {
             // 1. Create a ScopeSymbol Node
-            NumberedList newNumberedList = new NumberedList();
+            NumberedList newNumberedList = new NumberedList(TextFormattingProperties.MFormatContext);
             m_headStack.Push(newNumberedList);
             // 2. Add ScopeNode to current TextSymbol
             m_headStack.Peek().AddNode(newNumberedList, 0);
@@ -273,14 +276,15 @@ namespace ExamDSLCORE.ASTExamBuilders {
         }
         public TextBuilder NewLine() {
             // 1. Create a ScopeSymbol Node
-            NewLineSymbol newLine = new NewLineSymbol();
+            NewLineSymbol newLine = new NewLineSymbol(TextFormattingProperties.MFormatContext);
             // 2. Add ScopeNode to current TextSymbol
             m_headStack.Peek().AddNode(newLine, 0);
 
             return this;
         }
         public TextBuilder TextMacro(TextMacroSymbol macro) {
-            StaticTextSymbol s=macro.Evaluate();
+            StaticTextSymbol s = new StaticTextSymbol(
+                macro.Evaluate(),TextFormattingProperties.MFormatContext);
             m_headStack.Peek().AddNode(s, 0);
             return this;
         }
