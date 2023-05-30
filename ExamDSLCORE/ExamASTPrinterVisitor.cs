@@ -302,7 +302,19 @@ namespace ExamDSL
 
             return base.VisitText(node, n);
         }
-        
+
+        public override int VisitNumberedList(NumberedList node, params DSLSymbol[] args) {
+            NumberedList n = node as NumberedList;
+            if (n == null) {
+                throw new InvalidCastException("Expected Assignment type");
+            }
+            CreateContextSubgraph(n, NumberedList.CONTENT,
+                n.mc_contextNames[NumberedList.CONTENT]);
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+
+            return base.VisitNumberedList(node, args);
+        }
+
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
             return 0;

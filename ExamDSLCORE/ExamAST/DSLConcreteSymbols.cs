@@ -260,8 +260,18 @@ namespace ExamDSLCORE.ExamAST {
     }
 
     public class NumberedList : ASTComposite {
+        public const int CONTENT = 0;
+        public readonly string[] mc_contextNames = { "CONTENT" };
+        private int m_counter = 0;
+        public int GetNumber() {
+            return m_counter++;
+        }
         public NumberedList(TextFormattingProperties context) :
             base(1, (int)ExamSymbolType.ST_NUMBEREDLIST,context) { }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitNumberedList(this, info);
+        }
     }
 
     public class NewLineSymbol : ASTLeaf {

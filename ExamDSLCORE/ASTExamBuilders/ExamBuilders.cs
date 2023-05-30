@@ -242,6 +242,8 @@ namespace ExamDSLCORE.ASTExamBuilders {
         }
     }
 
+
+
     public class TextBuilder : IExamBuilder<Text> {
         private TextBuilder m_parent;
         public Text M_Product { get; }
@@ -286,20 +288,23 @@ namespace ExamDSLCORE.ASTExamBuilders {
             return this;
         }
         public TextBuilder OpenNumberedList() {
-            // 1. Create a ScopeSymbol Node
+            // 1. Create a NUmberList Node
             NumberedList newNumberedList = new NumberedList(ExamBuilderContextVariables.MFormatContext);
-            ExamBuilderContextVariables.M_HeadStack.Push(newNumberedList);
-            // 2. Add ScopeNode to current TextSymbol
+            // 2. Add NUmber list node to parent node
             ExamBuilderContextVariables.M_HeadStack.Peek().AddNode(newNumberedList, 0);
-
+            // 3. Make NumberList node parent
+            ExamBuilderContextVariables.M_HeadStack.Push(newNumberedList);
+            // 4. Enter NumberList scope
+            EnterScope();
             return this;
         }
         public TextBuilder CloseNumberedList() {
             ExamBuilderContextVariables.M_HeadStack.Pop();
+            ExitScope();
             return this;
         }
         public TextBuilder NewLine() {
-            // 1. Create a ScopeSymbol Node
+            // 1. Create a NewLine Node
             NewLineSymbol newLine = new NewLineSymbol(ExamBuilderContextVariables.MFormatContext);
             // 2. Add ScopeNode to current TextSymbol
             ExamBuilderContextVariables.M_HeadStack.Peek().AddNode(newLine, 0);

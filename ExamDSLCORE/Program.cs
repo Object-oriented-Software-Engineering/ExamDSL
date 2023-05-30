@@ -39,32 +39,36 @@ namespace ExamDSL {
                         .Semester(TextBuilder.T()
                         .Text("Winter Semester ")
                         .EnterScope()
-                        .NewLine()
-                        .Text("Regular Exam Period")
+                            .NewLine()
+                            .Text("Regular Exam Period")
                         .ExitScope()
                         .NewLine())
                     .Date("23/2/2023")
+                    .End()
+                    .question().
+                        Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")").NewLine()).
+                        Wording(TextBuilder.T()
+                            .Text("Text")
+                            .EnterScope()
+                                .NewLine()
+                                .Text("Find the sum of  ")
+                                .TextMacro(Y)
+                                .Text("+")
+                                .TextMacro(Z)
+                                .NewLine()
+                            .ExitScope()
+                            .Text("Text")
+                            .NewLine())
+                    .End()
+                    .question().
+                        Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")"))
+                        .Wording(TextBuilder.T()
+                        .OpenNumberedList()
+                            .Text("Find the sum of 55 + 66")
+                        .NewLine()
+                            .Text("Find the sum of 455 + 466")
+                        .CloseNumberedList())
                     .End();
-            /*
-        question().
-            //Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")").NewLine()).
-            Wording(TextBuilder.T()
-            .Text("Text")
-            .EnterScope()
-            .NewLine()
-            .Text("Find the sum of  ")
-            .TextMacro(Y)
-            .Text("+")
-            .TextMacro(Z)
-            .NewLine()
-            .ExitScope()
-            .Text("Text")
-            .NewLine())
-        .End();//.
-        /*question(). 
-            Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")")).
-            Wording("Find the sum of 55 + 66").
-        End()#1#;*/
             ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam.M_Product, null);
             ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
