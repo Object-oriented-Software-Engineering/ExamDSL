@@ -18,10 +18,9 @@ namespace ExamDSLCORE.ASTExamDirectors.MacroSymbols {
             m_generator = generator;
         }
 
-
         public override string Evaluate() {
-            int m = m_generator.Next();
-            return Convert.ToString(m);
+            m_integer = m_generator.Next();
+            return Convert.ToString(m_integer);
         }
 
         public override void Reset() {

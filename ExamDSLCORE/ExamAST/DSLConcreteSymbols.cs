@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExamDSL;
 using ExamDSLCORE;
+using ExamDSLCORE.ASTExamBuilders;
 
 public enum ExamSymbolType {
     ST_EXAM, ST_EXAMHEADER, ST_EXAMHEADERTITLE, ST_EXAMHEADERSEMESTER,
@@ -14,7 +15,7 @@ public enum ExamSymbolType {
     ST_EXAMQUESTIONSOLUTION, ST_EXAMQUESTIONSUBQUESTION,
     ST_EXAMHEADERSTUDENTNAME, ST_EXAMHEADERDEPARTMENTNAME, ST_EXAMHEADERDATE,
     ST_COMPOSITETEXT, ST_NUMBEREDLIST,
-    ST_STATICTEXT, ST_MACROTEXT, ST_NEWLINE,ST_SCOPE
+    ST_STATICTEXT, ST_MACROTEXT, ST_NEWLINE
 
 
 
@@ -229,20 +230,20 @@ namespace ExamDSLCORE.ExamAST {
             public Text Append(DSLSymbol s)
         */
         public static Text T(string s) {
-            Text newText = new Text(TextFormattingProperties.MFormatContext);
-            StaticTextSymbol st = new StaticTextSymbol(s,TextFormattingProperties.MFormatContext);
+            Text newText = new Text(ExamBuilderContextVariables.MFormatContext);
+            StaticTextSymbol st = new StaticTextSymbol(s,ExamBuilderContextVariables.MFormatContext);
             newText.AddNode(st, Text.CONTENT);
             return newText;
         }
 
         public static Text T(DSLSymbol s) {
-            Text newText = new Text(TextFormattingProperties.MFormatContext);
+            Text newText = new Text(ExamBuilderContextVariables.MFormatContext);
             newText.AddNode(s, Text.CONTENT);
             return newText;
         }
 
         public Text Append(string s) {
-            StaticTextSymbol st = new StaticTextSymbol(s,TextFormattingProperties.MFormatContext);
+            StaticTextSymbol st = new StaticTextSymbol(s,ExamBuilderContextVariables.MFormatContext);
             AddNode(st, 0);
             return this;
         }
@@ -258,30 +259,30 @@ namespace ExamDSLCORE.ExamAST {
         }
     }
 
-    public class ScopeSymbol : ASTComposite {
-        public const int CONTENT = 0;
-        public readonly string[] mc_contextNames = { "CONTENT" };
-        public ScopeSymbol(TextFormattingProperties context) :
-            base(1,(int)ExamSymbolType.ST_SCOPE,context) { }
-
-        public override Return Accept<Return, Params>(
-            IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitScope(this, info);
-        }
-    }
-
     public class NumberedList : ASTComposite {
         public NumberedList(TextFormattingProperties context) :
             base(1, (int)ExamSymbolType.ST_NUMBEREDLIST,context) { }
     }
 
     public class NewLineSymbol : ASTLeaf {
-        private string m_newLine;
-        public string MNewLine => m_newLine;
+
+        public string MNewLine {
+            get {
+                int indLevel = M_Formatting.M_Indentation.MIndentation;
+                int spacePerLevel = M_Formatting.M_Indentation.MSpaces;
+                StringBuilder txt = new StringBuilder();
+                txt.AppendLine();
+                for (int i = 0; i < indLevel; i++) {
+                    for (int j = 0; j < spacePerLevel; j++) {
+                        txt.Append(' ');
+                    }
+                }
+                return txt.ToString();
+            }
+        }
 
         public NewLineSymbol(TextFormattingProperties context) :
             base((int)ExamSymbolType.ST_NEWLINE,context) {
-            m_newLine = "\n";
         }
 
         public override Return Accept<Return, Params>(

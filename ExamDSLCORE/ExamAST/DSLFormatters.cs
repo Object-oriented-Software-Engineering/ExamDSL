@@ -15,22 +15,7 @@ namespace ExamDSLCORE.ExamAST {
         private Indentation m_Indentation;
         private FNumberedItem m_NumberedItem;
         private FNewLines m_newLineType;
-
-        private static Stack<TextFormattingProperties> m_FormatContextsStack;
-
-        static TextFormattingProperties() {
-            m_FormatContextsStack = new Stack<TextFormattingProperties>();
-            m_FormatContextsStack.Push(new TextFormattingProperties());
-        }
-
-        public static TextFormattingProperties MFormatContext => m_FormatContextsStack.Peek();
-        public static void EnterContext(TextFormattingProperties context) {
-            m_FormatContextsStack.Push(context);
-        }
-        public static TextFormattingProperties LeaveContext() {
-            m_FormatContextsStack.Pop();
-            return m_FormatContextsStack.Peek();
-        }
+        
         public Indentation M_Indentation {
             get => m_Indentation;
             private set => m_Indentation = value;
@@ -65,9 +50,9 @@ namespace ExamDSLCORE.ExamAST {
         }
         public TextFormattingProperties Clone() {
             TextFormattingProperties newobject = new TextFormattingProperties() {
-                M_Indentation = m_Indentation,
-                M_NumberedItem = m_NumberedItem,
-                MNewLineType = m_newLineType
+                M_Indentation = m_Indentation.Clone(),
+                M_NumberedItem = m_NumberedItem.Clone(),
+                MNewLineType = m_newLineType.Clone()
             };
             return newobject;
         }
@@ -188,24 +173,14 @@ namespace ExamDSLCORE.ExamAST {
             return newobject;
         }
         public static Indentation operator ++(Indentation x) {
-            Indentation newobject = x.Clone();
-            newobject.MIndentation = x.m_IndentationLevel++;
-            return newobject;
+            x.MIndentation = ++x.m_IndentationLevel;
+            return x;
         }
         public static Indentation operator --(Indentation x) {
-            Indentation newobject = x.Clone();
-            newobject.MIndentation = x.m_IndentationLevel--;
-            return newobject;
+            x.MIndentation = --x.m_IndentationLevel;
+            return x;
         }
-        public string Text() {
-            StringBuilder txt=null;
-            for (int i = 0; i < m_IndentationLevel; i++) {
-                for (int j = 0; j < m_spaces; j++) {
-                    txt.Append(' ');
-                }
-            }
-            return txt.ToString();
-        }
+        
         public Indentation Clone() {
             Indentation newobject = new Indentation() {
                 MIndentation = m_IndentationLevel,

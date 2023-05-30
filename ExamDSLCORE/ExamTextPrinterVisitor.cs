@@ -55,7 +55,6 @@ namespace ExamDSL
         }
         public override StringBuilder VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
             m_text.Append(node.MNewLine);
-            
             return base.VisitNewLine(node, args);
         }
     }

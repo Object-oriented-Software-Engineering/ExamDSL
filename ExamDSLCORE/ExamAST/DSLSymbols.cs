@@ -128,7 +128,6 @@ namespace ExamDSLCORE.ExamAST {
             if (context < m_children.Length) {
                 m_children[context].Add(code);
                 code.SetParent(this);
-                code.M_Formatting = this.M_Formatting;
             } else {
                 throw new ArgumentOutOfRangeException("context index out of range");
             }

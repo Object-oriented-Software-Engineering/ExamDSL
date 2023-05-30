@@ -296,31 +296,21 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
+            CreateContextSubgraph(n, Text.CONTENT,
+                n.mc_contextNames[Text.CONTENT]);
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
 
             return base.VisitText(node, n);
         }
-
-        public override int VisitScope(ScopeSymbol node, params DSLSymbol[] args) {
-            ScopeSymbol n = node as ScopeSymbol;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
-
-            CreateContextSubgraph(n, ScopeSymbol.CONTENT,
-                n.mc_contextNames[ScopeSymbol.CONTENT]);
-
-            return base.VisitScope(node, n);
-        }
-
+        
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
             return 0;
         }
 
         public override int VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MText}\";");
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node.MText}\";");
             return 0;
         }
 
