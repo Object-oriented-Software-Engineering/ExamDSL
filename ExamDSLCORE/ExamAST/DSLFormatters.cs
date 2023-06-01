@@ -4,65 +4,93 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static ExamDSLCORE.ExamAST.FNumberedItem;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ExamDSLCORE.ExamAST {
 
-    public interface ICloneable<T> : ICloneable {
-        T Clone();
+    public abstract class FormattingProperty {
+        private TextFormattingProperties m_formattingContext;
+
+        public TextFormattingProperties MFormattingContext
+            => m_formattingContext;
+
+        protected FormattingProperty(TextFormattingProperties mFormattingContainer) {
+            m_formattingContext = mFormattingContainer;
+        }
+        
+        public abstract string Text();
     }
 
-    public class TextFormattingProperties : ICloneable<TextFormattingProperties> {
+    public class TextFormattingProperties {
         private Indentation m_Indentation;
         private FNumberedItem m_NumberedItem;
         private FNewLines m_newLineType;
-        
+
         public Indentation M_Indentation {
             get => m_Indentation;
             private set => m_Indentation = value;
         }
+
         public FNumberedItem M_NumberedItem {
             get => m_NumberedItem;
             private set => m_NumberedItem = value;
         }
+
         public FNewLines MNewLineType {
             get => m_newLineType;
-            private set=> m_newLineType = value ;
+            private set => m_newLineType = value;
         }
+
         public TextFormattingProperties() {
-            m_Indentation = new Indentation();
-            m_NumberedItem = new FNumberedItem();
-            m_newLineType = new FNewLines();
+            m_Indentation = new Indentation(this);
+            m_NumberedItem = null;
+            m_newLineType = new FNewLines(this);
         }
+
         public TextFormattingProperties IncreaseIndentation() {
             TextFormattingProperties newobject = Clone();
             newobject.M_Indentation = newobject.M_Indentation++;
+            newobject.MNewLineType = newobject.MNewLineType.Clone(newobject);
+            newobject.M_NumberedItem = newobject.M_NumberedItem?.Clone(newobject);
             return newobject;
         }
+
         public TextFormattingProperties DecreaseIndentation() {
             TextFormattingProperties newobject = Clone();
             newobject.M_Indentation = newobject.M_Indentation--;
+            newobject.MNewLineType = newobject.MNewLineType.Clone(newobject);
+            newobject.M_NumberedItem = newobject.M_NumberedItem?.Clone(newobject);
             return newobject;
         }
+
+        public TextFormattingProperties SetItemNumberingScope() {
+            TextFormattingProperties newobject = Clone();
+            newobject.M_NumberedItem = new FNumberedItem(this);
+            return newobject;
+        }
+
         public TextFormattingProperties SetNewLineType(FNewLines type) {
             TextFormattingProperties newobject = Clone();
             newobject.MNewLineType = type;
             return newobject;
         }
+
         public TextFormattingProperties Clone() {
             TextFormattingProperties newobject = new TextFormattingProperties() {
-                M_Indentation = m_Indentation.Clone(),
-                M_NumberedItem = m_NumberedItem.Clone(),
-                MNewLineType = m_newLineType.Clone()
+                M_Indentation = m_Indentation.Clone(this),
+                M_NumberedItem = m_NumberedItem?.Clone(this),
+                MNewLineType = m_newLineType.Clone(this)
             };
             return newobject;
         }
-        object ICloneable.Clone() {
-            return Clone();
-        }
     }
 
-    public class FNewLines : ICloneable<FNewLines> {
-
+    /// <summary>
+    /// FNewLines describes the newline character format. Newline
+    /// contains the following characteristics
+    /// 1) Type of new line per OS
+    /// </summary>
+    public class FNewLines : FormattingProperty {
         private const int NLType_Windows = 0,
             NLType_Linux = 1;
 
@@ -78,28 +106,33 @@ namespace ExamDSLCORE.ExamAST {
             private set => m_newlineType = value;
         }
 
-        public FNewLines() {
+        public FNewLines(TextFormattingProperties container)
+            : base(container) {
             m_newlineType = 0;
         }
 
-        public FNewLines SetNewLineType(int spaces) {
-            FNewLines newobject = Clone();
+        public FNewLines SetNewLineType(int spaces, TextFormattingProperties container) {
+            FNewLines newobject = Clone(container);
             newobject.M_NewlineType = spaces;
             return newobject;
         }
 
-        public FNewLines Clone() {
-            FNewLines newobject = new FNewLines() {
+        public FNewLines Clone(TextFormattingProperties container) {
+            FNewLines newobject = new FNewLines(container) {
                 M_NewlineType = m_newlineType
             };
             return newobject;
         }
 
-        object ICloneable.Clone() {
-            return Clone();
+        public override string Text() {
+            StringBuilder txt = new StringBuilder();
+            txt.AppendLine();
+            txt.Append(MFormattingContext.M_Indentation.Text());
+            return txt.ToString();
         }
     }
-    public class FNumberedItem : ICloneable<FNumberedItem> {
+
+    public class FNumberedItem : FormattingProperty {
         private const int ArithType_Natural = 0,
             ArithType_Uppercase = 1,
             ArithType_Lowercase = 2,
@@ -112,7 +145,14 @@ namespace ExamDSLCORE.ExamAST {
             AT_LATINNUMBERS
         };
 
-        private int m_arithmeticUnit ;
+        private int m_arithmeticUnit;
+        private int m_nextNumber = 0;
+
+        public int MNextNumber => m_nextNumber;
+
+        public int GetNextNumber() {
+            return m_nextNumber++;
+        }
 
         public int M_ArithmeticUnit {
             get => m_arithmeticUnit;
@@ -120,74 +160,93 @@ namespace ExamDSLCORE.ExamAST {
         }
 
 
-        public FNumberedItem() {
+        public FNumberedItem(TextFormattingProperties container)
+            : base(container) {
             m_arithmeticUnit = ArithType_Natural;
         }
 
-        public FNumberedItem SetNumberType(int nttype) {
-            FNumberedItem newobject = Clone();
+        public FNumberedItem SetNumberType(int nttype, TextFormattingProperties container) {
+            FNumberedItem newobject = Clone(container);
             newobject.m_arithmeticUnit = nttype;
             return newobject;
         }
 
-        public FNumberedItem Clone() {
-            FNumberedItem newobject = new FNumberedItem() {
+        public FNumberedItem Clone(TextFormattingProperties container) {
+            FNumberedItem newobject = new FNumberedItem(container) {
                 M_ArithmeticUnit = m_arithmeticUnit
             };
             return newobject;
         }
 
-        object ICloneable.Clone() {
-            return Clone();
+        public override string Text() {
+            throw new NotImplementedException();
         }
     }
+
     // Immutable class that represents the text indentation level
-    public class Indentation : ICloneable<Indentation> {
+    public class Indentation : FormattingProperty {
         // Spaces per indentation level
         private int m_spaces = 3;
+
         // Indentation levels
         private int m_IndentationLevel = 0;
+
         public int MIndentation {
             get => m_IndentationLevel;
             private set => m_IndentationLevel = value;
         }
+
         public int MSpaces {
             get => m_spaces;
             private set => m_spaces = value;
         }
-        public Indentation() {
+
+        public Indentation(TextFormattingProperties container)
+            : base(container) {
             m_spaces = 3;
             m_IndentationLevel = 0;
         }
-        object ICloneable.Clone() {
-            return Clone();
-        }
-        public Indentation SetSpaces(int spaces) {
-            Indentation newobject = Clone();
+
+        public Indentation SetSpaces(int spaces,TextFormattingProperties container) {
+            Indentation newobject = Clone(container);
             newobject.MSpaces = spaces;
             return newobject;
         }
-        public Indentation SetIndentation(int indentation) {
-            Indentation newobject = Clone();
+
+        public Indentation SetIndentation(int indentation, TextFormattingProperties container) {
+            Indentation newobject = Clone(container);
             newobject.MIndentation = indentation;
             return newobject;
         }
+
         public static Indentation operator ++(Indentation x) {
             x.MIndentation = ++x.m_IndentationLevel;
             return x;
         }
+
         public static Indentation operator --(Indentation x) {
             x.MIndentation = --x.m_IndentationLevel;
             return x;
         }
-        
-        public Indentation Clone() {
-            Indentation newobject = new Indentation() {
+
+        public override string Text() {
+            StringBuilder txt = new StringBuilder();
+            for (int i = 0; i < m_IndentationLevel; i++) {
+                for (int j = 0; j < m_spaces; j++) {
+                    txt.Append(' ');
+                }
+            }
+            return txt.ToString();
+        }
+
+        public Indentation Clone(TextFormattingProperties container) {
+            Indentation newobject = new Indentation(container) {
                 MIndentation = m_IndentationLevel,
                 MSpaces = m_spaces
             };
             return newobject;
         }
     }
-
 }
+
+

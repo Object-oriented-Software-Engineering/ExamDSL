@@ -241,9 +241,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
             return M_Parent as ExamBuilder;
         }
     }
-
-
-
+    
     public class TextBuilder : IExamBuilder<Text> {
         private TextBuilder m_parent;
         public Text M_Product { get; }
@@ -288,14 +286,19 @@ namespace ExamDSLCORE.ASTExamBuilders {
             return this;
         }
         public TextBuilder OpenNumberedList() {
-            // 1. Create a NUmberList Node
-            NumberedList newNumberedList = new NumberedList(ExamBuilderContextVariables.MFormatContext);
-            // 2. Add NUmber list node to parent node
+            // 0. Create a new formatting context based on NUmber List Scope
+            TextFormattingProperties newcontext = M_Product.M_Formatting.SetItemNumberingScope();
+            // 1. Create a NUmberList Node using the current formatting context
+            NumberedList newNumberedList = new NumberedList(newcontext);
+            // 2. Add NUmber list node to parent node ( M_HeadStack stack contains the parent node)
             ExamBuilderContextVariables.M_HeadStack.Peek().AddNode(newNumberedList, 0);
             // 3. Make NumberList node parent
             ExamBuilderContextVariables.M_HeadStack.Push(newNumberedList);
             // 4. Enter NumberList scope
             EnterScope();
+            // 5. Add a new line for the first element
+            // CAUSES STACKOVERFLOW ->newNumberedList.AddNode(NewLine().M_Product,NumberedList.CONTENT);
+            NewLine();
             return this;
         }
         public TextBuilder CloseNumberedList() {
@@ -308,7 +311,6 @@ namespace ExamDSLCORE.ASTExamBuilders {
             NewLineSymbol newLine = new NewLineSymbol(ExamBuilderContextVariables.MFormatContext);
             // 2. Add ScopeNode to current TextSymbol
             ExamBuilderContextVariables.M_HeadStack.Peek().AddNode(newLine, 0);
-
             return this;
         }
         public TextBuilder TextMacro(TextMacroSymbol macro) {

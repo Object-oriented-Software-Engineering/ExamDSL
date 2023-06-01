@@ -275,22 +275,7 @@ namespace ExamDSLCORE.ExamAST {
     }
 
     public class NewLineSymbol : ASTLeaf {
-
-        public string MNewLine {
-            get {
-                int indLevel = M_Formatting.M_Indentation.MIndentation;
-                int spacePerLevel = M_Formatting.M_Indentation.MSpaces;
-                StringBuilder txt = new StringBuilder();
-                txt.AppendLine();
-                for (int i = 0; i < indLevel; i++) {
-                    for (int j = 0; j < spacePerLevel; j++) {
-                        txt.Append(' ');
-                    }
-                }
-                return txt.ToString();
-            }
-        }
-
+        
         public NewLineSymbol(TextFormattingProperties context) :
             base((int)ExamSymbolType.ST_NEWLINE,context) {
         }

@@ -312,7 +312,7 @@ namespace ExamDSL
                 n.mc_contextNames[NumberedList.CONTENT]);
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
 
-            return base.VisitNumberedList(node, args);
+            return base.VisitNumberedList(node, n);
         }
 
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
