@@ -54,7 +54,6 @@ namespace ExamDSL
             for (int i = 0; i < node.GetNumberOfContextNodes(0); i++) {
                 Visit(node.GetChild(0, i));
             }
-
             return m_text;
         }
 

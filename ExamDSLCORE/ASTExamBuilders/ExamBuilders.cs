@@ -241,7 +241,38 @@ namespace ExamDSLCORE.ASTExamBuilders {
             return M_Parent as ExamBuilder;
         }
     }
-    
+
+    public class NumberedListBuilder : IExamBuilder<NumberedList> {
+        public NumberedList M_Product { get; }
+        public IBuilder M_Parent { get; }
+        private TextBuilder m_textbuilder;
+
+        public NumberedListBuilder(TextBuilder text) {
+            M_Product = new NumberedList(ExamBuilderContextVariables.MFormatContext);
+            m_textbuilder = text;
+        }
+
+        public NumberedListBuilder Item() {
+
+            return this;
+        }
+
+        public NumberedListBuilder OpenNumberedList() {
+            NumberedListBuilder newListBuilder = new NumberedListBuilder(m_textbuilder);
+
+            return newListBuilder;
+        }
+
+        public NumberedListBuilder CloseNumberedList() {
+
+            return this;
+        }
+
+        public TextBuilder End() {
+            return m_textbuilder;
+        }
+    }
+
     public class TextBuilder : IExamBuilder<Text> {
         private TextBuilder m_parent;
         public Text M_Product { get; }
@@ -297,7 +328,6 @@ namespace ExamDSLCORE.ASTExamBuilders {
             // 4. Enter NumberList scope
             EnterScope();
             // 5. Add a new line for the first element
-            // CAUSES STACKOVERFLOW ->newNumberedList.AddNode(NewLine().M_Product,NumberedList.CONTENT);
             NewLine();
             return this;
         }

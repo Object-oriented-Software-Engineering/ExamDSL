@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static ExamDSLCORE.ExamAST.FNumberedItem;
+using static ExamDSLCORE.ExamAST.FNumberedItems;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace ExamDSLCORE.ExamAST {
@@ -23,7 +23,7 @@ namespace ExamDSLCORE.ExamAST {
 
     public class TextFormattingProperties {
         private Indentation m_Indentation;
-        private FNumberedItem m_NumberedItem;
+        private FNumberedItems m_NumberedItem;
         private FNewLines m_newLineType;
 
         public Indentation M_Indentation {
@@ -31,7 +31,7 @@ namespace ExamDSLCORE.ExamAST {
             private set => m_Indentation = value;
         }
 
-        public FNumberedItem M_NumberedItem {
+        public FNumberedItems M_NumberedItem {
             get => m_NumberedItem;
             private set => m_NumberedItem = value;
         }
@@ -65,7 +65,7 @@ namespace ExamDSLCORE.ExamAST {
 
         public TextFormattingProperties SetItemNumberingScope() {
             TextFormattingProperties newobject = Clone();
-            newobject.M_NumberedItem = new FNumberedItem(this);
+            newobject.M_NumberedItem = new FNumberedItems(this);
             return newobject;
         }
 
@@ -131,8 +131,8 @@ namespace ExamDSLCORE.ExamAST {
             return txt.ToString();
         }
     }
-
-    public class FNumberedItem : FormattingProperty {
+    
+    public class FNumberedItems : FormattingProperty {
         private const int ArithType_Natural = 0,
             ArithType_Uppercase = 1,
             ArithType_Lowercase = 2,
@@ -145,10 +145,16 @@ namespace ExamDSLCORE.ExamAST {
             AT_LATINNUMBERS
         };
 
-        private int m_arithmeticUnit;
+        private int m_arithmeticUnit=ArithType_Natural;
         private int m_nextNumber = 0;
+        private string m_closingDelimeter=")";
+        private string m_separatorDelimiter = ".";
+        private FNumberedItems m_parentScope;
 
-        public int MNextNumber => m_nextNumber;
+        public int M_NextNumber => m_nextNumber;
+        public string M_ClosingDelimeter => m_closingDelimeter;
+        public string M_SeparatorDelimiter => m_separatorDelimiter;
+        public FNumberedItems M_ParentScope => m_parentScope;
 
         public int GetNextNumber() {
             return m_nextNumber++;
@@ -160,19 +166,31 @@ namespace ExamDSLCORE.ExamAST {
         }
 
 
-        public FNumberedItem(TextFormattingProperties container)
+        public FNumberedItems(TextFormattingProperties container)
             : base(container) {
-            m_arithmeticUnit = ArithType_Natural;
+            if (container.M_NumberedItem == null ) {
+                m_arithmeticUnit = ArithType_Natural;
+                m_nextNumber = 0;
+                m_closingDelimeter = ")";
+                m_separatorDelimiter = ".";
+            }
+            else {
+                m_arithmeticUnit = container.M_NumberedItem.M_ArithmeticUnit;
+                m_nextNumber = 0;
+                m_closingDelimeter = container.M_NumberedItem.M_ClosingDelimeter;
+                m_separatorDelimiter = container.M_NumberedItem.M_SeparatorDelimiter;
+            }
+            m_parentScope = container.M_NumberedItem;
         }
 
-        public FNumberedItem SetNumberType(int nttype, TextFormattingProperties container) {
-            FNumberedItem newobject = Clone(container);
+        public FNumberedItems SetNumberType(int nttype, TextFormattingProperties container) {
+            FNumberedItems newobject = Clone(container);
             newobject.m_arithmeticUnit = nttype;
             return newobject;
         }
 
-        public FNumberedItem Clone(TextFormattingProperties container) {
-            FNumberedItem newobject = new FNumberedItem(container) {
+        public FNumberedItems Clone(TextFormattingProperties container) {
+            FNumberedItems newobject = new FNumberedItems(container) {
                 M_ArithmeticUnit = m_arithmeticUnit
             };
             return newobject;

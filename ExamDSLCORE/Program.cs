@@ -34,7 +34,7 @@ namespace ExamDSL {
 
             // Text Structural representation description of the exam
             var exam = ExamBuilder.exam()
-                .header()
+                /*.header()
                 .Title("Arithmetic Examination")
                 .Semester(TextBuilder.T()
                     .Text("Winter Semester ")
@@ -44,8 +44,16 @@ namespace ExamDSL {
                     .ExitScope()
                     .NewLine())
                 .Date("23/2/2023")
-                .End()
-                .question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")").NewLine()).Wording(
+                .End()*/
+                .question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")"))
+                .Wording(TextBuilder.T()
+                    .OpenNumberedList()
+                    .Text("Find the sum of 55 + 66")
+                    .NewLine()
+                    .Text("Find the sum of 455 + 466")
+                    .CloseNumberedList())
+                .End();
+                /*.question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")").NewLine()).Wording(
                     TextBuilder.T()
                         .Text("Text")
                         .EnterScope()
@@ -90,7 +98,7 @@ namespace ExamDSL {
                         .ExitScope()
                         .Text("Text")
                         .NewLine())
-                .End();
+                .End();*/
             ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam.M_Product, null);
             ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
