@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExamDSL;
+using ExamDSLCORE.ExamAST.Formatters;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace ExamDSLCORE.ExamAST {
+namespace ExamDSLCORE.ExamAST
+{
 
     public abstract class DSLSymbol : IASTVisitableNode, ILabelled {
         // Type of DSLSymbol
@@ -25,11 +27,11 @@ namespace ExamDSLCORE.ExamAST {
         // link hierarchy node. Trees have many applications 
         // most of the times they extend to an application domain
         // So this link is necessary.
-        private TextFormattingProperties m_formatting;
+        private Dictionary<object,object> m_info;
 
-        public TextFormattingProperties M_Formatting {
-            get => m_formatting;
-            set => m_formatting = value ??
+        public object this[object key] {
+            get => m_info[key];
+            set => m_info[key] = value ??
                                   throw new ArgumentNullException(nameof(value));
         }
 
@@ -45,12 +47,12 @@ namespace ExamDSLCORE.ExamAST {
 
         public static int MsSerialCounter => ms_serialCounter;
 
-        public DSLSymbol(int mType,TextFormattingProperties formatting=null) {
+        public DSLSymbol(int mType) {
             m_type = mType;
             m_serialNumber = ms_serialCounter++;
             m_nodeName = "Node" + GetType().Name + m_serialNumber;
             m_parent = new List<ASTComposite>();
-            m_formatting = formatting;
+            m_info = new Dictionary<object,object>();
         }
 
         public virtual void SetParent(ASTComposite parent) {
@@ -70,9 +72,8 @@ namespace ExamDSLCORE.ExamAST {
 
         public int MContexts => m_children.Length;
         
-        public ASTComposite(int contexts, int mType,
-            TextFormattingProperties formatting=null) :
-            base(mType,formatting) {
+        public ASTComposite(int contexts, int mType) :
+            base(mType) {
             m_children = new List<DSLSymbol>[contexts];
             for (int i = 0; i < contexts; i++) {
                 m_children[i] = new List<DSLSymbol>();
@@ -159,8 +160,8 @@ namespace ExamDSLCORE.ExamAST {
     public abstract class ASTLeaf : DSLSymbol {
         
 
-        public ASTLeaf( int mType,TextFormattingProperties formatting=null) :
-            base(mType,formatting) {
+        public ASTLeaf( int mType) :
+            base(mType) {
         }
 
         /*public void AddText(string text, int context = -1)

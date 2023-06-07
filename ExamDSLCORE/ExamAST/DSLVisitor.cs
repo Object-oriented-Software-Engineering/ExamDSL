@@ -34,6 +34,19 @@ namespace ExamDSLCORE.ExamAST {
             return result;
         }
 
+        public virtual Result VisitExamUnit(ExamUnit node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+
+
+
+
+
+
+
+
+
+
         public virtual Result VisitExam(Exam node, params Params[] args) {
             return VisitChildren(node, args);
         }
@@ -83,6 +96,9 @@ namespace ExamDSLCORE.ExamAST {
             return VisitChildren(node, args);
         }
         public virtual Result VisitNumberedList(NumberedList node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitNumberedListItem(NumberedList.NumberedListItem node, params Params[] args) {
             return VisitChildren(node, args);
         }
         public virtual Result VisitNewLine(NewLineSymbol node, params Params[] args) {

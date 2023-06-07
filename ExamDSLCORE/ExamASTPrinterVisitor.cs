@@ -61,6 +61,12 @@ namespace ExamDSL
             m_dotFile.WriteLine("}");
             m_dotFile.Close();
 
+            CallGraphvizProcess();
+
+            return 0;
+        }
+
+        private void CallGraphvizProcess() {
             // Prepare the process dot to run
             ProcessStartInfo start = new ProcessStartInfo();
             // Enter in the command line arguments, everything you would enter after the executable name itself
@@ -81,8 +87,6 @@ namespace ExamDSL
                 // Retrieve the app's exit code
                 exitCode = proc.ExitCode;
             }
-
-            return 0;
         }
 
         public override int VisitExamHeader(ExamHeader node, params DSLSymbol[] args) {
@@ -115,7 +119,13 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+
+            if (args != null) {
+                m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            }
+            else {
+                m_dotFile.WriteLine("digraph G{\n");
+            }
 
             CreateContextSubgraph(n, ExamQuestion.HEADER,
                 n.mc_contextNames[ExamQuestion.HEADER]);
@@ -132,7 +142,15 @@ namespace ExamDSL
             CreateContextSubgraph(n, ExamQuestion.SUBQUESTION,
                 n.mc_contextNames[ExamQuestion.SUBQUESTION]);
 
-            return base.VisitExamQuestion(node, n);
+            base.VisitExamQuestion(node, n);
+
+            if (args == null) {
+                m_dotFile.WriteLine("}");
+                m_dotFile.Close();
+                CallGraphvizProcess();
+            }
+
+            return 0;
         }
 
         public override int VisitExamHeaderTitle(ExamHeaderTitle node, params DSLSymbol[] args) {
@@ -313,6 +331,18 @@ namespace ExamDSL
             m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
 
             return base.VisitNumberedList(node, n);
+        }
+
+        public override int VisitNumberedListItem(NumberedList.NumberedListItem node, params DSLSymbol[] args) {
+            NumberedList.NumberedListItem n = node as NumberedList.NumberedListItem;
+            if (n == null) {
+                throw new InvalidCastException("Expected Assignment type");
+            }
+            CreateContextSubgraph(n, NumberedList.NumberedListItem.CONTENT,
+                n.mc_contextNames[NumberedList.NumberedListItem.CONTENT]);
+            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+
+            return base.VisitNumberedListItem(node, n);
         }
 
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {

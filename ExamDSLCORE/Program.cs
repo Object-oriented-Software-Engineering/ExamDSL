@@ -48,11 +48,11 @@ namespace ExamDSL {
                 .question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")"))
                 .Wording(TextBuilder.T()
                     .OpenNumberedList()
-                    .Text("Find the sum of 55 + 66")
-                    .NewLine()
-                    .Text("Find the sum of 455 + 466")
-                    .CloseNumberedList())
-                .End();
+                    .Item(TextBuilder.T().Text("Find the sum of 55 + 66"))
+                    .Item(TextBuilder.T().Text("Find the sum of 455 + 466"))
+                    .CloseNumberedList()
+                    .End())
+                    ;
                 /*.question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")").NewLine()).Wording(
                     TextBuilder.T()
                         .Text("Text")
