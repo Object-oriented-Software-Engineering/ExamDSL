@@ -33,7 +33,7 @@ namespace ExamDSL
                 }
                 first = false;
 
-                m_dotFile.Write("\"" + child.MNodeName + "\" ");
+                m_dotFile.Write("\"" + child.M_NodeName + "\" ");
                 if (node.GetNumberOfContextNodes(contextindex) != 0) {
                     m_dotFile.WriteLine($";");
                 }
@@ -90,7 +90,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamHeader.TITLE,
                 n.mc_contextNames[ExamHeader.TITLE]);
@@ -115,7 +115,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamQuestion.HEADER,
                 n.mc_contextNames[ExamQuestion.HEADER]);
@@ -140,7 +140,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamHeaderTitle.TEXT,
                 n.mc_contextNames[ExamHeaderTitle.TEXT]);
@@ -153,7 +153,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamHeaderSemester.TEXT,
                 n.mc_contextNames[ExamHeaderSemester.TEXT]);
@@ -166,7 +166,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamHeaderDate.TEXT,
                 n.mc_contextNames[ExamHeaderDate.TEXT]);
@@ -179,7 +179,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamHeaderDepartmentName.TEXT,
                 n.mc_contextNames[ExamHeaderDepartmentName.TEXT]);
@@ -192,7 +192,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamHeaderDuration.TEXT,
                 n.mc_contextNames[ExamHeaderDuration.TEXT]);
@@ -205,7 +205,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamHeaderTeacher.TEXT,
                 n.mc_contextNames[ExamHeaderTeacher.TEXT]);
@@ -218,7 +218,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamHeaderStudentName.TEXT,
                 n.mc_contextNames[ExamHeaderStudentName.TEXT]);
@@ -231,7 +231,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamQuestionHeader.CONTENT,
                 n.mc_contextNames[ExamQuestionHeader.CONTENT]);
@@ -244,7 +244,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamQuestionWeight.CONTENT,
                 n.mc_contextNames[ExamQuestionWeight.CONTENT]);
@@ -257,7 +257,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamQuestionWording.CONTENT,
                 n.mc_contextNames[ExamQuestionWording.CONTENT]);
@@ -270,7 +270,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamQuestionSolution.CONTENT,
                 n.mc_contextNames[ExamQuestionSolution.CONTENT]);
@@ -283,7 +283,7 @@ namespace ExamDSL
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             CreateContextSubgraph(n, ExamQuestionSubQuestion.CONTENT,
                 n.mc_contextNames[ExamQuestionSubQuestion.CONTENT]);
@@ -298,7 +298,7 @@ namespace ExamDSL
             }
             CreateContextSubgraph(n, Text.CONTENT,
                 n.mc_contextNames[Text.CONTENT]);
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             return base.VisitText(node, n);
         }
@@ -310,26 +310,26 @@ namespace ExamDSL
             }
             CreateContextSubgraph(n, NumberedList.CONTENT,
                 n.mc_contextNames[NumberedList.CONTENT]);
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{n.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
             return base.VisitNumberedList(node, n);
         }
 
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{node.M_NodeName}\";");
             return 0;
         }
 
         public override int VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
-            m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node.MText}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{node.M_NodeName}\";");
+            m_dotFile.WriteLine($"\"{node.M_NodeName}\"->\"{node.MText}\";");
             return 0;
         }
 
         public override int VisitTextMacro(TextMacroSymbol node, params DSLSymbol[] args) {
             // Bug corrected: use args[0] as the actual parent of the current node
-            m_dotFile.WriteLine($"\"{args[0].MNodeName}\"->\"{node.MNodeName}\";");
-            m_dotFile.WriteLine($"\"{node.MNodeName}\"->\"{node?.Evaluate()}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{node.M_NodeName}\";");
+            m_dotFile.WriteLine($"\"{node.M_NodeName}\"->\"{node?.Evaluate()}\";");
             return 0;
         }
 

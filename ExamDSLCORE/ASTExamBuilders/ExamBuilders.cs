@@ -7,6 +7,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
+using ExamDSLCORE.ExamAST.ASTBuilders;
 
 namespace ExamDSLCORE.ASTExamBuilders {
     public interface IBuilder {
@@ -37,44 +38,6 @@ namespace ExamDSLCORE.ASTExamBuilders {
         public static TextFormattingProperties LeaveContext() {
             m_FormatContextsStack.Pop();
             return m_FormatContextsStack.Peek();
-        }
-    }
-
-    // Exam : Header? Question+
-    public class ExamBuilder : IExamBuilder<Exam> {
-
-        public Exam M_Product { get; }
-
-        private ExamBuilder() {
-            M_Product = new Exam(ExamBuilderContextVariables.MFormatContext);
-            
-        }
-        public static ExamBuilder exam() {
-            ExamBuilder newExamBuilder= new ExamBuilder();
-            ExamBuilderContextVariables.M_HeadStack.Push(newExamBuilder.M_Product);
-            return newExamBuilder;
-        }
-        public ExamHeaderBuilder header() {
-            var headerBuilder = new ExamHeaderBuilder(this);
-            M_Product.AddNode(headerBuilder.M_Product, Exam.HEADER);
-            ExamBuilderContextVariables.M_HeadStack.Push(headerBuilder.M_Product);
-            return headerBuilder;
-        }
-        public ExamQuestionBuilder question() {
-            var questionBuilder = new ExamQuestionBuilder(this);
-            M_Product.AddNode(questionBuilder.M_Product, Exam.QUESTIONS);
-            ExamBuilderContextVariables.M_HeadStack.Push(questionBuilder.M_Product);
-            return questionBuilder;
-        }
-        public ExamQuestionBuilder question(ExamQuestion question) {
-            var questionBuilder = new ExamQuestionBuilder(question, this);
-            M_Product.AddNode(question, Exam.QUESTIONS);
-            ExamBuilderContextVariables.M_HeadStack.Push(questionBuilder.M_Product);
-            return questionBuilder;
-        }
-
-        public void End() {
-            ExamBuilderContextVariables.M_HeadStack.Pop();
         }
     }
 
@@ -189,58 +152,7 @@ namespace ExamDSLCORE.ASTExamBuilders {
             M_Product = new ExamHeaderStudentName(ExamBuilderContextVariables.MFormatContext);
         }
     }
-    // Question : Header Gravity Wording Solution Subquestions? 
-    public class ExamQuestionBuilder : IExamBuilder<ExamQuestion> {
-        // type of exam ( multiple choice, simple answer, 
-        private int m_questionType;
-        public ExamQuestion M_Product { get; }
-
-        public IBuilder M_Parent { get; }
-
-        public ExamQuestionBuilder(ExamBuilder parent = null) {
-            M_Product = new ExamQuestion(ExamBuilderContextVariables.MFormatContext);
-            M_Parent = parent;
-        }
-
-        public ExamQuestionBuilder(ExamQuestion question,
-            ExamBuilder parent = null) {
-            M_Product = question;
-            M_Parent = parent;
-        }
-        public ExamQuestionBuilder Header(TextBuilder content) {
-            ExamQuestionHeader header = new ExamQuestionHeader(ExamBuilderContextVariables.MFormatContext);
-            M_Product.AddNode(header, ExamQuestion.HEADER);
-            header.AddNode(content.M_Product, ExamQuestionHeader.CONTENT);
-            return this;
-        }
-        public ExamQuestionBuilder Weight(TextBuilder content) {
-            ExamQuestionWeight weight = new ExamQuestionWeight(ExamBuilderContextVariables.MFormatContext);
-            M_Product.AddNode(weight, ExamQuestion.WEIGHT);
-            weight.AddNode(content.M_Product, ExamQuestionWeight.CONTENT);
-            return this;
-        }
-        public ExamQuestionBuilder Wording(TextBuilder content) {
-            ExamQuestionWording wording = new ExamQuestionWording(ExamBuilderContextVariables.MFormatContext);
-            M_Product.AddNode(wording, ExamQuestion.WORDING);
-            wording.AddNode(content.M_Product, ExamQuestionWording.CONTENT);
-            return this;
-        }
-        public ExamQuestionBuilder Solution(TextBuilder content) {
-            ExamQuestionSolution solution = new ExamQuestionSolution(ExamBuilderContextVariables.MFormatContext);
-            M_Product.AddNode(solution, ExamQuestion.SOLUTION);
-            solution.AddNode(content.M_Product, ExamQuestionSolution.CONTENT);
-            return this;
-        }
-        public ExamQuestionBuilder SubQuestion(TextBuilder content) {
-            ExamQuestionSubQuestion subQuestion = new ExamQuestionSubQuestion(ExamBuilderContextVariables.MFormatContext);
-            M_Product.AddNode(subQuestion, ExamQuestion.SUBQUESTION);
-            subQuestion.AddNode(content.M_Product, ExamQuestionSubQuestion.CONTENT);
-            return this;
-        }
-        public ExamBuilder End() {
-            return M_Parent as ExamBuilder;
-        }
-    }
+    
 
     public class NumberedListBuilder : IExamBuilder<NumberedList> {
         public NumberedList M_Product { get; }

@@ -34,6 +34,10 @@ namespace ExamDSLCORE.ExamAST {
             return result;
         }
 
+        public virtual Result VisitExamUnit(ExamUnit node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+
         public virtual Result VisitExam(Exam node, params Params[] args) {
             return VisitChildren(node, args);
         }

@@ -13,12 +13,7 @@ namespace ExamDSLCORE.ExamAST
         bool End();
         void Next();
     }
-
-    public interface ILabelled
-    {
-        string MNodeName { get; }
-    }
-
+    
     public interface IASTVisitableNode
     {
         Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info);
