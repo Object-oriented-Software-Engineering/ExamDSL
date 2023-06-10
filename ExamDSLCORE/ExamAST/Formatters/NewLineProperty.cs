@@ -29,8 +29,8 @@ namespace ExamDSLCORE.ExamAST.Formatters {
         
         public override string Text() {
             StringBuilder txt = new StringBuilder();
-            IndentationProperty indentation = 
-                M_FormattingContext.GetFormattingProperty(typeof(IndentationProperty)) as IndentationProperty;
+            ScopeProperty indentation = 
+                M_FormattingContext.GetFormattingProperty(typeof(ScopeProperty)) as ScopeProperty;
             // Appends the appropriate line terminator per OS
             txt.AppendLine();
             txt.Append(indentation.Text());

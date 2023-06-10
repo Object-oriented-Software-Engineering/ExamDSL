@@ -174,15 +174,15 @@ namespace ExamDSL
             return base.VisitExamHeaderDate(node, n);
         }
 
-        public override int VisitExamHeaderDepartmentName(ExamHeaderDepartmentName node, params DSLSymbol[] args) {
-            ExamHeaderDepartmentName n = node as ExamHeaderDepartmentName;
+        public override int VisitExamHeaderDepartmentName(ExamHeaderDepartment node, params DSLSymbol[] args) {
+            ExamHeaderDepartment n = node as ExamHeaderDepartment;
             if (n == null) {
                 throw new InvalidCastException("Expected Assignment type");
             }
             m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
 
-            CreateContextSubgraph(n, ExamHeaderDepartmentName.TEXT,
-                n.mc_contextNames[ExamHeaderDepartmentName.TEXT]);
+            CreateContextSubgraph(n, ExamHeaderDepartment.TEXT,
+                n.mc_contextNames[ExamHeaderDepartment.TEXT]);
 
             return base.VisitExamHeaderDepartmentName(node, n);
         }
@@ -302,19 +302,7 @@ namespace ExamDSL
 
             return base.VisitText(node, n);
         }
-
-        public override int VisitNumberedList(NumberedList node, params DSLSymbol[] args) {
-            NumberedList n = node as NumberedList;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            CreateContextSubgraph(n, NumberedList.CONTENT,
-                n.mc_contextNames[NumberedList.CONTENT]);
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            return base.VisitNumberedList(node, n);
-        }
-
+        
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
             m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{node.M_NodeName}\";");
             return 0;

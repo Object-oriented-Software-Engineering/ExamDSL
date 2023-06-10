@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using ExamDSLCORE.ASTExamBuilders;
 using ExamDSLCORE.ExamAST.Formatters;
 
 namespace ExamDSLCORE.ExamAST.ASTBuilders {
@@ -16,7 +15,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 1. Initialize Formatting context
             M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null},
+                    { typeof(ScopeProperty), null},
                     { typeof(NewLineProperty), new NewLineProperty(M_FormattingContext) },
                     { typeof(OrderedItemListProperty), null}
                 }

@@ -49,14 +49,7 @@ namespace ExamDSL
             }
             return m_text;
         }
-
-        public override StringBuilder VisitNumberedList(NumberedList node, params DSLSymbol[] args) {
-            for (int i = 0; i < node.GetNumberOfContextNodes(0); i++) {
-                Visit(node.GetChild(0, i));
-            }
-            return m_text;
-        }
-
+        
         public override StringBuilder VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
             m_text.Append(node.MText);
             return base.VisitStaticText(node, args);

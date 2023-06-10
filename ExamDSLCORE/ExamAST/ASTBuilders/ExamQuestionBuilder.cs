@@ -1,5 +1,4 @@
-﻿using ExamDSLCORE.ASTExamBuilders;
-using ExamDSLCORE.ExamAST.Formatters;
+﻿using ExamDSLCORE.ExamAST.Formatters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +15,8 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 1. Initialize Formatting context
             M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null },
-                    { typeof(NewLineProperty),parent.M_FormattingContext.MNewLineProperty  },
+                    { typeof(ScopeProperty), null },
+                    { typeof(NewLineProperty),parent.M_FormattingContext.M_NewLineProperty  },
                     { typeof(OrderedItemListProperty), null}
                 }
             };

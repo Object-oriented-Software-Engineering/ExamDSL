@@ -31,15 +31,15 @@ namespace ExamDSLCORE.ExamAST.Formatters {
     }
 
     public class TextFormattingContext : BaseTextFormattingContext {
-        public IndentationProperty MIndentationProperty {
-            get => M_Context[typeof(IndentationProperty)] as IndentationProperty;
-            set => M_Context[typeof(IndentationProperty)] = value ?? throw new ArgumentNullException(nameof(value));
+        public ScopeProperty M_ScopeProperty {
+            get => M_Context[typeof(ScopeProperty)] as ScopeProperty;
+            set => M_Context[typeof(ScopeProperty)] = value ?? throw new ArgumentNullException(nameof(value));
         }
-        public OrderedItemListProperty MOrderedItemListProperty {
+        public OrderedItemListProperty M_OrderedItemListProperty {
             get => M_Context[typeof(OrderedItemListProperty)] as OrderedItemListProperty;
             set => M_Context[typeof(OrderedItemListProperty)] = value ?? throw new ArgumentNullException(nameof(value));
         }
-        public NewLineProperty MNewLineProperty {
+        public NewLineProperty M_NewLineProperty {
             get => M_Context[typeof(NewLineProperty)] as NewLineProperty;
             set => M_Context[typeof(NewLineProperty)] = value ?? throw new ArgumentNullException(nameof(value));
         }

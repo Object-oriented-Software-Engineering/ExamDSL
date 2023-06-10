@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using ExamDSL;
 using ExamDSLCORE;
-using ExamDSLCORE.ASTExamBuilders;
 using ExamDSLCORE.ExamAST.Formatters;
 
 public enum ExamSymbolType {
@@ -17,8 +16,8 @@ public enum ExamSymbolType {
     ST_EXAMQUESTIONSOLUTION, ST_EXAMQUESTIONSUBQUESTION,
     ST_EXAMHEADERSTUDENTNAME, ST_EXAMHEADERDEPARTMENTNAME, ST_EXAMHEADERDATE,
     ST_COMPOSITETEXT, ST_NUMBEREDLIST,
-    ST_STATICTEXT, ST_MACROTEXT, ST_NEWLINE
-        
+    ST_STATICTEXT, ST_MACROTEXT, ST_NEWLINE, ST_SCOPE
+
 }
 
 namespace ExamDSLCORE.ExamAST {
@@ -189,7 +188,7 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT =0;
         public readonly string[] mc_contextNames = { "CONTENT"};
 
-        public ExamQuestionWording(TextFormattingProperties formatting) :
+        public ExamQuestionWording(TextFormattingContext formatting) :
             base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWORDING) {
 
         }
@@ -202,7 +201,7 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
 
-        public ExamQuestionHeader(TextFormattingProperties formatting) :
+        public ExamQuestionHeader(TextFormattingContext formatting) :
             base(1, (int)ExamSymbolType.ST_EXAMQUESTIONHEADER) {
 
         }
@@ -215,7 +214,7 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
 
-        public ExamQuestionWeight(TextFormattingProperties formatting) :
+        public ExamQuestionWeight(TextFormattingContext formatting) :
             base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWEIGHT) {
 
         }
@@ -228,7 +227,7 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
 
-        public ExamQuestionSolution(TextFormattingProperties formatting) :
+        public ExamQuestionSolution(TextFormattingContext formatting) :
             base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSOLUTION) {
         }
 
@@ -240,7 +239,7 @@ namespace ExamDSLCORE.ExamAST {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
 
-        public ExamQuestionSubQuestion(TextFormattingProperties formatting) :
+        public ExamQuestionSubQuestion(TextFormattingContext formatting) :
             base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSUBQUESTION) {
         }
 
@@ -260,53 +259,18 @@ namespace ExamDSLCORE.ExamAST {
             base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) {
             SetInfo(typeof(BaseTextFormattingContext), formatting);
         }
-
         
-        public static Text T(string s) {
-            Text newText = new Text(ExamBuilderContextVariables.MFormatContext);
-            StaticTextSymbol st = new StaticTextSymbol(s,ExamBuilderContextVariables.MFormatContext);
-            newText.AddNode(st, Text.CONTENT);
-            return newText;
-        }
-
-        public static Text T(DSLSymbol s) {
-            Text newText = new Text(ExamBuilderContextVariables.MFormatContext);
-            newText.AddNode(s, Text.CONTENT);
-            return newText;
-        }
-
-        public Text Append(string s) {
-            StaticTextSymbol st = new StaticTextSymbol(s,ExamBuilderContextVariables.MFormatContext);
-            AddNode(st, 0);
-            return this;
-        }
-
-        public Text Append(DSLSymbol s) {
-            AddNode(s, 0);
-            return this;
-        }
-
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
                                                         params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitText(this, info);
         }
     }
-
-    public class NumberedList : ASTComposite {
-        public const int CONTENT = 0;
-        public readonly string[] mc_contextNames = { "CONTENT" };
-        public NumberedList(TextFormattingProperties context) :
-            base(1, (int)ExamSymbolType.ST_NUMBEREDLIST) { }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitNumberedList(this, info);
-        }
-    }
-
+    
     public class NewLineSymbol : ASTLeaf {
         
-        public NewLineSymbol(TextFormattingProperties context) :
+        public NewLineSymbol(BaseTextFormattingContext formatting) :
             base((int)ExamSymbolType.ST_NEWLINE) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
         }
 
         public override Return Accept<Return, Params>(
@@ -314,14 +278,16 @@ namespace ExamDSLCORE.ExamAST {
             return (v as DSLBaseVisitor<Return,Params>).VisitNewLine(this,info);
         }
     }
+    
 
     public class StaticTextSymbol : ASTLeaf {
         private string m_text;
         public string MText => m_text;
 
-        public StaticTextSymbol(string content,TextFormattingProperties context) :
+        public StaticTextSymbol(string content,BaseTextFormattingContext formatting) :
             base((int)ExamSymbolType.ST_STATICTEXT) {
             m_text = content;
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
         }
 
         public override Return Accept<Return, Params>(

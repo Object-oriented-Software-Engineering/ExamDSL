@@ -1,5 +1,4 @@
-﻿using ExamDSLCORE.ASTExamBuilders;
-using ExamDSLCORE.ExamAST.Formatters;
+﻿using ExamDSLCORE.ExamAST.Formatters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +11,9 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         
         public ExamHeaderTitleBuilder(ExamHeaderBuilder parent) {
             // 1. Initialize Formatting context
-            M_FormattingContext = new BaseTextFormattingContext() {
+            M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null },
+                    { typeof(ScopeProperty), null },
                     { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
                     { typeof(OrderedItemListProperty), null}
                 }
@@ -37,9 +36,9 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         public ExamHeaderSemesterBuilder(ExamHeaderBuilder parent) {
             // 1. Initialize Formatting context
-            M_FormattingContext = new BaseTextFormattingContext() {
+            M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null },
+                    { typeof(ScopeProperty), null },
                     { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
                     { typeof(OrderedItemListProperty), null}
                 }
@@ -61,9 +60,9 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         public ExamHeaderDateBuilder(ExamHeaderBuilder parent) {
             // 1. Initialize Formatting context
-            M_FormattingContext = new BaseTextFormattingContext() {
+            M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null },
+                    { typeof(ScopeProperty), null },
                     { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
                     { typeof(OrderedItemListProperty), null}
                 }
@@ -85,9 +84,9 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         public ExamHeaderDurationBuilder(ExamHeaderBuilder parent) {
             // 1. Initialize Formatting context
-            M_FormattingContext = new BaseTextFormattingContext() {
+            M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null },
+                    { typeof(ScopeProperty), null },
                     { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
                     { typeof(OrderedItemListProperty), null}
                 }
@@ -109,9 +108,9 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         public ExamHeaderTeacherBuilder(ExamHeaderBuilder parent) {
             // 1. Initialize Formatting context
-            M_FormattingContext = new BaseTextFormattingContext() {
+            M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null },
+                    { typeof(ScopeProperty), null },
                     { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
                     { typeof(OrderedItemListProperty), null}
                 }
@@ -133,9 +132,9 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         
         public ExamHeaderStudentBuilder(ExamHeaderBuilder parent) {
             // 1. Initialize Formatting context
-            M_FormattingContext = new BaseTextFormattingContext() {
+            M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null },
+                    { typeof(ScopeProperty), null },
                     { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
                     { typeof(OrderedItemListProperty), null}
                 }
@@ -159,8 +158,8 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 1. Initialize Formatting context
             M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
-                    { typeof(IndentationProperty), null },
-                    { typeof(NewLineProperty),parent.M_FormattingContext.MNewLineProperty  },
+                    { typeof(ScopeProperty), null },
+                    { typeof(NewLineProperty),parent.M_FormattingContext.M_NewLineProperty  },
                     { typeof(OrderedItemListProperty), null}
                 }
             };

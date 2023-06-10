@@ -53,7 +53,7 @@ namespace ExamDSLCORE.ExamAST {
         public virtual Result VisitExamHeaderDate(ExamHeaderDate node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamHeaderDepartmentName(ExamHeaderDepartmentName node, params Params[] args) {
+        public virtual Result VisitExamHeaderDepartmentName(ExamHeaderDepartment node, params Params[] args) {
             return VisitChildren(node, args);
         }
         public virtual Result VisitExamHeaderDuration(ExamHeaderDuration node, params Params[] args) {
@@ -86,12 +86,10 @@ namespace ExamDSLCORE.ExamAST {
         public virtual Result VisitText(Text node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitNumberedList(NumberedList node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
         public virtual Result VisitNewLine(NewLineSymbol node, params Params[] args) {
             return default;
         }
+        
         public virtual Result VisitStaticText(StaticTextSymbol node, params Params[] args) {
             return default;
         }

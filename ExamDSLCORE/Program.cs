@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ExamDSLCORE.ASTExamBuilders;
 using ExamDSLCORE.ASTExamDirectors;
 using ExamDSLCORE.ASTExamDirectors.ConcreteDirectors;
 using ExamDSLCORE.ASTExamDirectors.MacroSymbols;
 using ExamDSLCORE.ExamAST;
+using ExamDSLCORE.ExamAST.ASTBuilders;
 using Randomizer;
 // TODO MAJOR FEATURES
 // TODO 1: Get application formatting settings from settings file
@@ -33,7 +33,7 @@ namespace ExamDSL {
             TextMacroSymbol Z = MacroFactory.CreateRandomInteger(1, 10);
 
             // Text Structural representation description of the exam
-            var exam = ExamBuilder.exam()
+            /*var exam = ExamBuilder.exam()
                 /*.header()
                 .Title("Arithmetic Examination")
                 .Semester(TextBuilder.T()
@@ -44,7 +44,7 @@ namespace ExamDSL {
                     .ExitScope()
                     .NewLine())
                 .Date("23/2/2023")
-                .End()*/
+                .End()#1#
                 .question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")"))
                 .Wording(TextBuilder.T()
                     .OpenNumberedList()
@@ -98,12 +98,12 @@ namespace ExamDSL {
                         .ExitScope()
                         .Text("Text")
                         .NewLine())
-                .End();*/
-            ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
+                .End();#1#*//**/
+            /*ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam.M_Product, null);
             ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
             textPrinter.Visit(exam.M_Product, null);
-            Console.WriteLine(textPrinter.MText);
+            Console.WriteLine(textPrinter.MText);*/
         }
     }
 

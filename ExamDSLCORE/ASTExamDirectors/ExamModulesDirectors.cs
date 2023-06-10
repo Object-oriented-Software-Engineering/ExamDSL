@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ExamDSLCORE.ASTExamBuilders;
 using ExamDSLCORE.ExamAST;
+using ExamDSLCORE.ExamAST.ASTBuilders;
 
 namespace ExamDSLCORE.ASTExamDirectors
 {   
@@ -22,7 +22,7 @@ namespace ExamDSLCORE.ASTExamDirectors
         }
 
         protected ExamBuilder Create() {
-            return m_examAST = ExamBuilder.exam();
+            //return m_examAST = ExamBuilder.exam();
         }
 
         public abstract DSLSymbol Compose();

@@ -7,23 +7,31 @@ using System.Threading.Tasks;
 namespace ExamDSLCORE.ExamAST.Formatters {
 
     // Immutable class that represents the text indentation level
-    public class IndentationProperty : BaseFormattingProperty<IndentationProperty> {
+    public class ScopeProperty : BaseFormattingProperty<ScopeProperty> {
         // Spaces per indentation level
         private int m_spaces = 3;
+        private int m_nestingLevel;
 
         public int MSpaces {
             get => m_spaces;
             private set => m_spaces = value;
         }
 
-        public IndentationProperty(
+        public int M_NestingLevel {
+            get => m_nestingLevel;
+            set => m_nestingLevel = value;
+        }
+
+        public ScopeProperty(
             BaseTextFormattingContext container,
-            IndentationProperty decoratedProperty)
+            ScopeProperty decoratedProperty)
             : base(container, decoratedProperty) {
             if (decoratedProperty == null) {
                 m_spaces = 3;
+                m_nestingLevel=0;
             } else {
                 m_spaces = decoratedProperty.MSpaces;
+                m_nestingLevel = decoratedProperty.M_NestingLevel + 1;
             }
         }
 
