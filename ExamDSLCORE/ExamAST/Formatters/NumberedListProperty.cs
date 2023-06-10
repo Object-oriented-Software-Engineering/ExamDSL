@@ -23,11 +23,13 @@ namespace ExamDSLCORE.ExamAST.Formatters {
         private string m_closingDelimeter = ")";
         private string m_separatorDelimiter = ".";
         private bool b_isInnermost;
+        private int m_nestingLevel;
 
         public int M_ArithmeticUnit => m_arithmeticUnit;
         public int M_NextNumber => m_nextNumber;
         public string M_ClosingDelimeter => m_closingDelimeter;
         public string M_SeparatorDelimiter => m_separatorDelimiter;
+        public int M_NestingLevel => m_nestingLevel;
 
         public int GetNextNumber() {
             return m_nextNumber++;
@@ -39,12 +41,14 @@ namespace ExamDSLCORE.ExamAST.Formatters {
             if (decoratedProperty == null) {
                 m_arithmeticUnit = ArithType_Natural;
                 m_nextNumber = 0;
+                m_nestingLevel =0;
                 m_closingDelimeter = ")";
                 m_separatorDelimiter = ".";
                 b_isInnermost = true;
             } else {
                 m_arithmeticUnit = decoratedProperty.M_ArithmeticUnit;
                 m_nextNumber = 0;
+                m_nestingLevel = decoratedProperty.M_NestingLevel + 1;
                 m_closingDelimeter = decoratedProperty.M_ClosingDelimeter;
                 m_separatorDelimiter = decoratedProperty.M_SeparatorDelimiter;
                 b_isInnermost = true;
