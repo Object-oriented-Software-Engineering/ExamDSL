@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ExamDSLCORE.ExamAST.Formatters {
-    public class NumberedListProperty : BaseFormattingProperty<NumberedListProperty> {
+    public class OrderedItemListProperty : BaseFormattingProperty<OrderedItemListProperty> {
         private const int ArithType_Natural = 0,
             ArithType_Uppercase = 1,
             ArithType_Lowercase = 2,
@@ -33,8 +33,8 @@ namespace ExamDSLCORE.ExamAST.Formatters {
             return m_nextNumber++;
         }
 
-        public NumberedListProperty(BaseTextFormattingContext container,
-                NumberedListProperty decoratedProperty)
+        public OrderedItemListProperty(BaseTextFormattingContext container,
+                OrderedItemListProperty decoratedProperty)
             : base(container,decoratedProperty) {
             if (decoratedProperty == null) {
                 m_arithmeticUnit = ArithType_Natural;

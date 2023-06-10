@@ -9,7 +9,7 @@ using ExamDSLCORE.ExamAST.Formatters;
 namespace ExamDSLCORE.ExamAST.ASTBuilders {
     public abstract class BaseBuilder {
         public BaseBuilder M_Parent { get; init; }
-        public BaseTextFormattingContext M_FormattingContext { get; init; }
+        public TextFormattingContext M_FormattingContext { get; init; }
 
         public BaseBuilder() { }
 

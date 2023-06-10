@@ -30,4 +30,19 @@ namespace ExamDSLCORE.ExamAST.Formatters {
         }
     }
 
+    public class TextFormattingContext : BaseTextFormattingContext {
+        public IndentationProperty MIndentationProperty {
+            get => M_Context[typeof(IndentationProperty)] as IndentationProperty;
+            set => M_Context[typeof(IndentationProperty)] = value ?? throw new ArgumentNullException(nameof(value));
+        }
+        public OrderedItemListProperty MOrderedItemListProperty {
+            get => M_Context[typeof(OrderedItemListProperty)] as OrderedItemListProperty;
+            set => M_Context[typeof(OrderedItemListProperty)] = value ?? throw new ArgumentNullException(nameof(value));
+        }
+        public NewLineProperty MNewLineProperty {
+            get => M_Context[typeof(NewLineProperty)] as NewLineProperty;
+            set => M_Context[typeof(NewLineProperty)] = value ?? throw new ArgumentNullException(nameof(value));
+        }
+    }
+
 }

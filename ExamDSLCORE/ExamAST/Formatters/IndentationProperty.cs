@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ExamDSLCORE.ExamAST.Formatters {
+
     // Immutable class that represents the text indentation level
     public class IndentationProperty : BaseFormattingProperty<IndentationProperty> {
         // Spaces per indentation level

@@ -8,6 +8,7 @@ using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 using ExamDSLCORE.ExamAST.ASTBuilders;
+using ExamDSLCORE.ExamAST.Formatters;
 
 namespace ExamDSLCORE.ASTExamBuilders {
     public interface IBuilder {
@@ -40,159 +41,25 @@ namespace ExamDSLCORE.ASTExamBuilders {
             return m_FormatContextsStack.Peek();
         }
     }
-
-    public class ExamHeaderBuilder : IExamBuilder<ExamHeader> {
-
-        public IBuilder M_Parent { get; }
-
-        public ExamHeader M_Product { get; }
-
-        public ExamHeaderBuilder(ExamBuilder parent) {
-            M_Product = new ExamHeader(ExamBuilderContextVariables.MFormatContext);
-            M_Parent = parent;
-        }
-
-        public ExamHeaderBuilder Title(TextBuilder content) {
-            ExamHeaderTitleBuilder newtitle = new ExamHeaderTitleBuilder(this);
-            M_Product.AddNode(newtitle.M_Product, ExamHeader.TITLE);
-            newtitle.M_Product.AddNode(content.M_Product, ExamHeaderTitle.TEXT);
-            return this;
-        }
-        public ExamHeaderBuilder Semester(TextBuilder content) {
-            ExamHeaderSemesterBuilder newsemester = new ExamHeaderSemesterBuilder(this);
-            M_Product.AddNode(newsemester.M_Product, ExamHeader.SEMESTER);
-            newsemester.M_Product.AddNode(content.M_Product, ExamHeaderSemester.TEXT);
-            return this;
-        }
-        public ExamHeaderBuilder Date(TextBuilder content) {
-            ExamHeaderDateBuilder newdate = new ExamHeaderDateBuilder(this);
-            M_Product.AddNode(newdate.M_Product, ExamHeader.DATE);
-            newdate.M_Product.AddNode(content.M_Product, ExamHeaderDate.TEXT);
-            return this;
-        }
-        public ExamHeaderBuilder Duration(TextBuilder content) {
-            ExamHeaderDurationBuilder newduration = new ExamHeaderDurationBuilder(this);
-            M_Product.AddNode(newduration.M_Product, ExamHeader.DURATION);
-            newduration.M_Product.AddNode(content.M_Product, ExamHeaderDuration.TEXT);
-            return this;
-        }
-        public ExamHeaderBuilder Teacher(TextBuilder content) {
-            ExamHeaderTeacherBuilder newteacher = new ExamHeaderTeacherBuilder(this);
-            M_Product.AddNode(newteacher.M_Product, ExamHeader.TEACHER);
-            newteacher.M_Product.AddNode(content.M_Product, ExamHeaderTeacher.TEXT);
-            return this;
-        }
-        public ExamHeaderBuilder StudentName(TextBuilder content) {
-            ExamHeaderStudentBuilder newStudent = new ExamHeaderStudentBuilder(this);
-            M_Product.AddNode(newStudent.M_Product, ExamHeader.STUDENTNAME);
-            newStudent.M_Product.AddNode(content.M_Product, ExamHeaderStudentName.TEXT);
-            return this;
-        }
-        public ExamBuilder End() {
-            return M_Parent as ExamBuilder;
-        }
-    }
-
-    public class ExamHeaderTitleBuilder : IExamBuilder<ExamHeaderTitle> {
-        public ExamHeaderTitle M_Product { get; }
-
-        public IBuilder M_Parent { get; }
-
-        public ExamHeaderTitleBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderTitle(ExamBuilderContextVariables.MFormatContext);
-        }
-    }
-
-    public class ExamHeaderSemesterBuilder : IExamBuilder<ExamHeaderSemester> {
-        public ExamHeaderSemester M_Product { get; }
-
-        public IBuilder M_Parent { get; }
-
-        public ExamHeaderSemesterBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderSemester(ExamBuilderContextVariables.MFormatContext);
-        }
-    }
-
-    public class ExamHeaderDateBuilder : IExamBuilder<ExamHeaderDate> {
-        public ExamHeaderDate M_Product { get; }
-
-        public IBuilder M_Parent { get; }
-
-        public ExamHeaderDateBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderDate(ExamBuilderContextVariables.MFormatContext);
-        }
-    }
-
-    public class ExamHeaderDurationBuilder : IExamBuilder<ExamHeaderDuration> {
-        public ExamHeaderDuration M_Product { get; }
-
-        public IBuilder M_Parent { get; }
-
-        public ExamHeaderDurationBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderDuration(ExamBuilderContextVariables.MFormatContext);
-        }
-    }
-
-    public class ExamHeaderTeacherBuilder : IExamBuilder<ExamHeaderTeacher> {
-        public ExamHeaderTeacher M_Product { get; }
-
-        public IBuilder M_Parent { get; }
-
-        public ExamHeaderTeacherBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderTeacher(ExamBuilderContextVariables.MFormatContext);
-        }
-    }
-
-    public class ExamHeaderStudentBuilder : IExamBuilder<ExamHeaderStudentName> {
-        public ExamHeaderStudentName M_Product { get; }
-
-        public IBuilder M_Parent { get; }
-
-        public ExamHeaderStudentBuilder(ExamHeaderBuilder parent) {
-            M_Product = new ExamHeaderStudentName(ExamBuilderContextVariables.MFormatContext);
-        }
-    }
     
-
-    public class NumberedListBuilder : IExamBuilder<NumberedList> {
-        public NumberedList M_Product { get; }
-        public IBuilder M_Parent { get; }
-        private TextBuilder m_textbuilder;
-
-        public NumberedListBuilder(TextBuilder text) {
-            M_Product = new NumberedList(ExamBuilderContextVariables.MFormatContext);
-            m_textbuilder = text;
-        }
-
-        public NumberedListBuilder Item() {
-
-            return this;
-        }
-
-        public NumberedListBuilder OpenNumberedList() {
-            NumberedListBuilder newListBuilder = new NumberedListBuilder(m_textbuilder);
-
-            return newListBuilder;
-        }
-
-        public NumberedListBuilder CloseNumberedList() {
-
-            return this;
-        }
-
-        public TextBuilder End() {
-            return m_textbuilder;
-        }
-    }
-
-    public class TextBuilder : IExamBuilder<Text> {
-        private TextBuilder m_parent;
+    
+    
+    public class TextBuilder : BaseBuilder {
         public Text M_Product { get; }
-        public TextBuilder M_Parent => m_parent;
 
-        public TextBuilder() {
-            M_Product = new Text(ExamBuilderContextVariables.MFormatContext);
-            ExamBuilderContextVariables.M_HeadStack.Push(M_Product);
+        public TextBuilder(BaseBuilder parent) {
+            // 1. Initialize Formatting context
+            M_FormattingContext = new BaseTextFormattingContext() {
+                M_Context = new Dictionary<Type, object>() {
+                    { typeof(IndentationProperty), null },
+                    { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
+                    { typeof(OrderedItemListProperty), null}
+                }
+            };
+            // 2. Initialize parent
+            M_Parent = parent;
+            // 3. Initialize product
+            M_Product = new Text(M_FormattingContext);
         }
 
         public static implicit operator TextBuilder(string s) {

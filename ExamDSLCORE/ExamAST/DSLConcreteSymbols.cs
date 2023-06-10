@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using ExamDSL;
 using ExamDSLCORE;
 using ExamDSLCORE.ASTExamBuilders;
@@ -71,8 +72,11 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderTitle : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT"};
-        public ExamHeaderTitle(TextFormattingProperties formatting) : 
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERTITLE) { }
+
+        public ExamHeaderTitle(BaseTextFormattingContext formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERTITLE) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
+        }
 
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
@@ -83,8 +87,11 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderSemester : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderSemester(TextFormattingProperties formatting) : 
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERSEMESTER) { }
+
+        public ExamHeaderSemester(BaseTextFormattingContext formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERSEMESTER) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
+        }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderSemester(this, info);
@@ -94,8 +101,11 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderDate : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderDate(TextFormattingProperties formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERDATE) { }
+
+        public ExamHeaderDate(BaseTextFormattingContext formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERDATE) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
+        }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDate(this, info);
@@ -104,8 +114,11 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderDuration : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderDuration(TextFormattingProperties formatting) : 
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERDURATION) { }
+
+        public ExamHeaderDuration(BaseTextFormattingContext formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERDURATION) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
+        }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDuration(this, info);
@@ -115,8 +128,11 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderTeacher : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderTeacher(TextFormattingProperties formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERTEACHER) { }
+
+        public ExamHeaderTeacher(BaseTextFormattingContext formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERTEACHER) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
+        }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderTeacher(this, info);
@@ -126,19 +142,25 @@ namespace ExamDSLCORE.ExamAST {
     public class ExamHeaderStudentName : ASTComposite {
         public const int TEXT = 0;
         public readonly string[] mc_contextNames = { "TEXT" };
-        public ExamHeaderStudentName(TextFormattingProperties formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERSTUDENTNAME) { }
+
+        public ExamHeaderStudentName(BaseTextFormattingContext formatting) :
+            base(1, (int)ExamSymbolType.ST_EXAMHEADERSTUDENTNAME) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
+        }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderStudentName(this, info);
         }
     }
 
-    public class ExamHeaderDepartmentName : ASTComposite {
+    public class ExamHeaderDepartment : ASTComposite {
         public const int TEXT = 0, LOGO=1;
         public readonly string[] mc_contextNames = { "TEXT", "LOGO" };
-        public ExamHeaderDepartmentName(TextFormattingProperties formatting) :
-            base(2, (int)ExamSymbolType.ST_EXAMHEADERDEPARTMENTNAME) { }
+
+        public ExamHeaderDepartment(BaseTextFormattingContext formatting) :
+            base(2, (int)ExamSymbolType.ST_EXAMHEADERDEPARTMENTNAME) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
+        }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDepartmentName(this, info);
@@ -233,8 +255,11 @@ namespace ExamDSLCORE.ExamAST {
     public class Text : ASTComposite {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
-        public Text(TextFormattingProperties context) :
-            base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) { }
+
+        public Text(BaseTextFormattingContext formatting) :
+            base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) {
+            SetInfo(typeof(BaseTextFormattingContext), formatting);
+        }
 
         
         public static Text T(string s) {

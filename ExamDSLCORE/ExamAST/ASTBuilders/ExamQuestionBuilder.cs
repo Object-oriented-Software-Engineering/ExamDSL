@@ -14,11 +14,11 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         public ExamQuestionBuilder(BaseBuilder parent)  {
             // 1. Initialize Formatting context
-            M_FormattingContext = new BaseTextFormattingContext() {
+            M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
                     { typeof(IndentationProperty), null },
-                    { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
-                    { typeof(NumberedListProperty), null}
+                    { typeof(NewLineProperty),parent.M_FormattingContext.MNewLineProperty  },
+                    { typeof(OrderedItemListProperty), null}
                 }
             };
             // 2. Initialize parent

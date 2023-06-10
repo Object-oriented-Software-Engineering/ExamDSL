@@ -13,11 +13,11 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         public ExamHeaderBuilder(ExamBuilder parent) {
             // 1. Initialize Formatting context
-            M_FormattingContext = new BaseTextFormattingContext() {
+            M_FormattingContext = new TextFormattingContext() {
                 M_Context = new Dictionary<Type, object>() {
                     { typeof(IndentationProperty), null },
-                    { typeof(NewLineProperty),parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))  },
-                    { typeof(NumberedListProperty), null}
+                    { typeof(NewLineProperty),parent.M_FormattingContext.MNewLineProperty  },
+                    { typeof(OrderedItemListProperty), null}
                 }
             };
             // 2. Initialize parent
@@ -90,6 +90,17 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         public ExamHeaderBuilder StudentName() {
             ExamHeaderStudentBuilder newStudent = new ExamHeaderStudentBuilder(this);
             M_Product.AddNode(newStudent.M_Product, ExamHeader.STUDENTNAME);
+            return this;
+        }
+        public ExamHeaderBuilder Department(TextBuilder content) {
+            ExamHeaderDepartmentBuilder newDepartment = new ExamHeaderDepartmentBuilder(this);
+            M_Product.AddNode(newDepartment.M_Product, ExamHeader.DEPARTMENT);
+            newDepartment.M_Product.AddNode(content.M_Product, ExamHeaderDepartment.TEXT);
+            return this;
+        }
+        public ExamHeaderBuilder Department() {
+            ExamHeaderDepartmentBuilder newDepartment = new ExamHeaderDepartmentBuilder(this);
+            M_Product.AddNode(newDepartment.M_Product, ExamHeader.DEPARTMENT);
             return this;
         }
         public ExamBuilder End() {
