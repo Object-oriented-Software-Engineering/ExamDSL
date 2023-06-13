@@ -24,10 +24,13 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             M_Product = new ExamHeaderTitle(M_FormattingContext);
         }
 
-        public TextBuilder Text() {
-            TextBuilder newTextBuilder = new TextBuilder(this);
+        public TextBuilder<ExamHeaderTitleBuilder> Text() {
+            TextBuilder< ExamHeaderTitleBuilder> newTextBuilder = new TextBuilder<ExamHeaderTitleBuilder>(this);
             M_Product.AddNode(newTextBuilder.M_Product, ExamHeader.TITLE);
             return newTextBuilder;
+        }
+        public ExamHeaderBuilder End() {
+            return M_Parent as ExamHeaderBuilder;
         }
     }
 
@@ -48,10 +51,14 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 3. Initialize product
             M_Product = new ExamHeaderSemester(M_FormattingContext);
         }
-        public TextBuilder Text() {
-            TextBuilder newTextBuilder = new TextBuilder(this);
+        public TextBuilder<ExamHeaderSemesterBuilder> Text() {
+            TextBuilder<ExamHeaderSemesterBuilder> newTextBuilder = new TextBuilder<ExamHeaderSemesterBuilder>(this);
             M_Product.AddNode(newTextBuilder.M_Product, ExamHeader.TITLE);
             return newTextBuilder;
+        }
+
+        public ExamHeaderBuilder End() {
+            return M_Parent as ExamHeaderBuilder;
         }
     }
 
@@ -72,10 +79,13 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 3. Initialize product
             M_Product = new ExamHeaderDate(M_FormattingContext);
         }
-        public TextBuilder Text() {
-            TextBuilder newTextBuilder = new TextBuilder(this);
+        public TextBuilder<ExamHeaderDateBuilder> Text() {
+            TextBuilder<ExamHeaderDateBuilder> newTextBuilder = new TextBuilder<ExamHeaderDateBuilder>(this);
             M_Product.AddNode(newTextBuilder.M_Product, ExamHeader.TITLE);
             return newTextBuilder;
+        }
+        public ExamHeaderBuilder End() {
+            return M_Parent as ExamHeaderBuilder;
         }
     }
 
@@ -96,10 +106,13 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 3. Initialize product
             M_Product = new ExamHeaderDuration(M_FormattingContext);
         }
-        public TextBuilder Text() {
-            TextBuilder newTextBuilder = new TextBuilder(this);
+        public TextBuilder<ExamHeaderDurationBuilder> Text() {
+            TextBuilder<ExamHeaderDurationBuilder> newTextBuilder = new TextBuilder<ExamHeaderDurationBuilder>(this);
             M_Product.AddNode(newTextBuilder.M_Product, ExamHeader.TITLE);
             return newTextBuilder;
+        }
+        public ExamHeaderBuilder End() {
+            return M_Parent as ExamHeaderBuilder;
         }
     }
 
@@ -120,10 +133,13 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 3. Initialize product
             M_Product = new ExamHeaderTeacher(M_FormattingContext);
         }
-        public TextBuilder Text() {
-            TextBuilder newTextBuilder = new TextBuilder(this);
+        public TextBuilder<ExamHeaderTeacherBuilder> Text() {
+            TextBuilder<ExamHeaderTeacherBuilder> newTextBuilder = new TextBuilder<ExamHeaderTeacherBuilder>(this);
             M_Product.AddNode(newTextBuilder.M_Product, ExamHeader.TITLE);
             return newTextBuilder;
+        }
+        public ExamHeaderBuilder End() {
+            return M_Parent as ExamHeaderBuilder;
         }
     }
 
@@ -144,10 +160,13 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 3. Initialize product
             M_Product = new ExamHeaderStudentName(M_FormattingContext);
         }
-        public TextBuilder Text() {
-            TextBuilder newTextBuilder = new TextBuilder(this);
+        public TextBuilder<ExamHeaderStudentBuilder> Text() {
+            TextBuilder<ExamHeaderStudentBuilder> newTextBuilder = new TextBuilder<ExamHeaderStudentBuilder>(this);
             M_Product.AddNode(newTextBuilder.M_Product, ExamHeader.TITLE);
             return newTextBuilder;
+        }
+        public ExamHeaderBuilder End() {
+            return M_Parent as ExamHeaderBuilder;
         }
     }
 
@@ -168,10 +187,13 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 3. Initialize product
             M_Product = new ExamHeaderDepartment(M_FormattingContext);
         }
-        public TextBuilder Text() {
-            TextBuilder newTextBuilder = new TextBuilder(this);
+        public TextBuilder<ExamHeaderDepartmentBuilder> Text() {
+            TextBuilder<ExamHeaderDepartmentBuilder> newTextBuilder = new TextBuilder<ExamHeaderDepartmentBuilder>(this);
             M_Product.AddNode(newTextBuilder.M_Product, ExamHeader.TITLE);
             return newTextBuilder;
+        }
+        public ExamHeaderBuilder End() {
+            return M_Parent as ExamHeaderBuilder;
         }
     }
 }

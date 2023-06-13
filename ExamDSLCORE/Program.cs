@@ -32,73 +32,12 @@ namespace ExamDSL {
             TextMacroSymbol Y = MacroFactory.CreateRandomInteger(1, 10);
             TextMacroSymbol Z = MacroFactory.CreateRandomInteger(1, 10);
 
-            // Text Structural representation description of the exam
-            /*var exam = ExamBuilder.exam()
-                /*.header()
-                .Title("Arithmetic Examination")
-                .Semester(TextBuilder.T()
-                    .Text("Winter Semester ")
-                    .EnterScope()
-                    .NewLine()
-                    .Text("Regular Exam Period")
-                    .ExitScope()
-                    .NewLine())
-                .Date("23/2/2023")
-                .End()#1#
-                .question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")"))
-                .Wording(TextBuilder.T()
-                    .OpenNumberedList()
-                    .Text("Find the sum of 55 + 66")
-                    .NewLine()
-                    .Text("Find the sum of 455 + 466")
-                    .CloseNumberedList())
-                .End();
-                /*.question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")").NewLine()).Wording(
-                    TextBuilder.T()
-                        .Text("Text")
-                        .EnterScope()
-                        .NewLine()
-                        .Text("Find the sum of  ")
-                        .TextMacro(Y)
-                        .Text("+")
-                        .TextMacro(Z)
-                        .NewLine()
-                        .ExitScope()
-                        .Text("Text")
-                        .NewLine())
-                .End()
-                .question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")"))
-                .Wording(TextBuilder.T()
-                    .OpenNumberedList()
-                    .Text("Find the sum of 55 + 66")
-                    .NewLine()
-                    .Text("Find the sum of 455 + 466")
-                    .CloseNumberedList()
-                    .NewLine()
-                    .Text("Hello"))
-                .End()
-                .question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")"))
-                .Wording(TextBuilder.T()
-                    .OpenNumberedList()
-                    .Text("Find the sum of 55 + 66")
-                    .NewLine()
-                    .Text("Find the sum of 455 + 466")
-                    .CloseNumberedList())
-                .End()
-                .question().Header(TextBuilder.T().Text("Exercise ").TextMacro(X).Text(")").NewLine()).Wording(
-                    TextBuilder.T()
-                        .Text("Text")
-                        .EnterScope()
-                        .NewLine()
-                        .Text("Find the sum of  ")
-                        .TextMacro(Y)
-                        .Text("+")
-                        .TextMacro(Z)
-                        .NewLine()
-                        .ExitScope()
-                        .Text("Text")
-                        .NewLine())
-                .End();#1#*//**/
+
+            TestExam test = new TestExam();
+            test.Compose();
+
+
+
             /*ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
             printer.Visit(exam.M_Product, null);
             ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
@@ -114,7 +53,7 @@ namespace ExamDSL {
 
     public abstract class ExamPrinter {
         private ExamDirector m_exam;
-        ExamBuilder m_examAST;
+        ExamUnitBuilder m_examAST;
 
         protected ExamPrinter(ExamDirector mExam) {
             m_exam = mExam;

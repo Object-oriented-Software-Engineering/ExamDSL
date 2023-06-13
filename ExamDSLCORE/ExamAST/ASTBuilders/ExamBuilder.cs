@@ -34,5 +34,9 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             M_Product.AddNode(newExamQuestionBuilder.M_Product, Exam.QUESTIONS);
             return newExamQuestionBuilder;
         }
+
+        public ExamUnitBuilder End() {
+            return M_Parent as ExamUnitBuilder;
+        }
     }
 }

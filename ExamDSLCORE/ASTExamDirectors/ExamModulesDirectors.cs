@@ -14,15 +14,15 @@ namespace ExamDSLCORE.ASTExamDirectors
     // that creates the ExamBuilder.
     public abstract class ExamDirector
     {
-        protected ExamBuilder m_examAST;
+        protected ExamUnitBuilder m_examAST;
 
-        public ExamBuilder MExamAst => m_examAST;
+        public ExamUnitBuilder MExamAst => m_examAST;
 
         public ExamDirector() {
         }
 
-        protected ExamBuilder Create() {
-            //return m_examAST = ExamBuilder.exam();
+        protected ExamUnitBuilder Create() {
+            return m_examAST = new ExamUnitBuilder();
         }
 
         public abstract DSLSymbol Compose();

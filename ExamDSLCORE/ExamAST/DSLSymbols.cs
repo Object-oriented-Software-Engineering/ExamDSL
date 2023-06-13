@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExamDSL;
+using ExamDSLCORE.ExamAST.Formatters;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace ExamDSLCORE.ExamAST {
@@ -15,7 +16,7 @@ namespace ExamDSLCORE.ExamAST {
         // link hierarchy node. Trees have many applications 
         // most of the times they extend to an application domain
         // So this link is necessary.
-        private Dictionary<Type, object> m_Info;
+        private Dictionary<Type, object> m_Info=new Dictionary<Type, object>();
 
         public object Info(Type type) {
             try {
@@ -59,6 +60,8 @@ namespace ExamDSLCORE.ExamAST {
     public abstract class DSLSymbol : LabelContainer, IASTVisitableNode {
         
         private List<ASTComposite> m_parent;
+
+        public TextFormattingContext M_SymbolFormatting => Info(typeof(TextFormattingContext)) as TextFormattingContext;
         
         public ASTComposite MParent => m_parent[0];
 

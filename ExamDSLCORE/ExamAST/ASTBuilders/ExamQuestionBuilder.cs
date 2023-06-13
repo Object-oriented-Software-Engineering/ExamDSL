@@ -9,8 +9,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
     // Question : Header Gravity Wording Solution Subquestions? 
     public class ExamQuestionBuilder : BaseBuilder {
         public ExamQuestion M_Product { get; init; }
-
-
+        
         public ExamQuestionBuilder(BaseBuilder parent)  {
             // 1. Initialize Formatting context
             M_FormattingContext = new TextFormattingContext() {
@@ -29,22 +28,18 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         public ExamQuestionBuilder(ExamBuilder parent) :this((BaseBuilder)parent) { }
         public ExamQuestionBuilder(ExamUnitBuilder parent) : this((BaseBuilder)parent) { }
 
-
-        public ExamQuestionBuilder Header(TextBuilder content) {
-            
+        
+        public TextBuilder<ExamQuestionBuilder> Wording() {
+            TextBuilder<ExamQuestionBuilder> wording = new TextBuilder<ExamQuestionBuilder>(this);
+            M_Product.AddNode(wording.M_Product, ExamQuestion.WORDING);
+            return wording;
         }
-        public ExamQuestionBuilder Weight(TextBuilder content) {
-            
+        public TextBuilder<ExamQuestionBuilder> Solution() {
+            TextBuilder<ExamQuestionBuilder> solution = new TextBuilder<ExamQuestionBuilder>(this);
+            M_Product.AddNode(solution.M_Product, ExamQuestion.WORDING);
+            return solution;
         }
-        public ExamQuestionBuilder Wording(TextBuilder content) {
-            
-        }
-        public ExamQuestionBuilder Solution(TextBuilder content) {
-            
-        }
-        public ExamQuestionBuilder SubQuestion(TextBuilder content) {
-           
-        }
+       
         public ExamBuilder End() {
             return M_Parent as ExamBuilder;
         }

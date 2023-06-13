@@ -25,40 +25,40 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             M_Product = new ExamHeader(M_FormattingContext);
         }
         
-        public ExamHeaderBuilder Title() {
-            ExamHeaderTitleBuilder newtitle = new ExamHeaderTitleBuilder(this);
+        public TextBuilder<ExamHeaderBuilder> Title() {
+            TextBuilder<ExamHeaderBuilder> newtitle = new TextBuilder<ExamHeaderBuilder>(this,M_FormattingContext);
             M_Product.AddNode(newtitle.M_Product, ExamHeader.TITLE);
-            return this;
+            return newtitle;
         }
-        public ExamHeaderBuilder Semester() {
-            ExamHeaderSemesterBuilder newsemester = new ExamHeaderSemesterBuilder(this);
+        public TextBuilder<ExamHeaderBuilder> Semester() {
+            TextBuilder<ExamHeaderBuilder> newsemester = new TextBuilder<ExamHeaderBuilder>(this);
             M_Product.AddNode(newsemester.M_Product, ExamHeader.SEMESTER);
-            return this;
+            return newsemester;
         }
-        public ExamHeaderBuilder Date() {
-            ExamHeaderDateBuilder newdate = new ExamHeaderDateBuilder(this);
+        public TextBuilder<ExamHeaderBuilder> Date() {
+            TextBuilder<ExamHeaderBuilder>  newdate= new TextBuilder<ExamHeaderBuilder>(this);
             M_Product.AddNode(newdate.M_Product, ExamHeader.DATE);
-            return this;
+            return newdate;
         }
-        public ExamHeaderBuilder Duration() {
-            ExamHeaderDurationBuilder newduration = new ExamHeaderDurationBuilder(this);
+        public TextBuilder<ExamHeaderBuilder> Duration() {
+            TextBuilder<ExamHeaderBuilder> newduration = new TextBuilder<ExamHeaderBuilder>(this);
             M_Product.AddNode(newduration.M_Product, ExamHeader.DURATION);
-            return this;
+            return newduration;
         }
-        public ExamHeaderBuilder Teacher() {
-            ExamHeaderTeacherBuilder newteacher = new ExamHeaderTeacherBuilder(this);
+        public TextBuilder<ExamHeaderBuilder> Teacher() {
+            TextBuilder<ExamHeaderBuilder> newteacher = new TextBuilder<ExamHeaderBuilder>(this);
             M_Product.AddNode(newteacher.M_Product, ExamHeader.TEACHER);
-            return this;
+            return newteacher;
         }
-        public ExamHeaderBuilder StudentName() {
-            ExamHeaderStudentBuilder newStudent = new ExamHeaderStudentBuilder(this);
+        public TextBuilder<ExamHeaderBuilder> StudentName() {
+            TextBuilder<ExamHeaderBuilder> newStudent = new TextBuilder<ExamHeaderBuilder>(this);
             M_Product.AddNode(newStudent.M_Product, ExamHeader.STUDENTNAME);
-            return this;
+            return newStudent;
         }
-        public ExamHeaderBuilder Department() {
-            ExamHeaderDepartmentBuilder newDepartment = new ExamHeaderDepartmentBuilder(this);
+        public TextBuilder<ExamHeaderBuilder> Department() {
+            TextBuilder<ExamHeaderBuilder> newDepartment = new TextBuilder<ExamHeaderBuilder>(this);
             M_Product.AddNode(newDepartment.M_Product, ExamHeader.DEPARTMENT);
-            return this;
+            return newDepartment;
         }
         public ExamBuilder End() {
             return M_Parent as ExamBuilder;

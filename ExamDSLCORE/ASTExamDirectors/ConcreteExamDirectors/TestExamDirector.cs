@@ -18,31 +18,25 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
             RandomInteger Y = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0, 10)));
             RandomInteger Z = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0, 10)));
 
+            Create().Exam()
+                .Header()
+                    .Title()
+                        .Text("Computer Architecture I Exams")
+                        .End()
+                    .Department()
+                            .Text("Computer Science and Telecommunication Dep")
+                    .End()
+                .End()
+                .Question()
+                    .Wording()
+                        .Text("Find the sum of 1+2 ?")
+                    .End()
+                    .Solution()
+                        .Text("Solutions is 3")
+                    .End()
+                .End()
+           .End();
 
-            // Y : A Text D
-            // F : J Text K
-
-            // Text : a b c
-
-            //  Y  Text()
-            //  F  Text()
-
-            /*Create().
-                header().
-                Title(
-                    Text.T("Arithmetic Examination")
-                    )
-                .Semester(Text.T("Winter Semester ")).
-                Date(Text.T("23/2/2023")).
-                End().
-                question().
-                Header(Text.T("Exercise ").Append(X).Append(")")).
-                Wording(Text.T($"Find the sum of {Y} + {Z}")).
-                End().
-                question().
-                Header(Text.T("Exercise ").Append(X).Append(")")).
-                Wording(Text.T("Find the sum of 55 + 66")).
-                End();*/
             return m_examAST.M_Product;
         }
     }

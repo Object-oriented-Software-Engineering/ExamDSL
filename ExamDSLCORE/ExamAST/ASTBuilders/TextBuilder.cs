@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ExamDSLCORE.ExamAST.ASTBuilders {
-    public class TextBuilder : BaseBuilder {
+    public class TextBuilder<ParentType> : BaseBuilder
+        where ParentType:BaseBuilder {
         public Text M_Product { get; init; }
 
         public TextBuilder(BaseBuilder parent, TextFormattingContext modifierFormatting=null) {
@@ -31,31 +32,29 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 3. Initialize product
             M_Product = new Text(M_FormattingContext);
         }
-
-        public TextBuilder TextL(string text) {
+        public TextBuilder<ParentType> TextL(string text) {
             Text(text);
             return NewLine();
         }
-        public TextBuilder Text(string text) {
+        public TextBuilder<ParentType> Text(string text) {
             StaticTextSymbol st = new StaticTextSymbol(text, M_FormattingContext);
             M_Product.AddNode(st,ExamDSLCORE.ExamAST.Text.CONTENT);
             return this;
         }
-        public TextBuilder NewLine() {
+        public TextBuilder<ParentType> NewLine() {
             // 1. Create a NewLine Node
             NewLineSymbol newLine = new NewLineSymbol(M_FormattingContext);
             // 2. Add ScopeNode to current TextSymbol
             M_Product.AddNode(newLine, ExamDSLCORE.ExamAST.Text.CONTENT);
             return this;
         }
-        public TextBuilder TextMacro(TextMacroSymbol macro) {
+        public TextBuilder<ParentType> TextMacro(TextMacroSymbol macro) {
             StaticTextSymbol s = new StaticTextSymbol(
                 macro.Evaluate(), M_FormattingContext);
             M_Product.AddNode(s, ExamDSLCORE.ExamAST.Text.CONTENT);
             return this;
         }
-
-        public TextBuilder EnterScope() {
+        public TextBuilder<ParentType> EnterScope() {
             ScopeProperty currentScopeProperty = M_FormattingContext.M_ScopeProperty;
             TextFormattingContext newContext;
             if (currentScopeProperty == null) {
@@ -70,18 +69,18 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                 newContext.M_OrderedItemListProperty = M_FormattingContext.M_OrderedItemListProperty;
                 newContext.M_ScopeProperty = new ScopeProperty(newContext, M_FormattingContext.M_ScopeProperty);
             }
-            TextBuilder newTextBuilder = new TextBuilder(this, newContext);
+            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext);
             return newTextBuilder;
         }
-        public TextBuilder ExitScope() {
+        public TextBuilder<ParentType> ExitScope() {
             if (M_Parent.M_FormattingContext.M_ScopeProperty.M_NestingLevel > 1) {
-                return M_Parent as TextBuilder;
+                return M_Parent as TextBuilder<ParentType>;
             }
             else {
                 throw new Exception("Inconsistent use of Exitscope resulted from non-matching EnterScope ExitScope directives");
             }
         }
-        public TextBuilder EnterOrderedList() {
+        public TextBuilder<ParentType> EnterOrderedList() {
             ScopeProperty currentScopeProperty = M_FormattingContext.M_ScopeProperty;
             TextFormattingContext newContext;
             if (currentScopeProperty == null) {
@@ -95,15 +94,19 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                 newContext.M_OrderedItemListProperty = new OrderedItemListProperty(newContext,M_FormattingContext.M_OrderedItemListProperty);
                 newContext.M_ScopeProperty = M_FormattingContext.M_ScopeProperty;
             }
-            TextBuilder newTextBuilder = new TextBuilder(this, newContext);
+            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext);
             return newTextBuilder;
         }
-        public TextBuilder CloseOrderedList() {
+        public TextBuilder<ParentType> CloseOrderedList() {
             if (M_Parent.M_FormattingContext.M_OrderedItemListProperty.M_NestingLevel > 1) {
-                return M_Parent as TextBuilder;
+                return M_Parent as TextBuilder<ParentType>;
             } else {
                 throw new Exception("Inconsistent use of CloseOrderedList resulted from non-matching EnterOrderedList CloseOrderedList directives");
             }
+        }
+
+        public ParentType End() {
+            return M_Parent as ParentType;
         }
     }
 }
