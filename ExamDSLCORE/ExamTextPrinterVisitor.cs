@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExamDSLCORE.ExamAST;
+using ExamDSLCORE.ExamAST.Formatters;
 
 namespace ExamDSL
 {
@@ -51,6 +52,10 @@ namespace ExamDSL
         }
         
         public override StringBuilder VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
+            OrderedItemListProperty Orderprop = node.M_SymbolFormatting.M_OrderedItemListProperty;
+            if (Orderprop != null) {
+                m_text.Append(Orderprop.Text());
+            }
             m_text.Append(node.MText);
             return base.VisitStaticText(node, args);
         }

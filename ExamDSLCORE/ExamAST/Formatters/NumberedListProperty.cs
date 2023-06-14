@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ExamDSLCORE.ExamAST.Formatters {
     public class OrderedItemListProperty : BaseFormattingProperty<OrderedItemListProperty> {
@@ -58,6 +60,21 @@ namespace ExamDSLCORE.ExamAST.Formatters {
         
         public override string Text() {
             StringBuilder test = new StringBuilder();
+            // scope indentation
+            TextFormattingContext context = M_FormattingContext as TextFormattingContext;
+            if (context.M_ScopeProperty != null) {
+                test.Append(context.M_ScopeProperty.Text());
+            }
+
+            // level indentation
+            for (int i = -1; i < m_nestingLevel; i++) {
+                for (int j = 0; j < 3; j++) {
+                    test.Append(' ');
+                }
+            }
+
+
+            // numbering
             if (M_DecoratedProperty != null) {
                 test.Append(M_DecoratedProperty.Text());
             }
