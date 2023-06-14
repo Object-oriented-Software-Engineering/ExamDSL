@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExamDSLCORE.ExamAST.Formatters {
     public class BaseTextFormattingContext {
-        private Dictionary<Type, object> m_context;
+        private Dictionary<Type, object> m_context=new Dictionary<Type, object>();
 
         public Dictionary<Type, object> M_Context {
             get => m_context;
@@ -33,15 +33,15 @@ namespace ExamDSLCORE.ExamAST.Formatters {
     public class TextFormattingContext : BaseTextFormattingContext {
         public ScopeProperty M_ScopeProperty {
             get => M_Context[typeof(ScopeProperty)] as ScopeProperty;
-            set => M_Context[typeof(ScopeProperty)] = value ?? throw new ArgumentNullException(nameof(value));
+            set => M_Context[typeof(ScopeProperty)] = value ;
         }
         public OrderedItemListProperty M_OrderedItemListProperty {
             get => M_Context[typeof(OrderedItemListProperty)] as OrderedItemListProperty;
-            set => M_Context[typeof(OrderedItemListProperty)] = value ?? throw new ArgumentNullException(nameof(value));
+            set => M_Context[typeof(OrderedItemListProperty)] = value ;
         }
         public NewLineProperty M_NewLineProperty {
             get => M_Context[typeof(NewLineProperty)] as NewLineProperty;
-            set => M_Context[typeof(NewLineProperty)] = value ?? throw new ArgumentNullException(nameof(value));
+            set => M_Context[typeof(NewLineProperty)] = value;
         }
     }
 

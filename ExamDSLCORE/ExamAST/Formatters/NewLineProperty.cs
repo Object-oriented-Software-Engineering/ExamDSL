@@ -33,7 +33,9 @@ namespace ExamDSLCORE.ExamAST.Formatters {
                 M_FormattingContext.GetFormattingProperty(typeof(ScopeProperty)) as ScopeProperty;
             // Appends the appropriate line terminator per OS
             txt.AppendLine();
-            txt.Append(indentation.Text());
+            if (indentation != null) {
+                txt.Append(indentation.Text());
+            }
             return txt.ToString();
         }
     }

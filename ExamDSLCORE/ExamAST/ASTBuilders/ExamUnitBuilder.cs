@@ -13,13 +13,11 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         public ExamUnitBuilder() {
             // 1. Initialize Formatting context
-            M_FormattingContext = new TextFormattingContext() {
-                M_Context = new Dictionary<Type, object>() {
-                    { typeof(ScopeProperty), null},
-                    { typeof(NewLineProperty), new NewLineProperty(M_FormattingContext) },
-                    { typeof(OrderedItemListProperty), null}
-                }
-            };
+            M_FormattingContext = new TextFormattingContext();
+            M_FormattingContext.M_NewLineProperty = new NewLineProperty(M_FormattingContext);
+            M_FormattingContext.M_ScopeProperty = null;
+            M_FormattingContext.M_OrderedItemListProperty = null;
+
             // 2. Initialize parent
             M_Parent = null;
             // 2. Initialize product

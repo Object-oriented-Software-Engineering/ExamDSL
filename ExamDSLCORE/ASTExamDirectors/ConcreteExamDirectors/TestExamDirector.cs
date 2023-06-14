@@ -18,24 +18,33 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
             RandomInteger Y = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0, 10)));
             RandomInteger Z = new RandomInteger(new Random<int>(new SimpleRangeIntegerPicker(0, 10)));
 
-            Create().Exam()
+            var exam=Create().Exam()
                 .Header()
                     .Title()
-                        .Text("Computer Architecture I Exams")
-                        .End()
+                        .TextL("Computer Architecture I Exams")
+                    .End()
                     .Department()
-                            .Text("Computer Science and Telecommunication Dep")
+                            .TextL("Computer Science and Telecommunication Dep")
                     .End()
                 .End()
                 .Question()
                     .Wording()
-                        .Text("Find the sum of 1+2 ?")
+                .EnterOrderedList()
+                        .TextL("Find the sum of 1+2 ?")
+                        .TextL("Find the sum of 3+4 ?")
+                .CloseOrderedList()
                     .End()
                     .Solution()
-                        .Text("Solutions is 3")
+                        .TextL("Solutions is 3")
                     .End()
                 .End()
            .End();
+
+            ExamASTPrinterVisitor printer = new ExamASTPrinterVisitor("test.dot");
+            printer.Visit(exam.M_Product, null);
+            ExamTextPrinterVisitor textPrinter = new ExamTextPrinterVisitor();
+            textPrinter.Visit(exam.M_Product, null);
+            Console.WriteLine(textPrinter.MText);
 
             return m_examAST.M_Product;
         }

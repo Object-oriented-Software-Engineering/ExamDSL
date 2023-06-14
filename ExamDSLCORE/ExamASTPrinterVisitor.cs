@@ -42,21 +42,17 @@ namespace ExamDSL
             m_dotFile.WriteLine($"\t}}");
         }
 
-        public override int VisitExam(Exam node, params DSLSymbol[] args) {
-            Exam n = node as Exam;
+        public override int VisitExamUnit(ExamUnit node, params DSLSymbol[] args) {
+            ExamUnit n = node as ExamUnit;
             if (n == null) {
-                throw new InvalidCastException("Expected CompileUnit type");
+                throw new InvalidCastException("Expected Exam Unit Type");
             }
-
             m_dotFile.WriteLine("digraph G{\n");
 
-            CreateContextSubgraph(n, Exam.HEADER,
-                n.mc_contextNames[Exam.HEADER]);
-
-            CreateContextSubgraph(n, Exam.QUESTIONS,
-                n.mc_contextNames[Exam.QUESTIONS]);
-
-            base.VisitExam(node, n);
+            CreateContextSubgraph(n, ExamUnit.CONTENT,
+                n.mc_contextNames[ExamUnit.CONTENT]);
+            
+            base.VisitExamUnit(node, args);
 
             m_dotFile.WriteLine("}");
             m_dotFile.Close();
@@ -85,6 +81,23 @@ namespace ExamDSL
             return 0;
         }
 
+        public override int VisitExam(Exam node, params DSLSymbol[] args) {
+            Exam n = node as Exam;
+            if (n == null) {
+                throw new InvalidCastException("Expected CompileUnit type");
+            }
+
+            CreateContextSubgraph(n, Exam.HEADER,
+                n.mc_contextNames[Exam.HEADER]);
+
+            CreateContextSubgraph(n, Exam.QUESTIONS,
+                n.mc_contextNames[Exam.QUESTIONS]);
+
+            base.VisitExam(node, n);
+
+            return 0;
+        }
+
         public override int VisitExamHeader(ExamHeader node, params DSLSymbol[] args) {
             ExamHeader n = node as ExamHeader;
             if (n == null) {
@@ -106,6 +119,9 @@ namespace ExamDSL
 
             CreateContextSubgraph(n, ExamHeader.STUDENTNAME,
                 n.mc_contextNames[ExamHeader.STUDENTNAME]);
+
+            CreateContextSubgraph(n, ExamHeader.DEPARTMENT,
+                n.mc_contextNames[ExamHeader.DEPARTMENT]);
 
             return base.VisitExamHeader(node, n);
         }
@@ -134,163 +150,7 @@ namespace ExamDSL
 
             return base.VisitExamQuestion(node, n);
         }
-
-        public override int VisitExamHeaderTitle(ExamHeaderTitle node, params DSLSymbol[] args) {
-            ExamHeaderTitle n = node as ExamHeaderTitle;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamHeaderTitle.TEXT,
-                n.mc_contextNames[ExamHeaderTitle.TEXT]);
-            
-            return base.VisitExamHeaderTitle(node, n);
-        }
-
-        public override int VisitExamHeaderSemester(ExamHeaderSemester node, params DSLSymbol[] args) {
-            ExamHeaderSemester n = node as ExamHeaderSemester;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamHeaderSemester.TEXT,
-                n.mc_contextNames[ExamHeaderSemester.TEXT]);
-
-            return base.VisitExamHeaderSemester(node, n);
-        }
-
-        public override int VisitExamHeaderDate(ExamHeaderDate node, params DSLSymbol[] args) {
-            ExamHeaderDate n = node as ExamHeaderDate;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamHeaderDate.TEXT,
-                n.mc_contextNames[ExamHeaderDate.TEXT]);
-
-            return base.VisitExamHeaderDate(node, n);
-        }
-
-        public override int VisitExamHeaderDepartmentName(ExamHeaderDepartment node, params DSLSymbol[] args) {
-            ExamHeaderDepartment n = node as ExamHeaderDepartment;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamHeaderDepartment.TEXT,
-                n.mc_contextNames[ExamHeaderDepartment.TEXT]);
-
-            return base.VisitExamHeaderDepartmentName(node, n);
-        }
-
-        public override int VisitExamHeaderDuration(ExamHeaderDuration node, params DSLSymbol[] args) {
-            ExamHeaderDuration n = node as ExamHeaderDuration;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamHeaderDuration.TEXT,
-                n.mc_contextNames[ExamHeaderDuration.TEXT]);
-
-            return base.VisitExamHeaderDuration(node, n);
-        }
-
-        public override int VisitExamHeaderTeacher(ExamHeaderTeacher node, params DSLSymbol[] args) {
-            ExamHeaderTeacher n = node as ExamHeaderTeacher;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamHeaderTeacher.TEXT,
-                n.mc_contextNames[ExamHeaderTeacher.TEXT]);
-
-            return base.VisitExamHeaderTeacher(node, n);
-        }
-
-        public override int VisitExamHeaderStudentName(ExamHeaderStudentName node, params DSLSymbol[] args) {
-            ExamHeaderStudentName n = node as ExamHeaderStudentName;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamHeaderStudentName.TEXT,
-                n.mc_contextNames[ExamHeaderStudentName.TEXT]);
-
-            return base.VisitExamHeaderStudentName(node, n);
-        }
-
-        public override int VisitExamQuestionHeader(ExamQuestionHeader node, params DSLSymbol[] args) {
-            ExamQuestionHeader n = node as ExamQuestionHeader;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamQuestionHeader.CONTENT,
-                n.mc_contextNames[ExamQuestionHeader.CONTENT]);
-
-            return base.VisitExamQuestionHeader(node, n);
-        }
-
-        public override int VisitExamQuestionWeight(ExamQuestionWeight node, params DSLSymbol[] args) {
-            ExamQuestionWeight n = node as ExamQuestionWeight;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamQuestionWeight.CONTENT,
-                n.mc_contextNames[ExamQuestionWeight.CONTENT]);
-
-            return base.VisitExamQuestionWeight(node, n);
-        }
-
-        public override int VisitExamQuestionWording(ExamQuestionWording node, params DSLSymbol[] args) {
-            ExamQuestionWording n = node as ExamQuestionWording;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamQuestionWording.CONTENT,
-                n.mc_contextNames[ExamQuestionWording.CONTENT]);
-
-            return base.VisitExamQuestionWording(node, n);
-        }
-
-        public override int VisitExamQuestionSolution(ExamQuestionSolution node, params DSLSymbol[] args) {
-            ExamQuestionSolution n = node as ExamQuestionSolution;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamQuestionSolution.CONTENT,
-                n.mc_contextNames[ExamQuestionSolution.CONTENT]);
-
-            return base.VisitExamQuestionSolution(node, n);
-        }
-
-        public override int VisitExamQuestionSubQuestion(ExamQuestionSubQuestion node, params DSLSymbol[] args) {
-            ExamQuestionSubQuestion n = node as ExamQuestionSubQuestion;
-            if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
-            }
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
-            CreateContextSubgraph(n, ExamQuestionSubQuestion.CONTENT,
-                n.mc_contextNames[ExamQuestionSubQuestion.CONTENT]);
-
-            return base.VisitExamQuestionSubQuestion(node, n);
-        }
-
+        
         public override int VisitText(Text node, params DSLSymbol[] args) {
             Text n = node as Text;
             if (n == null) {

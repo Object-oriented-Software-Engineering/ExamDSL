@@ -67,106 +67,10 @@ namespace ExamDSLCORE.ExamAST {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamHeader(this, info);
         }
     }
-
-    public class ExamHeaderTitle : ASTComposite {
-        public const int TEXT = 0;
-        public readonly string[] mc_contextNames = { "TEXT"};
-
-        public ExamHeaderTitle(BaseTextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERTITLE) {
-            SetInfo(typeof(BaseTextFormattingContext), formatting);
-        }
-
-        public override Return Accept<Return, Params>(
-            IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderTitle(this, info);
-        }
-    }
-
-    public class ExamHeaderSemester : ASTComposite {
-        public const int TEXT = 0;
-        public readonly string[] mc_contextNames = { "TEXT" };
-
-        public ExamHeaderSemester(BaseTextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERSEMESTER) {
-            SetInfo(typeof(BaseTextFormattingContext), formatting);
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderSemester(this, info);
-        }
-    }
-
-    public class ExamHeaderDate : ASTComposite {
-        public const int TEXT = 0;
-        public readonly string[] mc_contextNames = { "TEXT" };
-
-        public ExamHeaderDate(BaseTextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERDATE) {
-            SetInfo(typeof(BaseTextFormattingContext), formatting);
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDate(this, info);
-        }
-    }
-    public class ExamHeaderDuration : ASTComposite {
-        public const int TEXT = 0;
-        public readonly string[] mc_contextNames = { "TEXT" };
-
-        public ExamHeaderDuration(BaseTextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERDURATION) {
-            SetInfo(typeof(BaseTextFormattingContext), formatting);
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDuration(this, info);
-        }
-    }
-
-    public class ExamHeaderTeacher : ASTComposite {
-        public const int TEXT = 0;
-        public readonly string[] mc_contextNames = { "TEXT" };
-
-        public ExamHeaderTeacher(BaseTextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERTEACHER) {
-            SetInfo(typeof(BaseTextFormattingContext), formatting);
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderTeacher(this, info);
-        }
-    }
-
-    public class ExamHeaderStudentName : ASTComposite {
-        public const int TEXT = 0;
-        public readonly string[] mc_contextNames = { "TEXT" };
-
-        public ExamHeaderStudentName(BaseTextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMHEADERSTUDENTNAME) {
-            SetInfo(typeof(BaseTextFormattingContext), formatting);
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderStudentName(this, info);
-        }
-    }
-
-    public class ExamHeaderDepartment : ASTComposite {
-        public const int TEXT = 0, LOGO=1;
-        public readonly string[] mc_contextNames = { "TEXT", "LOGO" };
-
-        public ExamHeaderDepartment(BaseTextFormattingContext formatting) :
-            base(2, (int)ExamSymbolType.ST_EXAMHEADERDEPARTMENTNAME) {
-            SetInfo(typeof(BaseTextFormattingContext), formatting);
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamHeaderDepartmentName(this, info);
-        }
-    }
     // ExamHeader : Title? Semester? Date? Duration? Teacher? StudentName?
     // Title : Text;
+   
+    
     public class ExamQuestion : ASTComposite {
         public const int HEADER = 0, WEIGHT = 1, WORDING = 2,
             SOLUTION = 3, SUBQUESTION = 4;
@@ -181,70 +85,6 @@ namespace ExamDSLCORE.ExamAST {
         public override Return Accept<Return, Params>(
             IASTBaseVisitor<Return, Params> v, params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestion(this, info);
-        }
-    }
-
-    public class ExamQuestionWording : ASTComposite {
-        public const int CONTENT =0;
-        public readonly string[] mc_contextNames = { "CONTENT"};
-
-        public ExamQuestionWording(TextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWORDING) {
-
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return,Params>).VisitExamQuestionWording(this, info);
-        }
-    }
-    public class ExamQuestionHeader : ASTComposite {
-        public const int CONTENT = 0;
-        public readonly string[] mc_contextNames = { "CONTENT" };
-
-        public ExamQuestionHeader(TextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONHEADER) {
-
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionHeader(this, info);
-        }
-    }
-    public class ExamQuestionWeight : ASTComposite {
-        public const int CONTENT = 0;
-        public readonly string[] mc_contextNames = { "CONTENT" };
-
-        public ExamQuestionWeight(TextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONWEIGHT) {
-
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionWeight(this, info);
-        }
-    }
-    public class ExamQuestionSolution : ASTComposite {
-        public const int CONTENT = 0;
-        public readonly string[] mc_contextNames = { "CONTENT" };
-
-        public ExamQuestionSolution(TextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSOLUTION) {
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionSolution(this, info);
-        }
-    }
-    public class ExamQuestionSubQuestion : ASTComposite {
-        public const int CONTENT = 0;
-        public readonly string[] mc_contextNames = { "CONTENT" };
-
-        public ExamQuestionSubQuestion(TextFormattingContext formatting) :
-            base(1, (int)ExamSymbolType.ST_EXAMQUESTIONSUBQUESTION) {
-        }
-
-        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v, params Params[] info) {
-            return (v as DSLBaseVisitor<Return, Params>).VisitExamQuestionSubQuestion(this, info);
         }
     }
     

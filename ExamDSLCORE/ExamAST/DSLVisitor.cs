@@ -44,42 +44,6 @@ namespace ExamDSLCORE.ExamAST {
         public virtual Result VisitExamHeader(ExamHeader node, params Params[] args) {
             return VisitChildren(node, args);
         }
-        public virtual Result VisitExamHeaderTitle(ExamHeaderTitle node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamHeaderSemester(ExamHeaderSemester node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamHeaderDate(ExamHeaderDate node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamHeaderDepartmentName(ExamHeaderDepartment node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamHeaderDuration(ExamHeaderDuration node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamHeaderTeacher(ExamHeaderTeacher node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamHeaderStudentName(ExamHeaderStudentName node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamQuestionHeader(ExamQuestionHeader node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamQuestionWeight(ExamQuestionWeight node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamQuestionWording(ExamQuestionWording node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamQuestionSolution(ExamQuestionSolution node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
-        public virtual Result VisitExamQuestionSubQuestion(ExamQuestionSubQuestion node, params Params[] args) {
-            return VisitChildren(node, args);
-        }
         public virtual Result VisitExamQuestion(ExamQuestion node, params Params[] args) {
             return VisitChildren(node, args);
         }

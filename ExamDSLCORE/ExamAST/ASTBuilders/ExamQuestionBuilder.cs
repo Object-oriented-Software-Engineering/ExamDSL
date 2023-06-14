@@ -12,13 +12,11 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         
         public ExamQuestionBuilder(BaseBuilder parent)  {
             // 1. Initialize Formatting context
-            M_FormattingContext = new TextFormattingContext() {
-                M_Context = new Dictionary<Type, object>() {
-                    { typeof(ScopeProperty), null },
-                    { typeof(NewLineProperty),parent.M_FormattingContext.M_NewLineProperty  },
-                    { typeof(OrderedItemListProperty), null}
-                }
-            };
+            M_FormattingContext = new TextFormattingContext();
+            M_FormattingContext.M_NewLineProperty = parent.M_FormattingContext.M_NewLineProperty;
+            M_FormattingContext.M_ScopeProperty = null;
+            M_FormattingContext.M_OrderedItemListProperty = null;
+
             // 2. Initialize parent
             M_Parent = parent;
             // 2. Initialize product
@@ -30,12 +28,14 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         
         public TextBuilder<ExamQuestionBuilder> Wording() {
-            TextBuilder<ExamQuestionBuilder> wording = new TextBuilder<ExamQuestionBuilder>(this);
+            TextBuilder<ExamQuestionBuilder> wording =
+                new TextBuilder<ExamQuestionBuilder>(this, M_FormattingContext);
             M_Product.AddNode(wording.M_Product, ExamQuestion.WORDING);
             return wording;
         }
         public TextBuilder<ExamQuestionBuilder> Solution() {
-            TextBuilder<ExamQuestionBuilder> solution = new TextBuilder<ExamQuestionBuilder>(this);
+            TextBuilder<ExamQuestionBuilder> solution = 
+                new TextBuilder<ExamQuestionBuilder>(this, M_FormattingContext);
             M_Product.AddNode(solution.M_Product, ExamQuestion.WORDING);
             return solution;
         }

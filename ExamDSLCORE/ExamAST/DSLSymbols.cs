@@ -61,7 +61,7 @@ namespace ExamDSLCORE.ExamAST {
         
         private List<ASTComposite> m_parent;
 
-        public TextFormattingContext M_SymbolFormatting => Info(typeof(TextFormattingContext)) as TextFormattingContext;
+        public TextFormattingContext M_SymbolFormatting => Info(typeof(BaseTextFormattingContext)) as TextFormattingContext;
         
         public ASTComposite MParent => m_parent[0];
 

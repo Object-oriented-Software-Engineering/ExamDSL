@@ -10,18 +10,14 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         where ParentType:BaseBuilder {
         public Text M_Product { get; init; }
 
-        public TextBuilder(BaseBuilder parent, TextFormattingContext modifierFormatting=null) {
+        public TextBuilder(BaseBuilder parent, TextFormattingContext modifierFormatting) {
             // 1. Initialize Formatting context
             if (modifierFormatting == null) {
-                M_FormattingContext = new TextFormattingContext() {
-                    M_Context = new Dictionary<Type, object>() {
-                        { typeof(ScopeProperty), null }, {
-                            typeof(NewLineProperty),
-                            parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty))
-                        },
-                        { typeof(OrderedItemListProperty), null }
-                    }
-                };
+                M_FormattingContext = new TextFormattingContext() ;
+                M_FormattingContext.M_NewLineProperty = 
+                    parent.M_FormattingContext.GetFormattingProperty(typeof(NewLineProperty)) as NewLineProperty;
+                M_FormattingContext.M_ScopeProperty = null;
+                M_FormattingContext.M_OrderedItemListProperty = null;
             }
             else {
                 M_FormattingContext = modifierFormatting;
@@ -34,7 +30,8 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         }
         public TextBuilder<ParentType> TextL(string text) {
             Text(text);
-            return NewLine();
+            NewLine();
+            return this;
         }
         public TextBuilder<ParentType> Text(string text) {
             StaticTextSymbol st = new StaticTextSymbol(text, M_FormattingContext);
@@ -95,14 +92,12 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                 newContext.M_ScopeProperty = M_FormattingContext.M_ScopeProperty;
             }
             TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext);
+            M_Product.AddNode(newTextBuilder.M_Product,ExamAST.Text.CONTENT);
             return newTextBuilder;
         }
         public TextBuilder<ParentType> CloseOrderedList() {
-            if (M_Parent.M_FormattingContext.M_OrderedItemListProperty.M_NestingLevel > 1) {
-                return M_Parent as TextBuilder<ParentType>;
-            } else {
-                throw new Exception("Inconsistent use of CloseOrderedList resulted from non-matching EnterOrderedList CloseOrderedList directives");
-            }
+            return M_Parent as TextBuilder<ParentType>;
+            
         }
 
         public ParentType End() {
