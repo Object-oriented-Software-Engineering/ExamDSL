@@ -29,13 +29,13 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         
         public TextBuilder<ExamQuestionBuilder> Wording() {
             TextBuilder<ExamQuestionBuilder> wording =
-                new TextBuilder<ExamQuestionBuilder>(this, M_FormattingContext);
+                new TextBuilder<ExamQuestionBuilder>(this, M_FormattingContext, "Wording");
             M_Product.AddNode(wording.M_Product, ExamQuestion.WORDING);
             return wording;
         }
         public TextBuilder<ExamQuestionBuilder> Solution() {
             TextBuilder<ExamQuestionBuilder> solution = 
-                new TextBuilder<ExamQuestionBuilder>(this, M_FormattingContext);
+                new TextBuilder<ExamQuestionBuilder>(this, M_FormattingContext,"Solution");
             M_Product.AddNode(solution.M_Product, ExamQuestion.WORDING);
             return solution;
         }

@@ -35,7 +35,7 @@ namespace ExamDSLCORE.ExamAST.Formatters {
             }
         }
 
-        public override string Text() {
+        public override string Text(PropertyInfoArgs info=null) {
             StringBuilder txt = new StringBuilder();
             if (m_decoratedProperty != null) {
                 txt.Append(m_decoratedProperty.Text());

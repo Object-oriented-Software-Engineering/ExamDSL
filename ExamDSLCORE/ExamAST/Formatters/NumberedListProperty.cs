@@ -8,6 +8,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace ExamDSLCORE.ExamAST.Formatters {
     public class OrderedItemListProperty : BaseFormattingProperty<OrderedItemListProperty> {
+
+        public class NestingInfo:PropertyInfoArgs {
+            public bool b_isInnerMost;
+        }
+
         private const int ArithType_Natural = 0,
             ArithType_Uppercase = 1,
             ArithType_Lowercase = 2,
@@ -21,10 +26,9 @@ namespace ExamDSLCORE.ExamAST.Formatters {
         };
 
         private int m_arithmeticUnit = ArithType_Natural;
-        private int m_nextNumber = 0;
+        private int m_nextNumber = 1;
         private string m_closingDelimeter = ")";
         private string m_separatorDelimiter = ".";
-        private bool b_isInnermost;
         private int m_nestingLevel;
 
         public int M_ArithmeticUnit => m_arithmeticUnit;
@@ -42,46 +46,47 @@ namespace ExamDSLCORE.ExamAST.Formatters {
             : base(container,decoratedProperty) {
             if (decoratedProperty == null) {
                 m_arithmeticUnit = ArithType_Natural;
-                m_nextNumber = 0;
+                m_nextNumber = 1;
                 m_nestingLevel =0;
                 m_closingDelimeter = ")";
                 m_separatorDelimiter = ".";
-                b_isInnermost = true;
             } else {
                 m_arithmeticUnit = decoratedProperty.M_ArithmeticUnit;
-                m_nextNumber = 0;
+                m_nextNumber = 1;
                 m_nestingLevel = decoratedProperty.M_NestingLevel + 1;
                 m_closingDelimeter = decoratedProperty.M_ClosingDelimeter;
                 m_separatorDelimiter = decoratedProperty.M_SeparatorDelimiter;
-                b_isInnermost = true;
-                decoratedProperty.b_isInnermost = false;
             }
         }
         
-        public override string Text() {
+        public override string Text(PropertyInfoArgs info=null) {
             StringBuilder test = new StringBuilder();
+            NestingInfo info_ = info as NestingInfo;
             // scope indentation
             TextFormattingContext context = M_FormattingContext as TextFormattingContext;
             if (context.M_ScopeProperty != null) {
                 test.Append(context.M_ScopeProperty.Text());
             }
-
-            // level indentation
-            for (int i = -1; i < m_nestingLevel; i++) {
-                for (int j = 0; j < 3; j++) {
-                    test.Append(' ');
+            
+            if (m_decoratedProperty == null) {
+                // level indentation
+                for (int i = -1; i < m_nestingLevel; i++) {
+                    for (int j = 0; j < 3; j++) {
+                        test.Append(' ');
+                    }
                 }
             }
 
-
             // numbering
             if (M_DecoratedProperty != null) {
-                test.Append(M_DecoratedProperty.Text());
+                test.Append(M_DecoratedProperty.Text(new NestingInfo(){b_isInnerMost = false}));
             }
-            test.Append(M_NextNumber);
-            if (b_isInnermost) {
-                test.Append(m_closingDelimeter);
+            
+            if (info_.b_isInnerMost ) {
+                test.Append(GetNextNumber());
+                test.Append(m_closingDelimeter+" ");
             } else {
+                test.Append(M_NextNumber);
                 test.Append(m_separatorDelimiter);
             }
             return test.ToString();

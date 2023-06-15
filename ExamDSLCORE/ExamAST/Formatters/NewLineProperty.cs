@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace ExamDSLCORE.ExamAST.Formatters {
     
     public class NewLineProperty : BaseFormattingProperty<NewLineProperty> {
+
+
         private const int NLType_Windows = 0,
             NLType_Linux = 1;
 
@@ -27,9 +29,9 @@ namespace ExamDSLCORE.ExamAST.Formatters {
             m_newlineType = 0;
         }
         
-        public override string Text() {
+        public override string Text(PropertyInfoArgs info=null) {
             StringBuilder txt = new StringBuilder();
-            ScopeProperty indentation = 
+            ScopeProperty indentation =
                 M_FormattingContext.GetFormattingProperty(typeof(ScopeProperty)) as ScopeProperty;
             // Appends the appropriate line terminator per OS
             txt.AppendLine();

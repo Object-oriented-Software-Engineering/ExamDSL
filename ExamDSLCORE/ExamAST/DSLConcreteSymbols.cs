@@ -94,12 +94,20 @@ namespace ExamDSLCORE.ExamAST {
     public class Text : ASTComposite {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
+        private string m_textNodeContext;
 
-        public Text(BaseTextFormattingContext formatting) :
+        public Text(BaseTextFormattingContext formatting,string textContext) :
             base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) {
             SetInfo(typeof(BaseTextFormattingContext), formatting);
+            m_textNodeContext = textContext;
+            SetNodeSuffix();
         }
-        
+
+        public override string SetNodeSuffix() {
+            m_nodeName= "Node" + GetType().Name+ "_" + m_textNodeContext + m_serialNumber;
+            return m_nodeName;
+        }
+
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
                                                         params Params[] info) {
             return (v as DSLBaseVisitor<Return, Params>).VisitText(this, info);

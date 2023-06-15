@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.VisualBasic;
 
 namespace ExamDSLCORE.ExamAST.Formatters {
+    public class PropertyInfoArgs {
+
+    }
     public abstract class BaseFormattingProperty<T>  {
+
         // A reference to the formatting context it belongs
         // The formatting context contains all the properties
         private BaseTextFormattingContext m_formattingContext;
@@ -28,6 +33,7 @@ namespace ExamDSLCORE.ExamAST.Formatters {
             m_decoratedProperty = decoratedProperty;
         }
 
-        public abstract string Text();
+        //public abstract string Text<Info>(Info info=null) where Info : PropertyInfoArgs;
+        public abstract string Text(PropertyInfoArgs info = null);
     }
 }

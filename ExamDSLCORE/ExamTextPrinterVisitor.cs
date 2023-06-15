@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExamDSLCORE.ExamAST;
 using ExamDSLCORE.ExamAST.Formatters;
+using static ExamDSLCORE.ExamAST.Formatters.OrderedItemListProperty;
 
 namespace ExamDSL
 {
@@ -54,7 +55,7 @@ namespace ExamDSL
         public override StringBuilder VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
             OrderedItemListProperty Orderprop = node.M_SymbolFormatting.M_OrderedItemListProperty;
             if (Orderprop != null) {
-                m_text.Append(Orderprop.Text());
+                m_text.Append(Orderprop.Text(new NestingInfo() { b_isInnerMost = true }));
             }
             m_text.Append(node.MText);
             return base.VisitStaticText(node, args);

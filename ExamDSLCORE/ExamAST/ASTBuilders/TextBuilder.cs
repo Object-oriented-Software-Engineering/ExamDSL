@@ -10,7 +10,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         where ParentType:BaseBuilder {
         public Text M_Product { get; init; }
 
-        public TextBuilder(BaseBuilder parent, TextFormattingContext modifierFormatting) {
+        public TextBuilder(BaseBuilder parent, TextFormattingContext modifierFormatting,string contextLabel) {
             // 1. Initialize Formatting context
             if (modifierFormatting == null) {
                 M_FormattingContext = new TextFormattingContext() ;
@@ -26,7 +26,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             // 2. Initialize parent
             M_Parent = parent;
             // 3. Initialize product
-            M_Product = new Text(M_FormattingContext);
+            M_Product = new Text(M_FormattingContext,contextLabel);
         }
         public TextBuilder<ParentType> TextL(string text) {
             Text(text);
@@ -66,16 +66,12 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                 newContext.M_OrderedItemListProperty = M_FormattingContext.M_OrderedItemListProperty;
                 newContext.M_ScopeProperty = new ScopeProperty(newContext, M_FormattingContext.M_ScopeProperty);
             }
-            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext);
+            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext,"Scope");
+            M_Product.AddNode(newTextBuilder.M_Product, ExamAST.Text.CONTENT);
             return newTextBuilder;
         }
         public TextBuilder<ParentType> ExitScope() {
-            if (M_Parent.M_FormattingContext.M_ScopeProperty.M_NestingLevel > 1) {
-                return M_Parent as TextBuilder<ParentType>;
-            }
-            else {
-                throw new Exception("Inconsistent use of Exitscope resulted from non-matching EnterScope ExitScope directives");
-            }
+            return M_Parent as TextBuilder<ParentType>;
         }
         public TextBuilder<ParentType> EnterOrderedList() {
             ScopeProperty currentScopeProperty = M_FormattingContext.M_ScopeProperty;
@@ -91,7 +87,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                 newContext.M_OrderedItemListProperty = new OrderedItemListProperty(newContext,M_FormattingContext.M_OrderedItemListProperty);
                 newContext.M_ScopeProperty = M_FormattingContext.M_ScopeProperty;
             }
-            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext);
+            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext, "OrderedList");
             M_Product.AddNode(newTextBuilder.M_Product,ExamAST.Text.CONTENT);
             return newTextBuilder;
         }

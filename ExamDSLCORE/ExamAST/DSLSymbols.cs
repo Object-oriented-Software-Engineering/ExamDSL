@@ -45,13 +45,19 @@ namespace ExamDSLCORE.ExamAST {
         // Support for tree structure
 
         public int MType => m_type;
-
         // Node label is open for changes as is virtual
         public virtual int MSerialNumber => m_serialNumber;
-
         // Node label is open for changes as is virtual
         public virtual string M_NodeName => m_nodeName;
         public static int MsSerialCounter => ms_serialCounter;
+
+        protected LabelContainer() {
+            m_serialNumber = ms_serialCounter++;
+            m_nodeName = SetNodeSuffix();
+        }
+        public virtual string SetNodeSuffix() {
+            return "Node" + GetType().Name + m_serialNumber;
+        }
     }
 
     /// <summary>
@@ -67,8 +73,6 @@ namespace ExamDSLCORE.ExamAST {
 
         public DSLSymbol(int mType) {
             m_type = mType;
-            m_serialNumber = ms_serialCounter++;
-            m_nodeName = "Node" + GetType().Name + m_serialNumber;
             m_parent = new List<ASTComposite>();
         }
         public virtual void SetParent(ASTComposite parent) {
