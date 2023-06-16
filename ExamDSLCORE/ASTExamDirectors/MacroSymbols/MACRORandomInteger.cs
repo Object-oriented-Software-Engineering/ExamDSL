@@ -30,5 +30,9 @@ namespace ExamDSLCORE.ASTExamDirectors.MacroSymbols {
         public override string GetText() {
             return Convert.ToString(m_integer);
         }
+
+        public override string ToString() {
+            return Evaluate();
+        }
     }
 }

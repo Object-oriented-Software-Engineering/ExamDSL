@@ -46,6 +46,7 @@ namespace ExamDSL
             return m_text;
         }
         public override StringBuilder VisitText(Text node, params DSLSymbol[] args) {
+           
             for (int i = 0; i < node.GetNumberOfContextNodes(0); i++) {
                 Visit(node.GetChild(0, i));
             }
@@ -65,5 +66,13 @@ namespace ExamDSL
             return base.VisitNewLine(node, args);
         }
 
+        public override StringBuilder VisitTextMacro(TextMacroSymbol node, params DSLSymbol[] args) {
+            OrderedItemListProperty Orderprop = node.M_SymbolFormatting.M_OrderedItemListProperty;
+            if (Orderprop != null) {
+                m_text.Append(Orderprop.Text(new NestingInfo() { b_isInnerMost = true }));
+            }
+            m_text.Append(node.Evaluate());
+            return base.VisitTextMacro(node, args);
+        }
     }
 }

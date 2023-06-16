@@ -3,7 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ExamDSLCORE.ExamAST.ASTBuilders {
     public class TextBuilder<ParentType> : BaseBuilder
@@ -38,6 +40,76 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             M_Product.AddNode(st,ExamDSLCORE.ExamAST.Text.CONTENT);
             return this;
         }
+
+        // TODO : Implementation of the following function that transforms the string
+        // TODO : template as a combination of text and DSLSymbol elements using 
+        // TODO : Console.WriteLine placeholders
+        // This method builds a lexical analyzer to distinguish in a string template
+        // the raw strings from DSLSymbols and create the corresponding objects
+        // to append to the parent node of the AST tree
+        public TextBuilder<ParentType> Text(string template, params DSLSymbol[] args) {
+            TextFormattingContext newContext;
+            newContext = new TextFormattingContext();
+            newContext.M_NewLineProperty = M_FormattingContext.M_NewLineProperty;
+            newContext.M_OrderedItemListProperty = null;
+            newContext.M_ScopeProperty = null;
+            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, M_FormattingContext, "CompositeText");
+            M_Product.AddNode(newTextBuilder.M_Product, ExamDSLCORE.ExamAST.Text.CONTENT);
+            Text newparentDSLSymbol = newTextBuilder.M_Product;
+
+            // Regular Expression ([^{]+|{{)|({\d+})
+            Regex regexText = new Regex("([^{]+|{{)|({\\d+})", RegexOptions.Singleline);
+            //Regex regexPlaceHolder = new Regex("({\\d+})", RegexOptions.Singleline);
+            int symbolIndex=0;
+            int numberOfSymbols = args.Length;
+            Match m= regexText.Match(template);
+            while (m.Success) {
+                if (m.Groups[1].Success) {
+                    // Found string action 
+                    StaticTextSymbol st;
+                    if (symbolIndex == 0) {
+                        st = new StaticTextSymbol(m.Value, M_FormattingContext);
+                    }
+                    else {
+                        st = new StaticTextSymbol(m.Value, newContext);
+                    }
+                    newparentDSLSymbol.AddNode(st, ExamDSLCORE.ExamAST.Text.CONTENT);
+
+                    //Console.WriteLine(m.Value);
+                }
+                else if (m.Groups[2].Success) {
+                    // Found DSLSymbol action
+                    if (symbolIndex == 0) {
+                        if (symbolIndex < numberOfSymbols) {
+                            TextMacroSymbol symbol = args[symbolIndex] as TextMacroSymbol;
+                            symbol.SetInfo(typeof(BaseTextFormattingContext), M_FormattingContext);
+                            newparentDSLSymbol.AddNode(args[symbolIndex], ExamDSLCORE.ExamAST.Text.CONTENT);
+                        }
+                    }
+                    else {
+                        if (symbolIndex < numberOfSymbols) {
+                            TextMacroSymbol symbol = args[symbolIndex] as TextMacroSymbol;
+                            symbol.SetInfo(typeof(BaseTextFormattingContext), newContext);
+                            newparentDSLSymbol.AddNode(args[symbolIndex], ExamDSLCORE.ExamAST.Text.CONTENT);
+                        }
+                    }
+                    //Console.WriteLine(m.Value);
+                }
+                m=m.NextMatch();
+                symbolIndex++;
+            }
+
+            newTextBuilder.NewLine();
+            return this;
+        }
+
+        public TextBuilder<ParentType> TextL(string template, params DSLSymbol[] args) {
+            // Regular Expression ([^{]+|{{)|({\d+})
+
+
+            return this;
+        }
+
         public TextBuilder<ParentType> NewLine() {
             // 1. Create a NewLine Node
             NewLineSymbol newLine = new NewLineSymbol(M_FormattingContext);
