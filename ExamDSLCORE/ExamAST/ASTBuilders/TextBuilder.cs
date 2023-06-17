@@ -54,6 +54,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             newContext.M_NewLineProperty = M_FormattingContext.M_NewLineProperty;
             newContext.M_OrderedItemListProperty = null;
             newContext.M_ScopeProperty = null;
+
             TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, M_FormattingContext, "CompositeText");
             M_Product.AddNode(newTextBuilder.M_Product, ExamDSLCORE.ExamAST.Text.CONTENT);
             Text newparentDSLSymbol = newTextBuilder.M_Product;
