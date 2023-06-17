@@ -35,7 +35,7 @@ namespace ExamDSLCORE.ASTExamDirectors.ConcreteDirectors {
                                 .EnterOrderedList()
                                         .TextL("Find the sum of 1+2 ?")
                                         .TextL($"Find the sum of {Y}+{Z} ?")
-                                        .Text("Find the sum of {0}+{1} ?",Y,Z)
+                                        .Text("Find the sum of {0}+{1}+{0} ?",Y,Z)
                                 .CloseOrderedList()
                                     .TextL("Find the sum of 3+4 ?")
                                     .TextL("Find the sum of 43+44 ?")

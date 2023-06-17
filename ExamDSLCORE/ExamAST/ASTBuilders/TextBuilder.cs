@@ -48,6 +48,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         // the raw strings from DSLSymbols and create the corresponding objects
         // to append to the parent node of the AST tree
         public TextBuilder<ParentType> Text(string template, params DSLSymbol[] args) {
+
             TextFormattingContext newContext;
             newContext = new TextFormattingContext();
             newContext.M_NewLineProperty = M_FormattingContext.M_NewLineProperty;
@@ -58,16 +59,19 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             Text newparentDSLSymbol = newTextBuilder.M_Product;
 
             // Regular Expression ([^{]+|{{)|({\d+})
+            // ([^{]+|{{) : Matches strings except placeholders {XX}
+            // ({\d+})    : Matches placeholders {XX}
             Regex regexText = new Regex("([^{]+|{{)|({\\d+})", RegexOptions.Singleline);
-            //Regex regexPlaceHolder = new Regex("({\\d+})", RegexOptions.Singleline);
             int symbolIndex=0;
+            int stringIndex = 0;
             int numberOfSymbols = args.Length;
             Match m= regexText.Match(template);
+
             while (m.Success) {
                 if (m.Groups[1].Success) {
                     // Found string action 
                     StaticTextSymbol st;
-                    if (symbolIndex == 0) {
+                    if (stringIndex == 0) {
                         st = new StaticTextSymbol(m.Value, M_FormattingContext);
                     }
                     else {
@@ -78,8 +82,11 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                     //Console.WriteLine(m.Value);
                 }
                 else if (m.Groups[2].Success) {
+                    string symbolIndex_ = m.Groups[2].Value;
+                    symbolIndex_=symbolIndex_.Trim(new char[] { '{', '}' });
+                    symbolIndex = Int32.Parse(symbolIndex_);
                     // Found DSLSymbol action
-                    if (symbolIndex == 0) {
+                    if (stringIndex == 0) {
                         if (symbolIndex < numberOfSymbols) {
                             TextMacroSymbol symbol = args[symbolIndex] as TextMacroSymbol;
                             symbol.SetInfo(typeof(BaseTextFormattingContext), M_FormattingContext);
@@ -93,12 +100,10 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                             newparentDSLSymbol.AddNode(args[symbolIndex], ExamDSLCORE.ExamAST.Text.CONTENT);
                         }
                     }
-                    //Console.WriteLine(m.Value);
                 }
-                m=m.NextMatch();
-                symbolIndex++;
+                m =m.NextMatch();
+                stringIndex++;
             }
-
             newTextBuilder.NewLine();
             return this;
         }
