@@ -50,6 +50,18 @@ namespace ExamDSLCORE.ExamAST {
         public virtual Result VisitText(Text node, params Params[] args) {
             return VisitChildren(node, args);
         }
+        public virtual Result VisitParagraph(Paragraph node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitOrderedList(OrderedList node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitScope(Scope node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
+        public virtual Result VisitFlow(Flow node, params Params[] args) {
+            return VisitChildren(node, args);
+        }
         public virtual Result VisitNewLine(NewLineSymbol node, params Params[] args) {
             return default;
         }

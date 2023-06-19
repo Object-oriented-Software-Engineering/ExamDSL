@@ -10,13 +10,9 @@ using ExamDSLCORE;
 using ExamDSLCORE.ExamAST.Formatters;
 
 public enum ExamSymbolType {
-    ST_EXAMUNIT,ST_EXAM, ST_EXAMHEADER, ST_EXAMHEADERTITLE, ST_EXAMHEADERSEMESTER,
-    ST_EXAMHEADERDURATION, ST_EXAMQUESTION, ST_EXAMHEADERTEACHER,
-    ST_EXAMQUESTIONHEADER, ST_EXAMQUESTIONWEIGHT, ST_EXAMQUESTIONWORDING,
-    ST_EXAMQUESTIONSOLUTION, ST_EXAMQUESTIONSUBQUESTION,
-    ST_EXAMHEADERSTUDENTNAME, ST_EXAMHEADERDEPARTMENTNAME, ST_EXAMHEADERDATE,
-    ST_COMPOSITETEXT, ST_NUMBEREDLIST,
-    ST_STATICTEXT, ST_MACROTEXT, ST_NEWLINE, ST_SCOPE
+    ST_EXAMUNIT,ST_EXAM, ST_EXAMHEADER,ST_EXAMQUESTION, 
+    ST_ORDEREDLIST,ST_PARAGRAPH, ST_SCOPE, ST_FLOW,
+    ST_STATICTEXT, ST_MACROTEXT, ST_NEWLINE
 
 }
 
@@ -91,21 +87,14 @@ namespace ExamDSLCORE.ExamAST {
     //      Text : StaticText
     //           | TextObject
     //           | Text
-    public class Text : ASTComposite {
+    public abstract class Text : ASTComposite {
         public const int CONTENT = 0;
         public readonly string[] mc_contextNames = { "CONTENT" };
-        private string m_textNodeContext;
 
-        public Text(BaseTextFormattingContext formatting,string textContext) :
-            base(1, (int)ExamSymbolType.ST_COMPOSITETEXT) {
+        public Text(BaseTextFormattingContext formatting,int textType) :
+            base(1, textType) {
             SetInfo(typeof(BaseTextFormattingContext), formatting);
-            m_textNodeContext = textContext;
             SetNodeSuffix();
-        }
-
-        public override string SetNodeSuffix() {
-            m_nodeName= "Node" + GetType().Name+ "_" + m_textNodeContext + m_serialNumber;
-            return m_nodeName;
         }
 
         public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
@@ -113,7 +102,47 @@ namespace ExamDSLCORE.ExamAST {
             return (v as DSLBaseVisitor<Return, Params>).VisitText(this, info);
         }
     }
-    
+
+    public class Paragraph : Text {
+        public Paragraph(BaseTextFormattingContext formatting) 
+            : base(formatting,(int)ExamSymbolType.ST_PARAGRAPH) { }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
+            params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitParagraph(this, info);
+        }
+    }
+
+    public class OrderedList : Text {
+        public OrderedList(BaseTextFormattingContext formatting)
+            : base(formatting,(int)ExamSymbolType.ST_ORDEREDLIST) { }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
+            params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitOrderedList(this, info);
+        }
+    }
+
+    public class Scope : Text {
+        public Scope(BaseTextFormattingContext formatting)
+            : base(formatting, (int)ExamSymbolType.ST_SCOPE) { }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
+            params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitScope(this, info);
+        }
+    }
+
+    public class Flow : Text {
+        public Flow(BaseTextFormattingContext formatting)
+            : base(formatting, (int)ExamSymbolType.ST_FLOW) { }
+
+        public override Return Accept<Return, Params>(IASTBaseVisitor<Return, Params> v,
+            params Params[] info) {
+            return (v as DSLBaseVisitor<Return, Params>).VisitFlow(this, info);
+        }
+    }
+
     public class NewLineSymbol : ASTLeaf {
         
         public NewLineSymbol(BaseTextFormattingContext formatting) :
@@ -126,7 +155,6 @@ namespace ExamDSLCORE.ExamAST {
             return (v as DSLBaseVisitor<Return,Params>).VisitNewLine(this,info);
         }
     }
-    
 
     public class StaticTextSymbol : ASTLeaf {
         private string m_text;

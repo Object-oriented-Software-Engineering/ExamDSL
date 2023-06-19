@@ -24,37 +24,44 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         }
         
         public TextBuilder<ExamHeaderBuilder> Title() {
-            TextBuilder<ExamHeaderBuilder> newtitle = new TextBuilder<ExamHeaderBuilder>(this,M_FormattingContext, "Title");
+            TextBuilder<ExamHeaderBuilder> newtitle = 
+                new TextBuilder<ExamHeaderBuilder>(this,M_FormattingContext, (int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newtitle.M_Product, ExamHeader.TITLE);
             return newtitle;
         }
         public TextBuilder<ExamHeaderBuilder> Semester() {
-            TextBuilder<ExamHeaderBuilder> newsemester = new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, "Semester");
+            TextBuilder<ExamHeaderBuilder> newsemester = 
+                new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, (int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newsemester.M_Product, ExamHeader.SEMESTER);
             return newsemester;
         }
         public TextBuilder<ExamHeaderBuilder> Date() {
-            TextBuilder<ExamHeaderBuilder>  newdate= new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, "Date");
+            TextBuilder<ExamHeaderBuilder>  newdate= 
+                new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, (int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newdate.M_Product, ExamHeader.DATE);
             return newdate;
         }
         public TextBuilder<ExamHeaderBuilder> Duration() {
-            TextBuilder<ExamHeaderBuilder> newduration = new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, "Duration");
+            TextBuilder<ExamHeaderBuilder> newduration = 
+                new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, (int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newduration.M_Product, ExamHeader.DURATION);
             return newduration;
         }
         public TextBuilder<ExamHeaderBuilder> Teacher() {
-            TextBuilder<ExamHeaderBuilder> newteacher = new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, "Teacher");
+            TextBuilder<ExamHeaderBuilder> newteacher = 
+                new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, (int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newteacher.M_Product, ExamHeader.TEACHER);
             return newteacher;
         }
         public TextBuilder<ExamHeaderBuilder> StudentName() {
-            TextBuilder<ExamHeaderBuilder> newStudent = new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, "StudentName");
+            TextBuilder<ExamHeaderBuilder> newStudent = 
+                new TextBuilder<ExamHeaderBuilder>(this, M_FormattingContext, (int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newStudent.M_Product, ExamHeader.STUDENTNAME);
             return newStudent;
         }
         public TextBuilder<ExamHeaderBuilder> Department() {
-            TextBuilder<ExamHeaderBuilder> newDepartment = new TextBuilder<ExamHeaderBuilder>(this,M_FormattingContext, "Department");
+            TextBuilder<ExamHeaderBuilder> newDepartment =
+                new TextBuilder<ExamHeaderBuilder>(this,M_FormattingContext, (int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newDepartment.M_Product, ExamHeader.DEPARTMENT);
             return newDepartment;
         }

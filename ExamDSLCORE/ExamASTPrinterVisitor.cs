@@ -154,7 +154,7 @@ namespace ExamDSL
         public override int VisitText(Text node, params DSLSymbol[] args) {
             Text n = node as Text;
             if (n == null) {
-                throw new InvalidCastException("Expected Assignment type");
+                throw new InvalidCastException("Expected Text type");
             }
             CreateContextSubgraph(n, Text.CONTENT,
                 n.mc_contextNames[Text.CONTENT]);
@@ -162,7 +162,55 @@ namespace ExamDSL
 
             return base.VisitText(node, n);
         }
-        
+
+        public override int VisitParagraph(Paragraph node, params DSLSymbol[] args) {
+            Paragraph n = node as Paragraph;
+            if (n == null) {
+                throw new InvalidCastException("Expected Paragraph type");
+            }
+            CreateContextSubgraph(n, Text.CONTENT,
+                n.mc_contextNames[Text.CONTENT]);
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
+
+            return base.VisitParagraph(node, n);
+        }
+
+        public override int VisitOrderedList(OrderedList node, params DSLSymbol[] args) {
+            OrderedList n = node as OrderedList;
+            if (n == null) {
+                throw new InvalidCastException("Expected Ordered List type");
+            }
+            CreateContextSubgraph(n, Text.CONTENT,
+                n.mc_contextNames[Text.CONTENT]);
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
+
+            return base.VisitOrderedList(node, n);
+        }
+
+        public override int VisitScope(Scope node, params DSLSymbol[] args) {
+            Scope n = node as Scope;
+            if (n == null) {
+                throw new InvalidCastException("Expected Scope  type");
+            }
+            CreateContextSubgraph(n, Text.CONTENT,
+                n.mc_contextNames[Text.CONTENT]);
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
+
+            return base.VisitScope(node, n);
+        }
+
+        public override int VisitFlow(Flow node, params DSLSymbol[] args) {
+            Flow n = node as Flow;
+            if (n == null) {
+                throw new InvalidCastException("Expected Flow type");
+            }
+            CreateContextSubgraph(n, Text.CONTENT,
+                n.mc_contextNames[Text.CONTENT]);
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
+
+            return base.VisitFlow(node, n);
+        }
+
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
             m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{node.M_NodeName}\";");
             return 0;

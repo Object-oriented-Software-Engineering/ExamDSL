@@ -12,7 +12,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         where ParentType:BaseBuilder {
         public Text M_Product { get; init; }
 
-        public TextBuilder(BaseBuilder parent, TextFormattingContext modifierFormatting,string contextLabel) {
+        public TextBuilder(BaseBuilder parent, TextFormattingContext modifierFormatting,int contextType) {
             // 1. Initialize Formatting context
             if (modifierFormatting == null) {
                 M_FormattingContext = new TextFormattingContext() ;
@@ -24,11 +24,28 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             else {
                 M_FormattingContext = modifierFormatting;
             }
-
             // 2. Initialize parent
             M_Parent = parent;
-            // 3. Initialize product
-            M_Product = new Text(M_FormattingContext,contextLabel);
+
+            //3. Create the proper Text container
+            switch ((ExamSymbolType)contextType) {
+                case ExamSymbolType.ST_PARAGRAPH:
+                    M_Product = new Paragraph(M_FormattingContext);
+                    break;
+                case ExamSymbolType.ST_ORDEREDLIST:
+                    M_Product = new OrderedList(M_FormattingContext);
+                    break;
+                case ExamSymbolType.ST_SCOPE:
+                    M_Product = new Scope(M_FormattingContext);
+                    break;
+                case ExamSymbolType.ST_FLOW:
+                    M_Product = new Flow(M_FormattingContext);
+                    break;
+                default: 
+                    break;
+
+            }
+            
         }
         public TextBuilder<ParentType> TextL(string text) {
             Text(text);
@@ -55,7 +72,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             newContext.M_OrderedItemListProperty = null;
             newContext.M_ScopeProperty = null;
 
-            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, M_FormattingContext, "CompositeText");
+            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, M_FormattingContext,(int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newTextBuilder.M_Product, ExamDSLCORE.ExamAST.Text.CONTENT);
             Text newparentDSLSymbol = newTextBuilder.M_Product;
 
@@ -111,8 +128,6 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
 
         public TextBuilder<ParentType> TextL(string template, params DSLSymbol[] args) {
             // Regular Expression ([^{]+|{{)|({\d+})
-
-
             return this;
         }
 
@@ -144,7 +159,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                 newContext.M_OrderedItemListProperty = M_FormattingContext.M_OrderedItemListProperty;
                 newContext.M_ScopeProperty = new ScopeProperty(newContext, M_FormattingContext.M_ScopeProperty);
             }
-            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext,"Scope");
+            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext, (int)ExamSymbolType.ST_FLOW);
             M_Product.AddNode(newTextBuilder.M_Product, ExamAST.Text.CONTENT);
             return newTextBuilder;
         }
@@ -165,13 +180,12 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                 newContext.M_OrderedItemListProperty = new OrderedItemListProperty(newContext,M_FormattingContext.M_OrderedItemListProperty);
                 newContext.M_ScopeProperty = M_FormattingContext.M_ScopeProperty;
             }
-            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext, "OrderedList");
+            TextBuilder<ParentType> newTextBuilder = new TextBuilder<ParentType>(this, newContext, (int)ExamSymbolType.ST_ORDEREDLIST);
             M_Product.AddNode(newTextBuilder.M_Product,ExamAST.Text.CONTENT);
             return newTextBuilder;
         }
         public TextBuilder<ParentType> CloseOrderedList() {
             return M_Parent as TextBuilder<ParentType>;
-            
         }
 
         public ParentType End() {
