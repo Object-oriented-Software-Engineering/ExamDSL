@@ -10,36 +10,41 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
     public class ExamQuestionBuilder : BaseBuilder {
         public ExamQuestion M_Product { get; init; }
         
-        public ExamQuestionBuilder(BaseBuilder parent)  {
+        public ExamQuestionBuilder(BaseBuilder parent,TextFormattingContext parentContext)
+            :base(parent,parentContext){
             // 1. Initialize Formatting context
-            M_FormattingContext = new TextFormattingContext();
-            M_FormattingContext.M_NewLineProperty = parent.M_FormattingContext.M_NewLineProperty;
-            M_FormattingContext.M_ScopeProperty = null;
-            M_FormattingContext.M_OrderedItemListProperty = null;
-
-            // 2. Initialize parent
-            M_Parent = parent;
+            InitializeFormattingContext(parentContext);
+            
             // 2. Initialize product
             M_Product = new ExamQuestion(M_FormattingContext);
         }
 
-        public ExamQuestionBuilder(ExamBuilder parent) :this((BaseBuilder)parent) { }
-        public ExamQuestionBuilder(ExamUnitBuilder parent) : this((BaseBuilder)parent) { }
+        public ExamQuestionBuilder(ExamBuilder parent, TextFormattingContext parentContext) 
+            :this((BaseBuilder)parent,parentContext) { }
+        public ExamQuestionBuilder(ExamUnitBuilder parent, TextFormattingContext parentContext) 
+            : this((BaseBuilder)parent, parentContext) { }
 
         
         public TextBuilder<ExamQuestionBuilder> Wording() {
             TextBuilder<ExamQuestionBuilder> wording =
-                new TextBuilder<ExamQuestionBuilder>(this, M_FormattingContext, (int)ExamSymbolType.ST_PARAGRAPH);
+                new TextParagraphBuilder<ExamQuestionBuilder>(this, M_FormattingContext);
             M_Product.AddNode(wording.M_Product, ExamQuestion.WORDING);
             return wording;
         }
         public TextBuilder<ExamQuestionBuilder> Solution() {
             TextBuilder<ExamQuestionBuilder> solution = 
-                new TextBuilder<ExamQuestionBuilder>(this, M_FormattingContext, (int)ExamSymbolType.ST_PARAGRAPH);
+                new TextParagraphBuilder<ExamQuestionBuilder>(this, M_FormattingContext);
             M_Product.AddNode(solution.M_Product, ExamQuestion.WORDING);
             return solution;
         }
-       
+
+        public override void InitializeFormattingContext(TextFormattingContext parentContext) {
+            M_FormattingContext = new TextFormattingContext();
+            M_FormattingContext.M_NewLineProperty = parentContext.M_NewLineProperty;
+            M_FormattingContext.M_ScopeProperty = null;
+            M_FormattingContext.M_OrderedItemListProperty = null;
+        }
+
         public ExamBuilder End() {
             return M_Parent as ExamBuilder;
         }

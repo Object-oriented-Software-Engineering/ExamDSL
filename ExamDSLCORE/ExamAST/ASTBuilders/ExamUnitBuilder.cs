@@ -11,29 +11,28 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         
         public ExamUnit M_Product { get; init; }
 
-        public ExamUnitBuilder() {
-            // 1. Initialize Formatting context
-            M_FormattingContext = new TextFormattingContext();
-            M_FormattingContext.M_NewLineProperty = new NewLineProperty(M_FormattingContext);
-            M_FormattingContext.M_ScopeProperty = null;
-            M_FormattingContext.M_OrderedItemListProperty = null;
+        public ExamUnitBuilder()
+            : base(null,null){
 
-            // 2. Initialize parent
-            M_Parent = null;
+            // 2. Initialize Formatting
+            InitializeFormattingContext(null);
+            
             // 2. Initialize product
             M_Product = new ExamUnit(M_FormattingContext);
         }
 
         // Only exam or question in an ExamUnit are allowed
         public ExamBuilder Exam() {
-            ExamBuilder newExamBuilder = new ExamBuilder(this);
+            ExamBuilder newExamBuilder = 
+                new ExamBuilder(this,M_FormattingContext);
             M_Product.AddNode(newExamBuilder.M_Product,ExamUnit.CONTENT);
             return newExamBuilder;
         }
 
         // Only exam or question in an ExamUnit are allowed
         public ExamQuestionBuilder Question() {
-            ExamQuestionBuilder newExamQuestionBuilder = new ExamQuestionBuilder(this);
+            ExamQuestionBuilder newExamQuestionBuilder =
+                new ExamQuestionBuilder(this,M_FormattingContext);
             M_Product.AddNode(newExamQuestionBuilder.M_Product, ExamUnit.CONTENT);
             return newExamQuestionBuilder;
         }
