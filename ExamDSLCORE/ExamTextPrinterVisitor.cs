@@ -52,12 +52,16 @@ namespace ExamDSL
             }
             return m_text;
         }
-        
-        public override StringBuilder VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
+
+        public override StringBuilder VisitParagraph(Paragraph node, params DSLSymbol[] args) {
             OrderedItemListProperty Orderprop = node.M_SymbolFormatting.M_OrderedItemListProperty;
             if (Orderprop != null) {
                 m_text.Append(Orderprop.Text(new NestingInfo() { b_isInnerMost = true }));
             }
+            return base.VisitParagraph(node, args);
+        }
+
+        public override StringBuilder VisitStaticText(StaticTextSymbol node, params DSLSymbol[] args) {
             m_text.Append(node.MText);
             return base.VisitStaticText(node, args);
         }

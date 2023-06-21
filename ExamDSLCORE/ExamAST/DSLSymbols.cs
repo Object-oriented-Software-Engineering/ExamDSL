@@ -133,6 +133,16 @@ namespace ExamDSLCORE.ExamAST {
                 throw new ArgumentOutOfRangeException("context index out of range");
             }
         }
+
+        public void AddSibling(DSLSymbol code, int context = -1) {
+            ASTComposite parent = MParent;
+            if (context < parent.m_children.Length) {
+                parent.m_children[context].Add(code);
+                code.SetParent(parent);
+            } else {
+                throw new ArgumentOutOfRangeException("context index out of range");
+            }
+        }
         
         public IEnumerator<IASTVisitableNode> GetEnumerator() {
             return new ASTCompositeEnumerator(this);

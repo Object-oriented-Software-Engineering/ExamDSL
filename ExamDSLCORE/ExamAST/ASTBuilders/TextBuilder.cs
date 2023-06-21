@@ -41,9 +41,9 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
             newContext.M_OrderedItemListProperty = null;
             newContext.M_ScopeProperty = null;
 
-            TextBuilder<ParentType> newTextBuilder = new TextFlowBuilder<ParentType>(this, M_FormattingContext);
+            /*TextBuilder<ParentType> newTextBuilder = new TextFlowBuilder<ParentType>(this, M_FormattingContext);
             M_Product.AddNode(newTextBuilder.M_Product, ExamDSLCORE.ExamAST.Text.CONTENT);
-            Text newparentDSLSymbol = newTextBuilder.M_Product;
+            Text newparentDSLSymbol = newTextBuilder.M_Product;*/
 
             // Regular Expression ([^{]+|{{)|({\d+})
             // ([^{]+|{{) : Matches strings except placeholders {XX}
@@ -64,7 +64,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                     else {
                         st = new StaticTextSymbol(m.Value, newContext);
                     }
-                    newparentDSLSymbol.AddNode(st, ExamDSLCORE.ExamAST.Text.CONTENT);
+                    M_Product.AddNode(st, ExamDSLCORE.ExamAST.Text.CONTENT);
 
                     //Console.WriteLine(m.Value);
                 }
@@ -77,26 +77,28 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
                         if (symbolIndex < numberOfSymbols) {
                             TextMacroSymbol symbol = args[symbolIndex] as TextMacroSymbol;
                             symbol.SetInfo(typeof(BaseTextFormattingContext), M_FormattingContext);
-                            newparentDSLSymbol.AddNode(args[symbolIndex], ExamDSLCORE.ExamAST.Text.CONTENT);
+                            M_Product.AddNode(args[symbolIndex], ExamDSLCORE.ExamAST.Text.CONTENT);
                         }
                     }
                     else {
                         if (symbolIndex < numberOfSymbols) {
                             TextMacroSymbol symbol = args[symbolIndex] as TextMacroSymbol;
                             symbol.SetInfo(typeof(BaseTextFormattingContext), newContext);
-                            newparentDSLSymbol.AddNode(args[symbolIndex], ExamDSLCORE.ExamAST.Text.CONTENT);
+                            M_Product.AddNode(args[symbolIndex], ExamDSLCORE.ExamAST.Text.CONTENT);
                         }
                     }
                 }
                 m =m.NextMatch();
                 stringIndex++;
             }
-            newTextBuilder.NewLine();
+            
             return this;
         }
 
         public virtual TextBuilder<ParentType> TextL(string template, params DSLSymbol[] args) {
             // Regular Expression ([^{]+|{{)|({\d+})
+            Text(template, args);
+            NewLine();
             return this;
         }
 
@@ -121,6 +123,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         }
 
         public virtual TextBuilder<ParentType> EnterOrderedList() {
+            // 1. Create an ordered list builder
             TextBuilder<ParentType> newTextBuilder = 
                 new TextOrderedListBuilder<ParentType>(this, M_FormattingContext);
             M_Product.AddNode(newTextBuilder.M_Product,ExamAST.Text.CONTENT);

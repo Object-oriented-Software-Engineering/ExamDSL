@@ -170,7 +170,8 @@ namespace ExamDSL
             }
             CreateContextSubgraph(n, Text.CONTENT,
                 n.mc_contextNames[Text.CONTENT]);
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\"");
+            m_dotFile.WriteLine($"{n.M_NodeName} [color =lightblue];");
 
             return base.VisitParagraph(node, n);
         }
@@ -182,8 +183,8 @@ namespace ExamDSL
             }
             CreateContextSubgraph(n, Text.CONTENT,
                 n.mc_contextNames[Text.CONTENT]);
-            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
+            m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\"");
+            m_dotFile.WriteLine($"{n.M_NodeName} [color =salmon];");
             return base.VisitOrderedList(node, n);
         }
 
@@ -195,7 +196,7 @@ namespace ExamDSL
             CreateContextSubgraph(n, Text.CONTENT,
                 n.mc_contextNames[Text.CONTENT]);
             m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
+            m_dotFile.WriteLine($"{n.M_NodeName} [color =lightgreen];");
             return base.VisitScope(node, n);
         }
 
@@ -207,12 +208,13 @@ namespace ExamDSL
             CreateContextSubgraph(n, Text.CONTENT,
                 n.mc_contextNames[Text.CONTENT]);
             m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{n.M_NodeName}\";");
-
+            m_dotFile.WriteLine($"{n.M_NodeName} [color =lightblue];");
             return base.VisitFlow(node, n);
         }
 
         public override int VisitNewLine(NewLineSymbol node, params DSLSymbol[] args) {
             m_dotFile.WriteLine($"\"{args[0].M_NodeName}\"->\"{node.M_NodeName}\";");
+            m_dotFile.WriteLine($"{node.M_NodeName} [color =darkgoldenrod];");
             return 0;
         }
 

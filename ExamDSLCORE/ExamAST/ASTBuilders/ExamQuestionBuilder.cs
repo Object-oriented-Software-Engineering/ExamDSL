@@ -34,7 +34,7 @@ namespace ExamDSLCORE.ExamAST.ASTBuilders {
         public TextBuilder<ExamQuestionBuilder> Solution() {
             TextBuilder<ExamQuestionBuilder> solution = 
                 new TextParagraphBuilder<ExamQuestionBuilder>(this, M_FormattingContext);
-            M_Product.AddNode(solution.M_Product, ExamQuestion.WORDING);
+            M_Product.AddNode(solution.M_Product, ExamQuestion.SOLUTION);
             return solution;
         }
 

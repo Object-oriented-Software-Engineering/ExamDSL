@@ -86,7 +86,7 @@ namespace ExamDSLCORE.ExamAST.Formatters {
                 test.Append(GetNextNumber());
                 test.Append(m_closingDelimeter+" ");
             } else {
-                test.Append(M_NextNumber);
+                test.Append(M_NextNumber-1);
                 test.Append(m_separatorDelimiter);
             }
             return test.ToString();
