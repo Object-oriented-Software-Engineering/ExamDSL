@@ -1,54 +1,75 @@
 ﻿namespace Randomizer;
 
-public interface IPicker<T> {
+
+public interface IPicker<T>
+{
 	T Pick();
+
+	public void Update(IEnumerable<IValue<T>> values);
 }
 
-public class SimplePicker<T>:IPicker<T> {
+public class SimplePicker<T> : IPicker<T>
+{
 	private readonly Random _numberGenerator;
-	private readonly T[] _values;
+	private IValue<T>[] _values;
 
-	public SimplePicker(IEnumerable<T> values) {
+	public SimplePicker()
+	{
 		_numberGenerator = new Random();
+		_values = Array.Empty<IValue<T>>();
+	}
+
+	public T Pick()
+	{
+
+		IValue<T> selected = _values[_numberGenerator.Next(_values.Length)];
+
+		return selected.Get();
+	}
+
+	public void Update(IEnumerable<IValue<T>> values)
+	{
 		_values = values.ToArray();
 	}
-
-	public T Pick() {
-		return _values[_numberGenerator.Next(_values.Length)];
-	}
+	
 }
 
-public class SimpleRangeIntegerPicker:IPicker<int>
+public class SetPicker<T> : IPicker<T>
 {
 	private readonly Random _numberGenerator;
-	private int _min, _max;
-
-	public SimpleRangeIntegerPicker(int min, int max)
+	private List<IValue<T>> _values;
+	private List<IValue<T>> _usedValues;
+	
+	public SetPicker()
 	{
 		_numberGenerator = new Random();
-		_min = min;
-		_max = max;
+		_values = new List<IValue<T>>();
+		_usedValues = new List<IValue<T>>();
 	}
-	public int Pick()
+
+	public T Pick()
 	{
-		return _numberGenerator.Next(_min, _max);
+		
+		if (_values.Count == 0 )
+		{
+			Update(_usedValues);
+		}
+		
+		int index = _numberGenerator.Next(_values.Count);
+		IValue<T> selected = _values[index];
+		_values.RemoveAt(index);
+		_usedValues.Add(selected);
+		
+		return selected.Get();
+		
+	}
+
+	public void Update(IEnumerable<IValue<T>> values)
+	{
+		_values = values.ToList();
+		_usedValues.Clear();
 	}
 }
 
-public class SimpleRangeDoublePicker:IPicker<double>
-{
-	private readonly Random _numberGenerator;
-	private double _min, _max;
 
-	public SimpleRangeDoublePicker(double min, double max)
-	{
-		_numberGenerator = new Random();
-		_min = min;
-		_max = max;
-	}
 
-	public double Pick()
-	{
-		return _min+(_numberGenerator.NextDouble()*(_max-_min));
-	}
-}

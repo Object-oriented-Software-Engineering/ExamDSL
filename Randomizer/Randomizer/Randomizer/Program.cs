@@ -1,39 +1,126 @@
 ﻿namespace Randomizer;
 
-public static class Program {
+public static class Program
+{
+	public static Dictionary<int, string> associativitiesMap = new Dictionary<int, string>() {
+		{ -1, "full" },
+		{ 1, "one" }, // direct-mapped
+		{ 2, "two" },
+		{ 4, "four" }
+	};
 
-	public static void Main(string[] args) {
-		const int n = 6;
-		var someIntegers = new int[n];
-		for( var i = 0; i < n; i++ )
-			someIntegers[i] = i;
+	private static IGenerator<int> wordSizes = new Random<int>(new SimplePicker<int>(),TwosPowers(0,2));
+	
+	private static Random<int> cacheLineSizes = new Random<int>(new SimplePicker<int>(),TwosPowers(0,8));
+	
+	private static Random<int> cacheSizes = new Random<int>(new SimplePicker<int>(),TwosPowers(0,14));
 
-		IGenerator<int> parameter1 = new Random<int>(new SimplePicker<int>(someIntegers));
-		for( var i = 0; i < 3 * n; i++ ) 
-			Console.Write(parameter1.Next().value + " ");
-        
-		double[] someDoubles = { 4.2, 8.345, 5.34, 8.2 };
-		IGenerator<double> parameter2 = new Random<double>(new SimplePicker<double>(someDoubles));
+	private static IGenerator<KeyValuePair<int, string>> associativities;
+	
+
+	public static  void exercise_1() {
+		
+		var generatedWordSize = wordSizes.Next().value;
+
+		// cacheLineSizes.SetCondition((e) => { return e >= generatedWordSize; });
+		var cacheLineSizesValidValues = TwosPowers((int)Math.Log2(generatedWordSize), 8);
+		cacheLineSizes.SetValues(cacheLineSizesValidValues);
+		
+		var generatedCacheLineSize = cacheLineSizes.Next().value;
+		
+		// cacheSizes.SetCondition((e) => { return e >= generatedCacheLineSize*4; });
+		var cacheSizesValidValues = TwosPowers((int)Math.Log2(generatedCacheLineSize*4), 14);
+		cacheSizes.SetValues(cacheSizesValidValues);
+		
+		var generatedCacheSize = cacheSizes.Next().value;
+		
+		int generatedMemorySize = 4 * generatedCacheSize;
+
+		var generatedAssociativity = associativities.Next().value.Value;
+		
 		Console.WriteLine();
-		for( var i = 0; i < 6; i++ )
-			Console.Write(parameter2.Next().value + " ");
+		Console.WriteLine(@$"A {generatedAssociativity}-way set-associative cache has lines of {generatedCacheLineSize} bytes and a total size of {generatedCacheSize} bytes. The {generatedMemorySize} bytes main memory is {generatedWordSize} bytes addressable. Show the format of main memory addresses.");
 
-		IGenerator<int> parameter3 = new Random<int>(new SimpleRangeIntegerPicker(1,4));
-		Console.WriteLine();
-		for( var i = 0; i < 6; i++ )
-			Console.Write(parameter3.Next().value + " ");
+		var values = new List<IValue<int>>();
+		values.Add(new SetIntRangeValue(0,generatedMemorySize));
 
-		Console.WriteLine();
+		IGenerator<int> generateAvailiableMemoryValues = new Random<int>(new SimplePicker<int>(), values);
 
-		
-		IGenerator<int> parameter4 = new HexFormatter(parameter3,"X5");
-		Console.WriteLine(parameter4.Next().formattedValue);
-		
-		
-		IGenerator<int> tmp = new PrefixPostfixFormatter<int>(parameter4,"okkkpre","okkkpost");
-		Console.WriteLine(tmp.Next().formattedValue);
+		int hexMemorySize = Convert.ToString(generatedMemorySize, 16).Length;
 
+		HexFormatter addresses = new HexFormatter(generateAvailiableMemoryValues,"X"+hexMemorySize);
 		
+		Console.WriteLine(@$"For the hexadecimal main memory addresses {addresses.Next().formattedValue}, {addresses.Next().formattedValue}, {addresses.Next().formattedValue}, show the following information in hexadecimal format.");
+
+	}
+	
+	
+	public static IEnumerable<IValue<int>> TwosPowers(int minInclusivePower, int maxInclusivePower) {
+		List<IValue<int>> powers = new List<IValue<int>>();
+		for( int i = minInclusivePower; i <= maxInclusivePower; i++ ) {
+			powers.Add(new Value<int>((int) Math.Pow(2, i)));
+		}
+		return powers;
+	}
+	
+	public static void Main(string[] args)
+	{
+		var tmp = new List<IValue<KeyValuePair<int, string>>>();
+		foreach (var kv in associativitiesMap)
+			tmp.Add(new Value<KeyValuePair<int, string>>(kv));
+		
+		var picker = new SimplePicker<KeyValuePair<int, string>>();
+		associativities = new Random<KeyValuePair<int, string>>(picker,tmp);
+
+		for (int i = 0; i < 3; i++)
+		{
+			exercise_1();
+		}
+		
+		
+
+
+		return;
+		
+		// const int n = 6;
+		// var someIntegers = new int[n];
+		// for( var i = 0; i < n; i++ )
+		// 	someIntegers[i] = i;
+		//
+		// IGenerator<int> parameter1 = new Random<int>(new SimplePicker<int>(someIntegers));
+		// for( var i = 0; i < 3 * n; i++ ) 
+		// 	Console.WriteLine(parameter1.Next() + " ");
+		// //
+		// // Console.WriteLine("-------------------------------------------------------------");
+		// //
+		// // ((Random<int>)parameter1).SetCondition((e) => (e % 2 != 0));
+		// //
+		// // for( var i = 0; i < 3 * n; i++ ) 
+		// // 	Console.WriteLine(parameter1.Next() + " ");
+		// //
+		// //
+		// // Console.WriteLine("-------------------------------------------------------------");
+		// //
+		// // ((Random<int>)parameter1).SetCondition((e) => (e == 5));
+		// //
+		// // for( var i = 0; i < 3 * n; i++ ) 
+		// // 	Console.WriteLine(parameter1.Next() + " ");
+		//
+		//
+		// double[] someDoubles = { 4.2, 8.345, 5.34, 8.2 };
+		// IGenerator<double> parameter2 = new Random<double>(new SimplePicker<double>(someDoubles));
+		// Console.WriteLine();
+		// for( var i = 0; i < 6; i++ )
+		// 	Console.Write(parameter2.Next() + " ");
+		//
+		// // IGenerator<int> parameter3 = new Random<int>(new SimpleRangeIntegerPicker(1,4));
+		// // Console.WriteLine();
+		// // for( var i = 0; i < 6; i++ )
+		// // 	Console.Write(parameter3.Next() + " ");
+		//
+		// Console.WriteLine();
+		// IFormatter<int> parameter4 = new HexFormatter("ok","okk","X5");
+		// Console.WriteLine(parameter4.Format(14));
 	}
 	
 }
