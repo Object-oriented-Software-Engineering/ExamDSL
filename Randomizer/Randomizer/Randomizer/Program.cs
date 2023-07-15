@@ -2,531 +2,145 @@
 
 public static class Program
 {
-	public static Dictionary<int, string> associativitiesMap = new Dictionary<int, string>() {
-		{ -1, "full" },
-		{ 1, "one" }, // direct-mapped
-		{ 2, "two" },
-		{ 4, "four" }
-	};
-
-	private static IGenerator<int> wordSizes = new Random<int>(new SimplePicker<int>(),TwosPowers(0,2));
+	private static void SimulateExerciseGeneration(int timesToParseTree) {
 	
-	private static Random<int> cacheLineSizes = new Random<int>(new SimplePicker<int>(),TwosPowers(0,8));
-	
-	private static Random<int> cacheSizes = new Random<int>(new SimplePicker<int>(),TwosPowers(0,14));
-
-	private static IGenerator<KeyValuePair<int, string>> associativities;
-	
-
-	public static  void exercise_1() {
-		
-		var generatedWordSize = wordSizes.Next().value;
-
-		// cacheLineSizes.SetCondition((e) => { return e >= generatedWordSize; });
-		var cacheLineSizesValidValues = TwosPowers((int)Math.Log2(generatedWordSize), 8);
-		cacheLineSizes.SetValues(cacheLineSizesValidValues);
-		
-		var generatedCacheLineSize = cacheLineSizes.Next().value;
-		
-		// cacheSizes.SetCondition((e) => { return e >= generatedCacheLineSize*4; });
-		var cacheSizesValidValues = TwosPowers((int)Math.Log2(generatedCacheLineSize*4), 14);
-		cacheSizes.SetValues(cacheSizesValidValues);
-		
-		var generatedCacheSize = cacheSizes.Next().value;
-		
-		int generatedMemorySize = 4 * generatedCacheSize;
-
-		var generatedAssociativity = associativities.Next().value.Value;
-		
-		Console.WriteLine();
-		Console.WriteLine(@$"A {generatedAssociativity}-way set-associative cache has lines of {generatedCacheLineSize} bytes and a total size of {generatedCacheSize} bytes. The {generatedMemorySize} bytes main memory is {generatedWordSize} bytes addressable. Show the format of main memory addresses.");
-
-		var values = new List<IValue<int>>();
-		values.Add(new SetIntRangeValue(0,generatedMemorySize));
-
-		IGenerator<int> generateAvailiableMemoryValues = new Random<int>(new SimplePicker<int>(), values);
-
-		int hexMemorySize = Convert.ToString(generatedMemorySize, 16).Length;
-
-		HexFormatter addresses = new HexFormatter(generateAvailiableMemoryValues,"X"+hexMemorySize);
-		
-		Console.WriteLine(@$"For the hexadecimal main memory addresses {addresses.Next().formattedValue}, {addresses.Next().formattedValue}, {addresses.Next().formattedValue}, show the following information in hexadecimal format.");
-
-	}
-	
-	
-	public static IEnumerable<IValue<int>> TwosPowers(int minInclusivePower, int maxInclusivePower) {
-		List<IValue<int>> powers = new List<IValue<int>>();
-		for( int i = minInclusivePower; i <= maxInclusivePower; i++ ) {
-			powers.Add(new Value<int>((int) Math.Pow(2, i)));
-		}
-		return powers;
-	}
-	
-	public static void Main(string[] args)
-	{
-		var tmp = new List<IValue<KeyValuePair<int, string>>>();
-		foreach (var kv in associativitiesMap)
-			tmp.Add(new Value<KeyValuePair<int, string>>(kv));
-		
-		var picker = new SimplePicker<KeyValuePair<int, string>>();
-		associativities = new Random<KeyValuePair<int, string>>(picker,tmp);
-
-		for (int i = 0; i < 3; i++)
-		{
-			exercise_1();
+		IEnumerable<IValue<KeyValuePair<int, string>>> ValuesOfAssociativity() {
+			yield return new Value<KeyValuePair<int, string>>(new KeyValuePair<int, string>(-1, "full"));
+			yield return new Value<KeyValuePair<int, string>>(new KeyValuePair<int, string>(1, "one")); // direct-mapped
+			yield return new Value<KeyValuePair<int, string>>(new KeyValuePair<int, string>(2, "two"));
+			yield return new Value<KeyValuePair<int, string>>(new KeyValuePair<int, string>(4, "four"));
 		}
 		
+		IEnumerable<IValue<int>> ValuesOfTwosPowers(int minInclusivePower, int maxInclusivePower) {
+			for( int i = minInclusivePower; i <= maxInclusivePower; i++ )
+				yield return new Value<int>((int)Math.Pow(2, i));
+		}
 		
+		int maxWordSizePower = 2;
+		int maxCacheLineSizePower = 8;
+		int maxCacheSizePower = 14;
 
+		var wordSizes =
+			new Random<int>(new SimplePickerStrategy<int>(), ValuesOfTwosPowers(0, maxWordSizePower));
+		var cacheLineSizes =
+			new Random<int>(new SimplePickerStrategy<int>(), new List<IValue<int>>());
+		var cacheSizes =
+			new Random<int>(new SimplePickerStrategy<int>(), new List<IValue<int>>());
+		var associativities =
+			new Random<KeyValuePair<int, string>>(new InfinitySetPickerStrategy<KeyValuePair<int, string>>(), ValuesOfAssociativity());
+		var memoryAddresses =
+			new Random<int>(new SimplePickerStrategy<int>(), new List<IValue<int>>());
 
-		return;
-		
-		// const int n = 6;
-		// var someIntegers = new int[n];
-		// for( var i = 0; i < n; i++ )
-		// 	someIntegers[i] = i;
-		//
-		// IGenerator<int> parameter1 = new Random<int>(new SimplePicker<int>(someIntegers));
-		// for( var i = 0; i < 3 * n; i++ ) 
-		// 	Console.WriteLine(parameter1.Next() + " ");
-		// //
-		// // Console.WriteLine("-------------------------------------------------------------");
-		// //
-		// // ((Random<int>)parameter1).SetCondition((e) => (e % 2 != 0));
-		// //
-		// // for( var i = 0; i < 3 * n; i++ ) 
-		// // 	Console.WriteLine(parameter1.Next() + " ");
-		// //
-		// //
-		// // Console.WriteLine("-------------------------------------------------------------");
-		// //
-		// // ((Random<int>)parameter1).SetCondition((e) => (e == 5));
-		// //
-		// // for( var i = 0; i < 3 * n; i++ ) 
-		// // 	Console.WriteLine(parameter1.Next() + " ");
-		//
-		//
-		// double[] someDoubles = { 4.2, 8.345, 5.34, 8.2 };
-		// IGenerator<double> parameter2 = new Random<double>(new SimplePicker<double>(someDoubles));
-		// Console.WriteLine();
-		// for( var i = 0; i < 6; i++ )
-		// 	Console.Write(parameter2.Next() + " ");
-		//
-		// // IGenerator<int> parameter3 = new Random<int>(new SimpleRangeIntegerPicker(1,4));
-		// // Console.WriteLine();
-		// // for( var i = 0; i < 6; i++ )
-		// // 	Console.Write(parameter3.Next() + " ");
-		//
-		// Console.WriteLine();
-		// IFormatter<int> parameter4 = new HexFormatter("ok","okk","X5");
-		// Console.WriteLine(parameter4.Format(14));
-	}
+		var treeParsing = () => {
+			// generate word size
+			var generatedWordSize = wordSizes.Next(); // <---
 	
-}
+			// generate cache line size
+			var powerOfWordSize = (int) Math.Log2(generatedWordSize.Value);
+			cacheLineSizes.SetValues(ValuesOfTwosPowers(powerOfWordSize, maxCacheLineSizePower));
+			var generatedCacheLineSize = cacheLineSizes.Next(); // <---
+		
+			// generate cache size
+			var powerOfCacheLineSize = (int) Math.Log2(generatedCacheLineSize.Value);
+			var minimumPowerToAllowAnyAssociativity = powerOfCacheLineSize + 2; // example, powerCLS = 3 -> 2^3 = 8, but with the addition of two, 2^(3+2) = 32 = 8*4
+			cacheSizes.SetValues(ValuesOfTwosPowers(minimumPowerToAllowAnyAssociativity, maxCacheSizePower));
+			var generatedCacheSize = cacheSizes.Next(); // <---
+		
+			// generate (calculate) memory size
+			int calculatedMemorySize = 4 * generatedCacheSize.Value; // <---
 
-
-
-/*
-
-internal interface IGenerator<T> {
-	T Next();
-}
-
-public class Random<TValue> : IGenerator<TValue> {
-	private readonly IPicker<TValue> _picker;
-
-	private readonly TValue[] _values;
-
-	public Random(TValue[] items, IPicker<TValue> picker) {
-		_values = new TValue[items.Length];
-		items.CopyTo(_values, 0);
-
-		_picker = picker;
-		_picker.Update(_values);
-	}
-
-	public TValue Next() {
-		return _values[_picker.Pick()];
-	}
-}
-
-public interface IPicker<TValue> {
-	public void Update(IEnumerable<TValue> values);
-
-	public int Pick();
-}
-
-public class SimplePicker<TValue> : IPicker<TValue> {
-	private readonly Random _numberGenerator;
-	private int _totalValues;
-
-	public SimplePicker() {
-		_numberGenerator = new Random();
-		_totalValues = 0;
-	}
-
-	public void Update(IEnumerable<TValue> values) {
-		_totalValues = 0;
-
-		foreach( var v in values ) _totalValues++;
-	}
-
-	public int Pick() {
-		return _numberGenerator.Next(_totalValues);
-	}
-}
-
-public class SetRotationPicker<TValue> : IPicker<TValue> {
-	private readonly HashSet<int> _availableIndices;
-
-	private readonly Random _numberGenerator;
-	private int _valuesLength;
-
-	public SetRotationPicker() {
-		_numberGenerator = new Random();
-		_availableIndices = new HashSet<int>();
-		_valuesLength = 0;
-	}
-
-	public void Update(IEnumerable<TValue> values) {
-		_availableIndices.Clear();
-		var curIndex = 0;
-
-		foreach( var v in values ) _availableIndices.Add(curIndex++);
-
-		_valuesLength = curIndex;
-	}
-
-	public int Pick() {
-		var picked = _availableIndices.ToArray()[_numberGenerator.Next(_availableIndices.Count)];
-		_availableIndices.Remove(picked);
-
-		if( _availableIndices.Count == 0 ) Restore();
-
-		return picked;
-	}
-
-	private void Restore() {
-		for( var i = 0; i < _valuesLength; i++ ) _availableIndices.Add(i);
-	}
-}
-
-*/
-
-// ---
-
-// interface IPicker<T> {
-//
-// 	void UpdateData(IEnumerator<T> data);
-// 	T Pick();
-// 	
-// 	
-// }
-//
-// interface IIterator<T>:IEnumerable<T> {
-// 	
-// 	void UpdateData(IEnumerator<T> data);
-//
-// }
-//
-// class Format<T> {
-// 	// prefix postfix maxlength or in Interface
-// }
-//
-// abstract class Random<T>{
-//
-// 	private IPicker<T> Picker;
-// 	private IIterator<T> Iterator;
-// 	public Format<T> Format {set; private get;}
-// 	protected List<T> data;
-//
-//
-// 	public Random(IPicker<T> Picker, IIterator<T> Iterator) {
-// 		this.Picker = Picker;
-// 		this.Iterator = Iterator;
-// 		
-// 		this.Picker.UpdateData(data.GetEnumerator());
-// 		this.Iterator.UpdateData(data.GetEnumerator());
-// 	}
-//
-// 	public T Next() {
-// 		return Picker.Pick();
-// 	}
-//
-// 	public T NextFromatted() {
-// 		Console.WriteLine(Format);
-// 		return Next();
-// 	}
-//
-// 	public IIterator<T> Shuffled() {
-// 		return Iterator;
-// 	}
-// }
-//
-// class RandomInt:Random<int> {
-// 	public RandomInt(IPicker<int> Picker, IIterator<int> Iterator,int[] data) : base(Picker, Iterator) {
-// 		//copy data from constructor to list 
-// 	}
-// }
-//  
-//
-// // ---
-//
-// public static class Program {
-// 	public static void Main(string[] args) {
-// 		//TODO write them in blocks to understand what todo
-//
-// 		// iteration over saved objects
-// 		
-// 		// ---
-// 		// υποστίριξη regex [0-9]{4}[a-z]{3}
-// 		// ---
-// 	
-// 		// Random<RandomIntegerX>
-// 	
-// 		//
-// 	
-// 		/* biased randomeness in strategy
-// 		{ X, EBX, ECX }
-// 		{ 2, 0, 1 }
-// 		*/
-// 	
-// 		// strategy will used non mutated data
-// 	
-// 		Console.WriteLine("Hello, World!");
-//
-// 		// var rndInteger = new RandomInteger(1, 2, -2, 5, 6, 8, 7);
-// 		// // var rndInteger2 = new RandomInteger(1..2);
-// 		// var x = new RandomInteger(1, 2, -2, 5, 6, 8, 7);
-// 		//
-// 		// rndInteger.Next();
-// 		// rndInteger.Iterator();
-// 		// Console.WriteLine(rndInteger.GeneratedValue);
-// 		// Console.WriteLine(rndInteger.GeneratedValue);
-// 		// rndInteger.Next();
-// 		// Console.WriteLine(rndInteger.GeneratedValue);
-// 		//
-// 		//
-// 		// rndInteger.NextIn(1, 6);
-// 		// Console.WriteLine(rndInteger.GeneratedValue);
-// 		//
-// 		// x.Next();
-// 		// Console.WriteLine(x.GeneratedValue);
-// 		// x.NextIn(1, 6);
-// 		// Console.WriteLine(x.GeneratedValue);
-// 		//
-// 		// Console.WriteLine(RandomInteger.NextAnyIn(4,241));
-// 		//
-// 		// var y = new RandomString("a","b","c","d","e");
-// 		// y.Next();
-// 		// Console.WriteLine(y.GeneratedValue);
-// 		// Console.WriteLine(y.GeneratedValue);
-// 		// Console.WriteLine(y.GeneratedValue);
-// 	}
-// }
-//
-// public abstract class Random<T> {
-//
-// 	protected Format format;
-//
-// 	protected Generator generator;
-//
-// 	public T GeneratedValue { get; private set; }
-// 	public string GeneratedValueFormatted { get; private set; }
-//
-// 	protected T[] values;
-// 	protected T[] valuesSet;
-//
-// 	protected Random(T[] values) {
-// 		this.values = valuesSet = values;
-//
-// 		generator = new Generator();
-// 	}
-//
-// 	protected Random() {
-// 		
-// 	}
-//
-// 	// ---
-//
-// 	public void Next() {
-// 		GeneratedValue = values[generator.IndexFor(values.Length)];
-// 		GeneratedValueFormatted = format.ApplyOn(GeneratedValue);
-// 	}
-//
-// 	public void NextFromSet() {
-// 		Next();
-// 	}
-//
-// 	// ---
-//
-// 	public void SetFormat(Format f) {
-// 		format = f;
-// 	}
-//
-// 	// ---
-//
-// 	protected class Generator {
-// 		private readonly Random source;
-//
-// 		public Generator() {
-// 			source = new Random();
-// 		}
-//
-// 		public int IndexFor(int arrayLength) {
-// 			return source.Next(0, arrayLength);
-// 		}
-// 	}
-// }
-//
-// public class Format {
-// 	private string charToExtend = "0";
-//
-// 	private int length = -1;
-// 	private string postfix;
-//
-// 	private string prefix;
-// 	
-// 	// 2.12345
-// 	// 2.12
-//
-// 	public string ApplyOn<T>(T value) {
-// 		return prefix + value.ToString() + postfix;
-// 	}
-// }
-//
-// public class RandomInteger : Random<int> {
-// 	public RandomInteger(params int[] values) : base(values) { }
-//
-// 	public RandomInteger(System.Range range) { }
-//
-// 	public void NextIn(int min, int max) {
-// 		Next();
-// 	}
-//
-// 	public static int NextAnyIn(int min, int max) {
-// 		// return generator.IndexFor();
-// 		return default;
-// 	}
-// }
-//
-// public class RandomString : Random<string> {
-//
-// 	public RandomString(params string[] values) : base(values) { }
-// 	
-// }
-
-/*
-            Ο α πηρε χ μηλα και ο β πηρε y μηλα.Ποσα μηλα έχουν ο a και ο β 
-         
-            Ο α πηρε x και και τα εκανε  xyy | yyxx | yyxyy   
-            
-            
-        */
-
-/*
-    TODO give access to classes on user or hide it with an external class?
-    Random
-        values hashMap(id,class)
-        
-        public createParamerer(string id, set δεδομένων) {
-			new RandomInteger(δεδομένων);
-        }
-        
-        T 
-        
-        String GetRandomValue(id){
-            return values.key(id).GetRandomString()
-        }
-        
-        getIterator(id) {
+			// generate associativity
+			var generatedAssociativity = associativities.Next(); // <---
 			
-        }
-        
-    Random<String>
-    Fields
-        Values String[] //maybe a class , strategy , set
-        Value
-        Format
+			// build question
+			int wordSize = generatedWordSize.Value;
+			int cacheLineSize = generatedCacheLineSize.Value;
+			int cacheSize = generatedCacheSize.Value;
+			int memorySize = calculatedMemorySize;
+			string associativity = generatedAssociativity.Value.Value;
+			
+			Console.WriteLine(@$"A {associativity}-way set-associative cache has lines of {cacheLineSize} byte(s) and a total size of {cacheSize} byte(s). The {memorySize} byte(s) main memory is {wordSize} byte(s) addressable. Show the format of main memory addresses.");
+			
+			Console.WriteLine("---");
+			
+			// build sub-question
+			
+			memoryAddresses.SetValues(new ValueIntegerRangeFiniteSet(0, memorySize));
+			var hexMaxMemoryAddressDigitsCount = Convert.ToString(memorySize, 16).Length;
+			var memoryAddressesFormatted = new HexFormatterDecorator(memoryAddresses, hexMaxMemoryAddressDigitsCount, true);
+		
+			Console.WriteLine(@$"For the hexadecimal main memory addresses {memoryAddressesFormatted.Next().FormattedValue}, {memoryAddressesFormatted.Next().FormattedValue}, {memoryAddressesFormatted.Next().FormattedValue}, show the following information in hexadecimal format.");
+		};
 
-    Methods
-        Void GetRandomString(){
-            this.Value = Value.PickRandom;
-        }
-        
-        String GetValue(){
-            this.Value
-        }
-        
-        String SetFormat(Format){
-            this.Format = Format
-        }
-        
-        String GetValueFormated(){
-            this.Format.GetValueFormated(this.value)
-        }
-        
-        
-------------------------------------------------------
-     Random<Int|Double|T>
-     Fields
-        Values Int[]
-        Value
-        
-    Methods
-        String GetRandomInt(){
-            this.Value = Value.PickRandom; 
-        }
-        
-        String GetValue(){
-            this.Value
-        }
-        
-        String SetFormat(Format){
-            this.Format = Format
-        }
-        
-        String GetValueFormated(){
-            this.Format.GetValueFormated(this.value)
-        }
-            
-    ---------------------------------------
-    Format<String> // problem with  GetValueFormated method bounding our class with Random Class, Used outside Random
-         Fields
-             prefix,postfix,format
-         
-         Methods           
-            Void SetFormat(prefix,postfix,format){
-               this.prefix = prefix
-               this.postfix = postfix
-               this.format = format
-            }
-            
-            String GetValueFormated(value){
-                formatedString = (prefix)value(postfix);
-            }
-            
-    Format<Int|Double|T>  
-        Fields
-        
-        Methods
-    ----------------------------------------------
-    RandomizerStrategy //Users creates his own Strategy (problem with UpdateValues)
-        SimpleStrategy
-        SetStrategy
-        
-    --------------------------------------------------
-    SimpleStrategy
-        T Values[]
-        
-        T PickRandom(){ 
-            //Picksvalue
-        }
-        
-        void UpdateValues(T Values){
-            this.Values = Values
-        }
-        
-       
- */
+		for( int i = 0; i < timesToParseTree; i++ ) {
+			Console.WriteLine("===");
+			treeParsing.Invoke();
+			Console.WriteLine("===");
+		}
+
+	}
+
+	private static void Demonstration2() {
+		var random = new Random<int>(new SimplePickerStrategy<int>());
+		
+		// var value = new ValueIntegerRangeSimple(2, 6);
+		var value = new ValueIntegerRangeInfinitySet(2, 6); // [2,6)
+		random.SetValues(value);
+
+		for( int i = 0; i < 12; i++ ) {
+			if(i%4 == 0)
+				Console.WriteLine("---");
+			var generated = random.Next();
+			Console.WriteLine(generated.Value);
+		}
+
+		var formatter1 = new PrefixPostfixFormatterDecorator<int>(random, "->", "<<--");
+		// var formatter2 = new PrefixPostfixFormatterDecorator<int>(formatter1, "~abc~", "def123-");
+
+		for( int i = 0; i < 12; i++ ) {
+			var generated = formatter1.Next();
+			// var generated = formatter2.Next();
+			Console.WriteLine(generated.FormattedValue + " | " + (generated.Value + 100));
+		}
+
+	}
+	
+	private static void Demonstration1() {
+		var random = new Random<int>();
+		
+		var pickerStrategy = new SimplePickerStrategy<int>();
+		// var pickerStrategy = new FiniteSetPickerStrategy<int>();
+		
+		var values = new List<IValue<int>> {
+			new Value<int>(2),
+			new Value<int>(8),
+			new Value<int>(5),
+			new Value<int>(1)
+		};
+
+		random.SetPickerStrategy(pickerStrategy);
+		random.SetValues(values);
+
+		for( int i = 0; i < 25; i++ ) {
+			if( i == 9 ) {
+				random.SetValues(12,18,5,1);
+				Console.WriteLine("---");
+			}
+			else if( i == 16 ) {
+				random.SetPickerStrategy(new InfinitySetPickerStrategy<int>());
+				Console.WriteLine("===");
+			}
+		
+			var generated = random.Next();
+			Console.WriteLine(generated.Value);
+		}
+	}
+	
+	public static void Main(string[] args)  {
+		// Demonstration1();
+		// Demonstration2();
+		
+		SimulateExerciseGeneration(3);
+	}
+	
+}

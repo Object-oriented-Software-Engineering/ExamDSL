@@ -1,48 +1,63 @@
-﻿namespace Randomizer;
+﻿using System.Diagnostics.CodeAnalysis;
 
-public class Generated<T>
-{
-    public T value;
-    public string formattedValue;
-}
+namespace Randomizer;
 
-public interface IGenerator<T> {
-    Generated<T> Next();
-}
-
-public class Random<T>:IGenerator<T>
-{
-    private IPicker<T> _picker;
+public class Random<T> : IGenerator<T> {
+    
+    private IPickerStrategy<T>? _pickerStrategy;
     private IValue<T>[] _values;
-    
-    public Random(IPicker<T> picker,IEnumerable<IValue<T>> values) {
-        _picker = picker;
+
+    public Random(IPickerStrategy<T>? pickerStrategy, params IValue<T>[] values)  {
+        _pickerStrategy = pickerStrategy;
         _values = Array.Empty<IValue<T>>();
-        SetValues(values);
-    }
+        
+        this.SetValues(values);
+    }    
     
-    public void SetPicker(IPicker<T> picker)
-    {
-        _picker = picker;
-        _picker.Update(_values);
+    public Random(IPickerStrategy<T>? pickerStrategy, IEnumerable<IValue<T>> values) : this(pickerStrategy, values.ToArray()) { }
+    
+    public Random() : this(null) { }
+
+    public Generated<T> Next() {
+        if( !ValidState() )
+            throw new RandomNoValuesException();
+
+        var picked = _pickerStrategy!.Pick();
+        
+        var generated = new Generated<T>() {
+            Value = picked,
+            FormattedValue = picked?.ToString()
+        };
+        
+        return generated;
     }
 
-    public Generated<T> Next()
-    {
-        Generated<T> pick = new Generated<T>();
-        
-        pick.value = _picker.Pick();
-        pick.formattedValue = pick.value.ToString();
-        
-        return pick;
+    public void SetPickerStrategy(IPickerStrategy<T> pickerStrategy) {
+        _pickerStrategy = pickerStrategy;
+        this.UpdatePickerStrategyValues();
     }
 
-    public void SetValues(IEnumerable<IValue<T>> values)
-    {
-        _values = values.ToArray(); //TODO Check warning
-        _picker.Update(values);
+    public void SetValues(params IValue<T>[] values) {
+        _values = values; // TODO IDEA: maybe deep copy here?
+        this.UpdatePickerStrategyValues();
+    }
+
+    public void SetValues(params T[] values) {
+        SetValues(values.ToList().ConvertAll<IValue<T>>(value => new Value<T>(value)));
+    }
+
+    public void SetValues(IEnumerable<IValue<T>> values) {
+        SetValues(values.ToArray());
     }
     
-    //TODO Add Apply format method that utilizes parameter value (Add to IGenerator interface) 
-    //TODO Add setters for Formatter etc. 
+    private bool ValidState() {
+        return _pickerStrategy != null && _values.Length != 0;
+    }
+
+    private void UpdatePickerStrategyValues() {
+        if( ValidState() ) {
+            _pickerStrategy!.Update(_values); // TODO IDEA: maybe deep copy here?
+        }
+    }
+    
 }

@@ -1,137 +1,190 @@
 ﻿namespace Randomizer;
 
-public interface IValue<T>
-{
+public interface IValue<out T> {
+
     public T Get();
     
 }
 
-public class Value<T> : IValue<T>
-{
-    private T _value;
+// ===
+
+public class Value<T> : IValue<T> {
+
+    private readonly T _value;
     
-    public Value(T value)
-    {
+    public Value(T value) {
         _value = value;
     }
 
-    public T Get()
-    {
+    public T Get() {
         return _value;
     }
     
 }
 
-public class IntegerRangeValue : IValue<int> 
-{
-    private readonly Random _numberGenerator;
-    private readonly int _min, _max;
+// ===
 
-    public IntegerRangeValue(int min, int max)
-    {
-        //TODO check if min max are valid and throw exception
-        _numberGenerator = new Random();
-        _min = min;
-        _max = max;
+public abstract class ValueIntegerRange : IValue<int> {
+    
+    protected readonly Random NumberGenerator;
+    protected readonly int Min, Max;
+
+    protected ValueIntegerRange(int minInclusive, int maxExclusive) {
+        if( maxExclusive < minInclusive )
+            throw new ArgumentException("Argument maxExclusive must be greater or equal than argument minInclusive.");
+    
+        NumberGenerator = new Random();
+        
+        Min = minInclusive;
+        Max = maxExclusive;
     }
 
-    public int Get()
-    {
-        return _numberGenerator.Next(_min, _max);
+    public abstract int Get();
+    
+}
+
+public class ValueIntegerRangeSimple : ValueIntegerRange {
+
+    public ValueIntegerRangeSimple(int minInclusive, int maxExclusive) : base(minInclusive, maxExclusive) { }
+
+    public override int Get() {
+        return NumberGenerator.Next(Min, Max);
     }
     
 }
 
-public class DoubleRangeValue : IValue<double>
-{
-    private readonly Random _numberGenerator;
-    private readonly double _min, _max;
+public class ValueIntegerRangeFiniteSet : ValueIntegerRange {
 
-    public DoubleRangeValue(double min, double max)
-    {
-        //TODO check if min max are valid and throw exception
-        _numberGenerator = new Random();
-        _min = min;
-        _max = max;
+    private readonly List<int> _usedValues;
+    private readonly int _rangeValuesCount;
+
+    public ValueIntegerRangeFiniteSet(int minInclusive, int maxExclusive) : base(minInclusive, maxExclusive) {
+        _usedValues = new List<int>();
+        _rangeValuesCount = maxExclusive - minInclusive;
     }
 
-    public double Get()
-    {
-        return _min+(_numberGenerator.NextDouble()*(_max-_min));
-    }
-}
-
-public class SetIntRangeValue : IValue<int>
-{
-    private readonly Random _numberGenerator;
-    private readonly int _min, _max;
-    private List<int> _alreadyGenaratedValues;
-
-    public SetIntRangeValue(int min, int max)
-    {
-        //TODO check if min max are valid and throw exception
-        _numberGenerator = new Random();
-        _min = min;
-        _max = max;
-        _alreadyGenaratedValues = new List<int>();
-    }
-
-    public int Get()
-    {
-        if ((_max - _min) == _alreadyGenaratedValues.Count)
-            throw new ValueException("The is no more unique values please use another setRangeValue");
+    public override int Get() {
+        if (_rangeValuesCount == _usedValues.Count)
+            throw new ValueUnableToCompleteGetException();
         
-        var value = _numberGenerator.Next(_min, _max);
+        var value = NumberGenerator.Next(Min, Max);
+        while (_usedValues.Contains(value))
+            value = NumberGenerator.Next(Min, Max);
         
-        while ( _alreadyGenaratedValues.Contains(value))
-        {
-            value = _numberGenerator.Next(_min, _max);
-        }
-        
-        _alreadyGenaratedValues.Add(value);
+        _usedValues.Add(value);
         
         return value;
     }
+    
 }
 
-public class SetDoubleRangeValue : IValue<double>
-{
-    private readonly Random _numberGenerator;
-    private readonly double _min, _max;
-    private List<double> _alreadyGenaratedValues;
+public class ValueIntegerRangeInfinitySet : ValueIntegerRange {
 
-    public SetDoubleRangeValue(double min, double max)
-    {
-        //TODO check if min max are valid and throw exception
-        _numberGenerator = new Random();
-        _min = min;
-        _max = max;
-        _alreadyGenaratedValues = new List<double>();
+    private readonly List<int> _usedValues;
+    private readonly int _rangeValuesCount;
+
+    public ValueIntegerRangeInfinitySet(int minInclusive, int maxExclusive) : base(minInclusive, maxExclusive) {
+        _usedValues = new List<int>();
+        _rangeValuesCount = maxExclusive - minInclusive;
     }
 
-    public double Get()
-    {
-        //TODO think of a better way
-        if (((int)(_max - _min))*(int)Math.Pow(10,15) == _alreadyGenaratedValues.Count)
-            throw new ValueException("The is no more unique values please use another setRangeValue");
-
-        var value = _min + (_numberGenerator.NextDouble() * (_max - _min));
+    public override int Get() {
+        if (_rangeValuesCount == _usedValues.Count)
+            _usedValues.Clear();
         
-        while ( _alreadyGenaratedValues.Contains(value))
-        {
-            value = _min + (_numberGenerator.NextDouble() * (_max - _min));
-        }
+        var value = NumberGenerator.Next(Min, Max);
+        while (_usedValues.Contains(value))
+            value = NumberGenerator.Next(Min, Max);
         
-        _alreadyGenaratedValues.Add(value);
-
-        return _min+(_numberGenerator.NextDouble()*(_max-_min));
+        _usedValues.Add(value);
+        
+        return value;
     }
+    
 }
 
-public class ValueException : Exception
-{
-    public ValueException(string message): base(message)
-    {
+// ===
+
+public abstract class ValueDoubleRange : IValue<double> {
+    
+    protected readonly Random NumberGenerator;
+    protected readonly double Min, Max;
+
+    protected ValueDoubleRange(double minInclusive, double maxExclusive) {
+        if( maxExclusive < minInclusive )
+            throw new ArgumentException("Argument maxExclusive must be greater or equal than argument minInclusive.");
+    
+        NumberGenerator = new Random();
         
+        Min = minInclusive;
+        Max = maxExclusive;
     }
+
+    public abstract double Get();
+    
 }
+
+public class ValueDoubleRangeSimple : ValueDoubleRange {
+
+    public ValueDoubleRangeSimple(double minInclusive, double maxExclusive) : base(minInclusive, maxExclusive) { }
+
+    public override double Get() {
+        return Min + NumberGenerator.NextDouble() * (Max - Min);
+    }
+    
+}
+
+public class ValueDoubleRangeFiniteSet : ValueDoubleRange {
+
+    private readonly List<double> _usedValues;
+    private readonly long _rangeValuesCount; // approximation
+
+    public ValueDoubleRangeFiniteSet(double minInclusive, double maxExclusive) : base(minInclusive, maxExclusive) {
+        _usedValues = new List<double>();
+        _rangeValuesCount = (long) ((Max - Min) * Math.Pow(10, 15)); // double has up to 15 decimals
+    }
+
+    public override double Get() {
+        if (_rangeValuesCount == _usedValues.Count)
+            throw new ValueUnableToCompleteGetException();
+        
+        var value = Min + NumberGenerator.NextDouble() * (Max - Min);
+        while (_usedValues.Contains(value))
+            value = Min + NumberGenerator.NextDouble() * (Max - Min);
+        
+        _usedValues.Add(value);
+        
+        return value;
+    }
+    
+}
+
+public class ValueDoubleRangeInfinitySet : ValueDoubleRange {
+
+    private readonly List<double> _usedValues;
+    private readonly long _rangeValuesCount; // approximation
+
+    public ValueDoubleRangeInfinitySet(double minInclusive, double maxExclusive) : base(minInclusive, maxExclusive) {
+        _usedValues = new List<double>();
+        _rangeValuesCount = _rangeValuesCount = (long) ((Max - Min) * Math.Pow(10, 15)); // double has up to 15 decimals
+    }
+
+    public override double Get() {
+        if (_rangeValuesCount == _usedValues.Count)
+            _usedValues.Clear();
+        
+        var value = Min + NumberGenerator.NextDouble() * (Max - Min);
+        while (_usedValues.Contains(value))
+            value = Min + NumberGenerator.NextDouble() * (Max - Min);
+        
+        _usedValues.Add(value);
+        
+        return value;
+    }
+    
+}
+
+// ===
+
+// TODO IDEA (maybe not needed, can be replicated with current IValue and IPickerStrategy): IWeightedValue (integer 1,2,3...) for multiplier
+// change random and pickers to choose between giving IWeightedValue or IValue (fair and unfair based pickers?)
